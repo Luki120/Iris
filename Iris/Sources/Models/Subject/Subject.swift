@@ -1,0 +1,103 @@
+import Foundation.NSDate
+import SwiftData
+import struct SwiftUI.Color
+
+/// API model class
+@Model
+final class Subject: Codable {
+	let name: String
+	let year: String
+
+	var grade: Int?
+	var isFinished = false
+	var hasThreeExams = false
+
+	var tasks = [Task]()
+
+	/// Designated initializer
+	///  - Parameters:
+	///		- name: A string that represents the name
+	///		- year: A string that represents the year
+	///		- grade: A nullable integer that represents the grade
+	///		- isFinished: A boolean that represents if I finished the subject, defaults to false
+	///		- hasThreeExams: A boolean that represents wether the subject requires taking three exams or more, defaults to false
+	init(name: String, year: String, grade: Int? = nil, isFinished: Bool = false, hasThreeExams: Bool = false) {
+		self.name = name
+		self.year = year
+		self.grade = grade
+		self.isFinished = isFinished
+		self.hasThreeExams = hasThreeExams
+	}
+
+	// MARK: - Codable
+
+	required init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		name = try container.decode(String.self, forKey: .name)
+		year = try container.decode(String.self, forKey: .year)
+		grade = try container.decode(Int?.self, forKey: .grade)
+		isFinished = try container.decode(Bool.self, forKey: .isFinished)
+		hasThreeExams = try container.decode(Bool.self, forKey: .hasThreeExams)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(name, forKey: .name)
+		try container.encode(year, forKey: .year)
+		try container.encode(grade, forKey: .grade)
+		try container.encode(isFinished, forKey: .isFinished)
+		try container.encode(hasThreeExams, forKey: .hasThreeExams)
+	}
+
+	private enum CodingKeys: String, CodingKey {
+		case name, year, grade, isFinished, hasThreeExams
+	}
+}
+
+extension Subject {
+	@Model
+	final class Task {
+		var title: String
+		var priority: Priority = Priority.normal
+
+		let timestamp = Date()
+		var examDate = Date()
+		var isCompleted = false
+
+		@Transient
+		enum Priority: String, CaseIterable, Codable {
+			case normal = "Normal"
+			case exam = "Exam"
+
+			var color: Color {
+				switch self {
+					case .normal: return .green
+					case .exam: return .red
+				}
+			}
+		}
+
+		/// Designated initializer
+		///  - Parameters:
+		///		- title: A string that represents the title for the task assignment
+		///		- priority: An enum to represent the priority for the assignment
+		init(title: String, priority: Priority) {
+			self.title = title
+			self.priority = priority
+		}
+	}
+}
+
+// MARK: - Hashable
+
+extension Subject: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(name)
+	}
+
+	static func == (lhs: Subject, rhs: Subject) -> Bool {
+		lhs.name == rhs.name
+	}
+}
