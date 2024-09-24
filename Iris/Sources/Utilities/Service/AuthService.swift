@@ -141,7 +141,10 @@ final class AuthService {
 		guard let httpResponse = response as? HTTPURLResponse else { throw AuthError.unknownError }
 
 		switch httpResponse.statusCode {
-			case 200: return .success
+			case 200:
+				UserDefaults.standard.removeObject(forKey: "jwtToken")
+				return .success
+
 			case 401: return .unauthorized
 			case 409: throw AuthError.conflict
 			case 500...600: throw AuthError.badServerResponse
