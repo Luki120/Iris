@@ -44,7 +44,9 @@ struct GradesChartView: View {
 							.contentShape(.rect)
 							.onTapGesture { location in
 								guard let (_, grade) = chartProxy.value(at: location, as: (String, Int).self) else { return }
-								tappedGrade = grade
+								withAnimation(.easeInOut(duration: 0.25)) {
+									tappedGrade = grade
+								}
 							}
 					}
 				}
