@@ -26,13 +26,13 @@ final class AllSubjectsCell: UICollectionViewCell {
 
 	private func setupUI() {
 		contentView.backgroundColor = .secondarySystemGroupedBackground
+		contentView.layer.cornerCurve = .continuous
+		contentView.layer.cornerRadius = 15
+
 		layoutUI()
 	}
 
 	private func layoutUI() {
-		contentView.layer.cornerCurve = .continuous
-		contentView.layer.cornerRadius = 15
-
 		totalSubjectsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
 		totalSubjectsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
 	}
@@ -42,6 +42,9 @@ final class AllSubjectsCell: UICollectionViewCell {
 // MARK: - Public
 
 extension AllSubjectsCell {
+	/// Function to configure the cell with its respective view model
+	/// -  Parameters:
+	/// 	- with: The view model object
 	func configure(with viewModel: AllSubjectsCellViewModel) {
 		totalSubjectsLabel.attributedText = .init(
 			fullString: String(describing: viewModel.count) + "\n" + viewModel.title,

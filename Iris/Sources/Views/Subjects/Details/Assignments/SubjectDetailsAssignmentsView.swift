@@ -107,6 +107,5 @@ private struct CompletedAssignmentsView: View {
 				.font(.caption)
 			}
 		}
-
 	}
 }

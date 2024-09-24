@@ -3,8 +3,6 @@ import UIKit
 /// UICollectionViewCell subclass to represent the subject cell
 class SubjectCell: UICollectionViewCell {
 
-	static var identifier: String { String(describing: self) }
-
 	private(set) lazy var subjectNameLabel: UILabel = {
 		let label = UILabel()
 		label.font = .quicksand(withStyle: .bold)
@@ -14,7 +12,7 @@ class SubjectCell: UICollectionViewCell {
 		return label
 	}()
 
-	// ! Lifecyle
+	// MARK: - Lifecyle
 
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
@@ -25,17 +23,13 @@ class SubjectCell: UICollectionViewCell {
 		setupUI()
 	}
 
-	override func layoutSubviews() {
-		super.layoutSubviews()
-
-		contentView.layer.cornerCurve = .continuous
-		contentView.layer.cornerRadius = 15
-	}
-
-	// ! Private
+	// MARK: - Private
 
 	private func setupUI() {
 		contentView.backgroundColor = .secondarySystemGroupedBackground
+		contentView.layer.cornerCurve = .continuous
+		contentView.layer.cornerRadius = 15
+
 		layoutUI()
 	}
 
@@ -47,8 +41,12 @@ class SubjectCell: UICollectionViewCell {
 
 }
 
-extension SubjectCell {
+// MARK: - Public
 
+extension SubjectCell {
+	/// Function to configure the cell with its respective view model
+	/// -  Parameters:
+	/// 	- with: The view model object
 	func configure(with viewModel: SubjectCellViewModel) {
 		subjectNameLabel.text = viewModel.name
 	}
