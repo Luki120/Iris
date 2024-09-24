@@ -24,7 +24,6 @@ final class SubjectsView: UIView {
 		collectionView.delegate = viewModel
 		collectionView.backgroundColor = .systemGroupedBackground
 		collectionView.showsVerticalScrollIndicator = false
-		collectionView.register(SubjectCell.self, forCellWithReuseIdentifier: SubjectCell.identifier)
 		addSubview(collectionView)
 		return collectionView
 	}()
