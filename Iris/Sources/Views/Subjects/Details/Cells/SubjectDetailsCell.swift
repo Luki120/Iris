@@ -32,7 +32,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		return label
 	}()
 
-	private(set)lazy var gradeTextField: UITextField = {
+	private(set) lazy var gradeTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = .quicksand(withStyle: .semiBold, size: 25)
 		textField.delegate = self
@@ -54,7 +54,6 @@ final class SubjectDetailsCell: UICollectionViewCell {
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		addSubviews(views: hashtagLabel, examLabel)
 		contentView.backgroundColor = .secondarySystemGroupedBackground
 		contentView.layer.cornerCurve = .continuous
 		contentView.layer.cornerRadius = 15
