@@ -23,15 +23,9 @@ final class SubjectsService {
 			return try JSONDecoder().decode([Subject].self, from: cachedData)
 		}
 
-		do {
-			let (data, _) = try await URLSession.shared.data(from: url)
-			apiCache[url.absoluteString] = data
+		let (data, _) = try await URLSession.shared.data(from: url)
+		apiCache[url.absoluteString] = data
 
-			return try JSONDecoder().decode([Subject].self, from: data)
-		}
-		catch {
-			print(error.localizedDescription)
-			throw URLError(.cannotDecodeRawData)
-		}
+		return try JSONDecoder().decode([Subject].self, from: data)
 	}
 }
