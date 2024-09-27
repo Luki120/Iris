@@ -181,9 +181,11 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 
 	func collectionView(
 		_ collectionView: UICollectionView,
-		contextMenuConfigurationForItemAt indexPath: IndexPath,
+		contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
 		point: CGPoint
 	) -> UIContextMenuConfiguration? {
+		guard let indexPath = indexPaths.first else { return nil }
+
 		switch sections[indexPath.section] {
 			case .currentlyTakingSubjects:
 				let contextMenu = UIContextMenuConfiguration(previewProvider: nil) { _ in
@@ -191,23 +193,24 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 
 					let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 						SubjectsManager.shared.delete(subject: subject, at: indexPath.item)
-						self.dataSource.apply(self.dataSource.snapshot(), animatingDifferences: true)
+						self.dataSource.apply(self.dataSource.snapshot())
 					}
 					let passedAction = UIAction(title: "Passed", image: UIImage(systemName: "checkmark")) { _ in
 						subject.isFinished = true
 
 						SubjectsManager.shared.markSubjectAsPassed(subject, at: indexPath.item)
-						self.dataSource.apply(self.dataSource.snapshot(), animatingDifferences: true)
+						self.dataSource.apply(self.dataSource.snapshot())
 					}
 
-					guard subject.grade == nil else { return UIMenu(options: .displayInline, children: [passedAction, deleteAction]) }
+					guard subject.grade == nil || subject.grade == 0 else {
+						return UIMenu(options: .displayInline, children: [passedAction, deleteAction])
+					}
 					return UIMenu(options: .displayInline, children: [deleteAction])
 				}
 				return contextMenu
 
-			default: break
+			default: return nil
 		}
-		return nil
 	}
 
 }
