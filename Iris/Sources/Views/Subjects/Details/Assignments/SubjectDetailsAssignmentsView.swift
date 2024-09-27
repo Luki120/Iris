@@ -26,7 +26,7 @@ struct SubjectDetailsAssignmentsView: View {
 	}
 
 	var body: some View {
-		VStack {
+		VStack(spacing: 0) {
 			if subject.tasks.isEmpty {
 				ContentUnavailableView {
 					Text("There's currently no assignments for this subject")
