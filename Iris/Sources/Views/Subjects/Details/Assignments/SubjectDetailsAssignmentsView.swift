@@ -13,46 +13,72 @@ struct SubjectDetailsAssignmentsView: View {
 
 	let subject: Subject
 
+	private var examsList: [Subject.Task] {
+		return subject.tasks.filter { $0.priority == .exam && !$0.isCompleted }
+	}
+
+	private var pendingAssignments: [Subject.Task] {
+		return subject.tasks.filter { !$0.isCompleted && $0.priority != .exam }.sorted(using: SortDescriptor(\.timestamp))
+	}
+
+	private var completedAssignments: [Subject.Task] {
+		return subject.tasks.filter { $0.isCompleted }.sorted(using: SortDescriptor(\.timestamp))
+	}
+
 	var body: some View {
-		if subject.tasks.isEmpty {
-			ContentUnavailableView {
-				Text("There's currently no assignments for this subject")
-					.font(.quicksand(withStyle: .medium))
-			}
-		}
-		else {
-			List {
-				if !subject.tasks.filter({ $0.priority == .exam && !$0.isCompleted }).isEmpty {
-					ExamsListView(subject: subject)
+		VStack {
+			if subject.tasks.isEmpty {
+				ContentUnavailableView {
+					Text("There's currently no assignments for this subject")
+						.font(.quicksand(withStyle: .medium))
 				}
-				Section("Pending") {
-					ForEach(subject.tasks.filter { !$0.isCompleted && $0.priority != .exam }.sorted(using: SortDescriptor(\.timestamp))) { task in
-						SubjectDetailsAssignmentCellView(subject: subject, task: task)
+			}
+			else {
+				List {
+					if !examsList.isEmpty {
+						ExamsListView(subject: subject)
+					}
+					if !pendingAssignments.isEmpty {
+						PendingAssignmentsView()
+					}
+					if !completedAssignments.isEmpty {
+						CompletedAssignmentsView(subject: subject)
 					}
 				}
-				if !subject.tasks.filter({ $0.isCompleted }).sorted(using: SortDescriptor(\.timestamp)).isEmpty {
-					CompletedAssignmentsView(subject: subject)
+				.scrollIndicators(.hidden)
+			}
+			Group {
+				Button("Add") {
+					withAnimation(.snappy) {
+						subject.tasks.append(.init(title: "", priority: .normal))
+					}
 				}
+				.foregroundStyle(.primary)
+				.frame(width: 120, height: 50)
+				.background(Color.irisSlateBlue, in: .capsule)
+				.padding(.bottom, 20)
+				.shadow(color: .primary.opacity(0.5), radius: 4)
 			}
+			.frame(maxWidth: .infinity)
+			.background(
+				subject.tasks.isEmpty ? Color(uiColor: .systemBackground) : Color(uiColor: .systemGroupedBackground)
+			)
 		}
-
-		Button("Add") {
-			let task = Subject.Task(title: "", priority: .normal)
-			withAnimation(.snappy) {
-				subject.tasks.append(task)
-			}
-		}
-		.foregroundStyle(.primary)
-		.frame(width: 120, height: 50)
-		.background(Color.irisSlateBlue, in: .capsule)
-		.padding(.bottom, 20)
-		.shadow(color: .primary.opacity(0.5), radius: 4)
 	}
 
 	@ViewBuilder
 	private func ExamsListView(subject: Subject) -> some View {
 		Section("Exams") {
-			ForEach(subject.tasks.filter { $0.priority == .exam }) { task in
+			ForEach(examsList) { task in
+				SubjectDetailsAssignmentCellView(subject: subject, task: task)
+			}
+		}
+	}
+
+	@ViewBuilder
+	private func PendingAssignmentsView() -> some View {
+		Section("Pending") {
+			ForEach(pendingAssignments) { task in
 				SubjectDetailsAssignmentCellView(subject: subject, task: task)
 			}
 		}
@@ -62,7 +88,7 @@ struct SubjectDetailsAssignmentsView: View {
 /// View that'll show the completed assignments
 private struct CompletedAssignmentsView: View {
 
-	@Bindable private(set) var subject: Subject
+	let subject: Subject
 	@State private var showAll = false
 
 	private var filteredTasks: [Subject.Task] {
@@ -71,7 +97,7 @@ private struct CompletedAssignmentsView: View {
 
 	var body: some View {
 		Section {
-			ForEach(filteredTasks.prefix(showAll ? filteredTasks.count : 4)) { task in
+			ForEach(filteredTasks.prefix(showAll ? filteredTasks.count : 5)) { task in
 				SubjectDetailsAssignmentCellView(subject: subject, task: task)
 			}
 		} header: {
@@ -80,20 +106,20 @@ private struct CompletedAssignmentsView: View {
 
 				Spacer()
 
-				if showAll {
-					Button("Show recents") {
-						withAnimation(.snappy) {
-							showAll = false
-						}
+				Button("Show recents") {
+					withAnimation(.snappy) {
+						showAll = false
 					}
 				}
+				.opacity(showAll ? 1 : 0)
+				.transition(.opacity)
 			}
 			.font(.caption)
 
 		} footer: {
-			if filteredTasks.count >= 4 && !showAll {
+			if filteredTasks.count >= 5 && !showAll {
 				HStack {
-					Text("Showing the 10 most recent tasks")
+					Text("Showing the 5 most recent assignments")
 						.foregroundStyle(.gray)
 
 					Spacer()

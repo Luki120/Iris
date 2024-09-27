@@ -10,11 +10,10 @@ import SwiftUI
 /// Struct to represent the assignment cell for the assignments view
 struct SubjectDetailsAssignmentCellView: View {
 
-	@Bindable private(set) var subject: Subject
+	let subject: Subject
 	@Bindable private(set) var task: Subject.Task
 
 	@State private var viewModel = SubjectDetailsAssignmentCellViewViewModel()
-
 	@FocusState private var isActive: Bool
 
 	var body: some View {
