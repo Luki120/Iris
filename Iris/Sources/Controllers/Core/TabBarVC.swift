@@ -5,7 +5,6 @@ final class TabBarVC: UITabBarController {
 
 	private let homeCoordinator = HomeCoordinator()
     private let gradesCoordinator = GradesCoordinator()
-	private let settingsCoordinator = SettingsCoordinator()
 
 	// MARK: - Lifecycle
 
