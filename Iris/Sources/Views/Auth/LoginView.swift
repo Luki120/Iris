@@ -143,9 +143,11 @@ struct LoginView: View {
 	}
 }
 
-private struct CustomCornersShape: Shape {
+struct CustomCornersShape: Shape {
+	var radius: CGFloat = 25.0
+
 	func path(in rect: CGRect) -> Path {
-		let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: .init(width: 25, height: 25))
+		let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: .init(width: radius, height: radius))
 
 		return Path(path.cgPath)
 	}

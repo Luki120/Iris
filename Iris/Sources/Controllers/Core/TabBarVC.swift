@@ -5,6 +5,7 @@ final class TabBarVC: UITabBarController {
 
 	private let homeCoordinator = HomeCoordinator()
     private let gradesCoordinator = GradesCoordinator()
+	private let pomodoroCoordinator = PomodoroCoordinator()
 
 	// MARK: - Lifecycle
 
@@ -15,7 +16,11 @@ final class TabBarVC: UITabBarController {
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        viewControllers = [homeCoordinator.navigationController, gradesCoordinator.navigationController]
+        viewControllers = [
+			homeCoordinator.navigationController,
+			gradesCoordinator.navigationController,
+			pomodoroCoordinator.navigationController
+		]
 	}
 
 }

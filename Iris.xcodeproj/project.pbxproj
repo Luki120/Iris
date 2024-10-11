@@ -24,6 +24,10 @@
 		145212AF2C8E9F0000CE286C /* SubjectDetailsAssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145212AE2C8E9F0000CE286C /* SubjectDetailsAssignmentsView.swift */; };
 		145212B12C8E9FF000CE286C /* SubjectDetailsAssignmentsViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145212B02C8E9FF000CE286C /* SubjectDetailsAssignmentsViewViewModel.swift */; };
 		1459D31B2C9E985C0093AD6B /* SettingsFooterViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1459D31A2C9E985C0093AD6B /* SettingsFooterViewViewModel.swift */; };
+		145E3FA22CACBF2B005EED89 /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA12CACBF2B005EED89 /* PomodoroTimerView.swift */; };
+		145E3FA62CACBF83005EED89 /* PomodoroTimerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA52CACBF83005EED89 /* PomodoroTimerVC.swift */; };
+		145E3FA82CACBFF2005EED89 /* PomodoroCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA72CACBFF2005EED89 /* PomodoroCoordinator.swift */; };
+		145E3FAA2CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA92CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift */; };
 		1460735B2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1460735A2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift */; };
 		1470360E2C74845600578925 /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470360D2C74845600578925 /* SubjectDetailsView.swift */; };
 		147036102C74855300578925 /* SubjectDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470360F2C74855300578925 /* SubjectDetailsVC.swift */; };
@@ -82,6 +86,10 @@
 		145212AE2C8E9F0000CE286C /* SubjectDetailsAssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsView.swift; sourceTree = "<group>"; };
 		145212B02C8E9FF000CE286C /* SubjectDetailsAssignmentsViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsViewViewModel.swift; sourceTree = "<group>"; };
 		1459D31A2C9E985C0093AD6B /* SettingsFooterViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFooterViewViewModel.swift; sourceTree = "<group>"; };
+		145E3FA12CACBF2B005EED89 /* PomodoroTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerView.swift; sourceTree = "<group>"; };
+		145E3FA52CACBF83005EED89 /* PomodoroTimerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerVC.swift; sourceTree = "<group>"; };
+		145E3FA72CACBFF2005EED89 /* PomodoroCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroCoordinator.swift; sourceTree = "<group>"; };
+		145E3FA92CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerViewViewModel.swift; sourceTree = "<group>"; };
 		1460735A2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentCellViewViewModel.swift; sourceTree = "<group>"; };
 		1470360D2C74845600578925 /* SubjectDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsView.swift; sourceTree = "<group>"; };
 		1470360F2C74855300578925 /* SubjectDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsVC.swift; sourceTree = "<group>"; };
@@ -254,6 +262,30 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		145E3FA02CACBF09005EED89 /* Pomodoro */ = {
+			isa = PBXGroup;
+			children = (
+				145E3FA12CACBF2B005EED89 /* PomodoroTimerView.swift */,
+			);
+			path = Pomodoro;
+			sourceTree = "<group>";
+		};
+		145E3FA32CACBF52005EED89 /* Pomodoro */ = {
+			isa = PBXGroup;
+			children = (
+				145E3FA92CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift */,
+			);
+			path = Pomodoro;
+			sourceTree = "<group>";
+		};
+		145E3FA42CACBF5D005EED89 /* Pomodoro */ = {
+			isa = PBXGroup;
+			children = (
+				145E3FA52CACBF83005EED89 /* PomodoroTimerVC.swift */,
+			);
+			path = Pomodoro;
+			sourceTree = "<group>";
+		};
 		1492E0532C94CAAA00E8315E /* Auth */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +334,7 @@
 			children = (
 				143C1B592C97B81700510596 /* Auth */,
 				14F28D662C8CFDDC00FC1EC6 /* Home */,
+				145E3FA32CACBF52005EED89 /* Pomodoro */,
 				140F5A892C9CA4660093A159 /* Settings */,
 				14F28D672C8CFDE200FC1EC6 /* Subjects */,
 			);
@@ -350,6 +383,7 @@
 				14C7D01E2C58F2DD007F6A2E /* HomeCoordinator.swift */,
 				14C7D0512C58FE33007F6A2E /* GradesCoordinator.swift */,
 				14C7D01F2C58F2DD007F6A2E /* SettingsCoordinator.swift */,
+				145E3FA72CACBFF2005EED89 /* PomodoroCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -377,6 +411,7 @@
 				143C1B532C97936100510596 /* Auth */,
 				14F28D6A2C8CFF4E00FC1EC6 /* Grades */,
 				14F28D692C8CFF4900FC1EC6 /* Home */,
+				145E3FA02CACBF09005EED89 /* Pomodoro */,
 				140F5A862C9CA3DD0093A159 /* Settings */,
 				14F28D6B2C8CFF5C00FC1EC6 /* Subjects */,
 			);
@@ -407,6 +442,7 @@
 			children = (
 				143C1B562C97938100510596 /* Auth */,
 				14C7D03A2C58F323007F6A2E /* Core */,
+				145E3FA42CACBF5D005EED89 /* Pomodoro */,
 				140F5A912C9CBFA80093A159 /* Settings */,
 				14C7D03C2C58F323007F6A2E /* Subjects */,
 			);
@@ -610,6 +646,7 @@
 				143C1B582C97939300510596 /* LoginVC.swift in Sources */,
 				14C7D02B2C58F2DD007F6A2E /* SubjectsService.swift in Sources */,
 				145212AB2C8E865100CE286C /* SubjectDetailsAssignmentsCell.swift in Sources */,
+				145E3FA82CACBFF2005EED89 /* PomodoroCoordinator.swift in Sources */,
 				14C7D0542C58FEBD007F6A2E /* GradesVC.swift in Sources */,
 				14C7D0242C58F2DD007F6A2E /* AllSubjectsCellViewModel.swift in Sources */,
 				140F5A902C9CA6250093A159 /* DeveloperCellViewViewModel.swift in Sources */,
@@ -618,7 +655,9 @@
 				1470360E2C74845600578925 /* SubjectDetailsView.swift in Sources */,
 				148BB3CA2C90331900B69B48 /* AllSubjectsHeaderView.swift in Sources */,
 				14004A0E2C93910500BE7548 /* SubjectDetailsAssignmentCellView.swift in Sources */,
+				145E3FA62CACBF83005EED89 /* PomodoroTimerVC.swift in Sources */,
 				14C7D02A2C58F2DD007F6A2E /* SubjectsManager.swift in Sources */,
+				145E3FAA2CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift in Sources */,
 				14C7D0402C58F323007F6A2E /* SubjectCell.swift in Sources */,
 				14C7D0522C58FE33007F6A2E /* GradesCoordinator.swift in Sources */,
 				14C7D03F2C58F323007F6A2E /* CurrentlyTakingSubjectCell.swift in Sources */,
@@ -626,6 +665,7 @@
 				14C7D0432C58F323007F6A2E /* HomeVC.swift in Sources */,
 				14C7D02D2C58F2DD007F6A2E /* HomeCoordinator.swift in Sources */,
 				145212B12C8E9FF000CE286C /* SubjectDetailsAssignmentsViewViewModel.swift in Sources */,
+				145E3FA22CACBF2B005EED89 /* PomodoroTimerView.swift in Sources */,
 				1459D31B2C9E985C0093AD6B /* SettingsFooterViewViewModel.swift in Sources */,
 				143C1B552C97937400510596 /* LoginView.swift in Sources */,
 				147036102C74855300578925 /* SubjectDetailsVC.swift in Sources */,
