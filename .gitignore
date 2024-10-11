@@ -1,4 +1,5 @@
 .DS_Store
+DerivedData/
 Iris.xcodeproj/xcuserdata/
 Iris.xcodeproj/project.xcworkspace/xcuserdata/
 .swiftpm/
