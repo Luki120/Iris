@@ -27,7 +27,7 @@ extension UIFont {
 }
 
 extension UIView {
-	func addSubviews(views: UIView ...) {
+	func addSubviews(views: UIView...) {
 		views.forEach { addSubview($0) }
 	}
 
@@ -55,11 +55,5 @@ extension UIView {
 			view.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
 			view.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
 		])
-	}
-
-	func centerViewOnBothAxes(_ view: UIView) {
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-		view.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 	}
 }

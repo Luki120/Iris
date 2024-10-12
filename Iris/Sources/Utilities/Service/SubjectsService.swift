@@ -1,4 +1,3 @@
-import Combine
 import Foundation
 
 /// Singleton service to make API calls
