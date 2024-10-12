@@ -1,8 +1,8 @@
-import Foundation.NSDate
 import SwiftData
+import struct Foundation.Date
 import struct SwiftUI.Color
 
-/// API model class
+/// API model class that represents a Subject object
 @Model
 final class Subject: Codable {
 	let name: String
@@ -57,6 +57,7 @@ final class Subject: Codable {
 }
 
 extension Subject {
+	/// Class that represents a subject's assignment
 	@Model
 	final class Task {
 		var title: String
@@ -81,8 +82,8 @@ extension Subject {
 
 		/// Designated initializer
 		///  - Parameters:
-		///		- title: A string that represents the title for the task assignment
-		///		- priority: An enum to represent the priority for the assignment
+		///		- title: A string that represents the assignment's title
+		///		- priority: An enum that represents the assignment's priority
 		init(title: String, priority: Priority) {
 			self.title = title
 			self.priority = priority

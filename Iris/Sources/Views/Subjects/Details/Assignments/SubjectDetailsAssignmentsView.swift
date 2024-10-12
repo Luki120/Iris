@@ -5,7 +5,6 @@
 //  Created by Luki on 09/09/2024.
 //
 
-import SwiftData
 import SwiftUI
 
 /// View that'll show the subject's assignments
@@ -36,7 +35,7 @@ struct SubjectDetailsAssignmentsView: View {
 			else {
 				List {
 					if !examsList.isEmpty {
-						ExamsListView(subject: subject)
+						ExamsListView()
 					}
 					if !pendingAssignments.isEmpty {
 						PendingAssignmentsView()
@@ -67,7 +66,7 @@ struct SubjectDetailsAssignmentsView: View {
 	}
 
 	@ViewBuilder
-	private func ExamsListView(subject: Subject) -> some View {
+	private func ExamsListView() -> some View {
 		Section("Exams") {
 			ForEach(examsList) { task in
 				SubjectDetailsAssignmentCellView(subject: subject, task: task)
