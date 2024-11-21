@@ -53,7 +53,7 @@ final class PomodoroTimerViewViewModel {
 			isRunning = true
 		}
 		if isBreak {
-			timerString = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
+			timerString = "\(breakMinutes):\(seconds < 10 ? "0" : "")\(seconds)"
 			totalSeconds = breakMinutes * 60
 			totalStaticSeconds = totalSeconds
 			scheduleNotification(forSession: .break)
@@ -114,6 +114,7 @@ final class PomodoroTimerViewViewModel {
 			progress = 1
 		}
 		if session != .study {
+			isBreak = false
 			session = .study
 		}
 		timerString = "00:00"
@@ -159,7 +160,9 @@ extension PomodoroTimerViewViewModel {
 			}
 			else {
 				session = .study
+				isBreak = false
 				timerString = "00:00"
+				breakMinutes = 0
 			}
 		}
 		else {
