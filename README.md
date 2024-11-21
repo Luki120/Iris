@@ -1,6 +1,6 @@
 # Iris
 
-<img src="Assets/Home.png" width="300" alt="Iris home"> &nbsp; <img src="/Assets/Grades.png" width="300" alt="Iris grades">
+<img src="Assets/Home.png" width="200" alt="Iris home tab"> <img src="/Assets/Grades.png" width="200" alt="Iris grades tab"> <img src="Assets/Pomodoro.png" width="200" alt="Iris pomodoro tab">
 
 * My personal app for college, to see which subjects I'm currently taking, add grades, assignments, etc. It calls my custom backend made with Kotlin & Ktor, [Ianthea](https://github.com/Luki120/Ianthea), which implements a REST API as well as JWT based authentication. Built using:
 
