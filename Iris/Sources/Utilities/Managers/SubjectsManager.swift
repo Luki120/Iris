@@ -72,6 +72,7 @@ extension SubjectsManager {
 
 		currentlyTakingSubjects.remove(at: index)
 		context?.delete(subject)
+		try? context?.save()
 	}
 
 	/// Function to mark a subject as passed at the given index
