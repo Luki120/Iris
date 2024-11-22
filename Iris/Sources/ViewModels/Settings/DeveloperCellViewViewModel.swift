@@ -31,10 +31,10 @@ final class DeveloperCellViewViewModel {
 
 			do {
 				let (data, _) = try await URLSession.shared.data(from: url)
+				guard let image = UIImage(data: data) else { return }
 
 				await MainActor.run {
 					withAnimation(.smooth) {
-						guard let image = UIImage(data: data) else { return }
 						self.image = image
 					}
 				}
