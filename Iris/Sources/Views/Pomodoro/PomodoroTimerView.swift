@@ -11,14 +11,14 @@ import SwiftUI
 struct PomodoroTimerView: View {
 	@State private var viewModel = PomodoroTimerViewViewModel()
 	@Environment(\.colorScheme) private var colorScheme
-	
+
 	var body: some View {
 		VStack {
 			GeometryReader { proxy in
 				VStack(spacing: 15) {
 					ProgressView()
 						.frame(height: proxy.size.width)
-					
+
 					TimerButtons()
 				}
 				.padding()
@@ -32,11 +32,12 @@ struct PomodoroTimerView: View {
 		.overlay {
 			ZStack {
 				Color.black
+					.ignoresSafeArea(edges: .top)
 					.opacity(viewModel.createNewTimer ? 0.25 : 0.0)
 					.onTapGesture {
 						viewModel.createNewTimer = false
 					}
-				
+
 				NewTimerView()
 					.frame(maxHeight: .infinity, alignment: .bottom)
 					.offset(y: viewModel.createNewTimer ? 0 : 400)
@@ -55,7 +56,7 @@ struct PomodoroTimerView: View {
 			}
 		}
 	}
-	
+
 	@ViewBuilder
 	private func ProgressView() -> some View {
 		ZStack {
@@ -71,7 +72,7 @@ struct PomodoroTimerView: View {
 					)
 					.blur(radius: 15)
 					.padding(-2)
-				
+
 				Circle()
 					.fill(Color.irisBackground)
 			}
@@ -80,41 +81,23 @@ struct PomodoroTimerView: View {
 					.stroke(gradient, lineWidth: 30)
 					.opacity(0.5)
 			}
-			
+
 			Group {
 				if colorScheme == .dark {
-					Circle()
-						.trim(from: 0, to: viewModel.progress)
-						.stroke(
-							Color.irisSlateBlue,
-							style: StrokeStyle(
-								lineWidth: 30,
-								lineCap: .round,
-								lineJoin: .round
-							)
-						)
+					CircleView(Color.irisSlateBlue)
 				}
 				else {
-					Circle()
-						.trim(from: 0, to: viewModel.progress)
-						.stroke(
-							gradient,
-							style: StrokeStyle(
-								lineWidth: 30,
-								lineCap: .round,
-								lineJoin: .round
-							)
-						)
+					CircleView(gradient)
 						.shadow(color: .irisSlateBlue, radius: 5, x: 1, y: -4)
 				}
 			}
 			.rotationEffect(.degrees(-90))
 			.animation(.linear(duration: 1), value: viewModel.progress)
-			
+
 			VStack(spacing: 10) {
 				Text(viewModel.timerString)
 					.font(.quicksand(withStyle: .semiBold, size: 45))
-				
+
 				Text(viewModel.session.rawValue)
 					.font(.quicksand(withStyle: .medium, size: 18))
 			}
@@ -122,7 +105,7 @@ struct PomodoroTimerView: View {
 		.animation(.smooth, value: viewModel.progress)
 		.padding(45)
 	}
-	
+
 	@ViewBuilder
 	private func TimerButtons() -> some View {
 		HStack(spacing: 20) {
@@ -131,7 +114,7 @@ struct PomodoroTimerView: View {
 			}
 			.disabled(!viewModel.isRunning)
 			.opacity(!viewModel.isRunning ? 0.5 : 1)
-			
+
 			TimerButton(symbol: viewModel.isRunning ? "stop.fill" : "timer") {
 				if viewModel.isRunning {
 					viewModel.stopTimer()
@@ -143,7 +126,7 @@ struct PomodoroTimerView: View {
 		}
 		.padding(.top, 50)
 	}
-	
+
 	@ViewBuilder
 	private func TimerButton(
 		symbol: String,
@@ -159,7 +142,7 @@ struct PomodoroTimerView: View {
 				.shadow(color: .irisSlateBlue, radius: 8)
 		}
 	}
-	
+
 	@ViewBuilder
 	private func NewTimerView() -> some View {
 		VStack(spacing: 15) {
@@ -167,7 +150,7 @@ struct PomodoroTimerView: View {
 				.font(.quicksand(withStyle: .medium, size: 20))
 				.foregroundStyle(Color.primary)
 				.padding(.top, 5)
-			
+
 			HStack {
 				Group {
 					Button("\(viewModel.minutes) min") {
@@ -185,7 +168,7 @@ struct PomodoroTimerView: View {
 				)
 				.transition(.blurReplace.animation(.smooth))
 			}
-			
+
 			Button("Confirm") {
 				viewModel.startTimer()
 			}
@@ -200,10 +183,10 @@ struct PomodoroTimerView: View {
 		.alert("Iris", isPresented: $viewModel.showAlert) {
 			TextField("60m", value: $viewModel.minutes, format: .number)
 				.keyboardType(.numberPad)
-			
+
 			TextField("20m break", value: $viewModel.breakMinutes, format: .number)
 				.keyboardType(.numberPad)
-			
+
 			Button("Confirm") {}
 			Button("Cancel") {}
 		} message: {
@@ -217,7 +200,21 @@ struct PomodoroTimerView: View {
 			in: CustomCornersShape(radius: 15)
 		)
 	}
-	
+
+	@ViewBuilder
+	private func CircleView<S: ShapeStyle>(_ shapeStyle: S) -> some View {
+		Circle()
+			.trim(from: 0, to: viewModel.progress)
+			.stroke(
+				shapeStyle,
+				style: StrokeStyle(
+					lineWidth: 30,
+					lineCap: .round,
+					lineJoin: .round
+				)
+			)
+	}
+
 	private var gradient: LinearGradient {
 		return .init(
 			colors: [
