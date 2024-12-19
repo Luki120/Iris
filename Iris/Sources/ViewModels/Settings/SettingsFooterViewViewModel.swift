@@ -15,7 +15,7 @@ struct SettingsFooterViewViewModel {
 	let copyrightLabel = "© \(Date.now.formatted(.dateTime.year())) Luki120"
 
 	/// Enum to represent each funding platform for the funding cell
-	@frozen enum FundingPlatform: String, CaseIterable {
+	enum FundingPlatform: String, CaseIterable {
 		case kofi = "Ko-fi"
 		case paypal = "PayPal"
 

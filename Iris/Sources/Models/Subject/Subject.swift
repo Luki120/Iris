@@ -5,8 +5,8 @@ import struct SwiftUI.Color
 /// API model class that represents a Subject object
 @Model
 final class Subject: Codable {
-	let name: String
-	let year: String
+	private(set) var name: String
+	private(set) var year: String
 
 	var grade: Int?
 	var isFinished = false
@@ -63,9 +63,10 @@ extension Subject {
 		var title: String
 		var priority: Priority = Priority.normal
 
-		let timestamp = Date()
 		var examDate = Date()
 		var isCompleted = false
+
+		private(set) var timestamp = Date()
 
 		@Transient
 		enum Priority: String, CaseIterable, Codable {

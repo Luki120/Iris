@@ -26,7 +26,6 @@ final class SettingsViewViewModel: NSObject {
 		case sourceCode(SourceCodeCellViewViewModel)
 	}
 
-	@frozen
 	private enum Section {
 		case developer, accountSettings, sourceCode
 

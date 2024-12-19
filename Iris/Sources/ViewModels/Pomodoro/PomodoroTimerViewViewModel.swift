@@ -32,7 +32,7 @@ final class PomodoroTimerViewViewModel {
 	private(set) var isRunning = false
 	private(set) var timerString = "00:00"
 
-	@frozen enum Session: String {
+	enum Session: String {
 		case study = "Study"
 		case `break` = "Break"
 	}

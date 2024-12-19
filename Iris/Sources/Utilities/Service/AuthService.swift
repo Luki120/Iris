@@ -31,7 +31,6 @@ final class AuthService {
 		static let baseURL = "https://ianthea-luki120.koyeb.app/v1/auth/"
 	}
 
-	@frozen
 	private enum Route: String {
 		case signup, signin, authenticate, secret, users
 	}

@@ -23,7 +23,6 @@ final class SubjectsViewViewModel: NSObject {
 
 	private var dataSource: DataSource!
 
-	@frozen
 	private enum Sections {
 		case main
 	}
