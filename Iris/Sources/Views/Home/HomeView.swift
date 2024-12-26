@@ -161,7 +161,6 @@ extension HomeView: HomeViewViewModelDelegate {
 	func didTap(subject: Subject) {
 		delegate?.homeView(self, didTap: subject)
 	}
-
 }
 
 private extension NSAttributedString {
