@@ -315,7 +315,6 @@
 		14C7CFF42C58F23C007F6A2E /* Iris */ = {
 			isa = PBXGroup;
 			children = (
-				1490E0F02CFE80A000AE031A /* Iris.entitlements */,
 				14C90B432C59B8DE002427D2 /* Resources */,
 				14C90B422C59B8CE002427D2 /* Sources */,
 			);
@@ -472,6 +471,7 @@
 				14C7CFFE2C58F23E007F6A2E /* Assets.xcassets */,
 				14C7D0002C58F23E007F6A2E /* LaunchScreen.storyboard */,
 				14C7D0032C58F23E007F6A2E /* Info.plist */,
+				1490E0F02CFE80A000AE031A /* Iris.entitlements */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -812,7 +812,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Iris/Iris.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Iris/Resources/Iris.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NNS5G9G4TC;
@@ -843,7 +843,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Iris/Iris.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Iris/Resources/Iris.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NNS5G9G4TC;
