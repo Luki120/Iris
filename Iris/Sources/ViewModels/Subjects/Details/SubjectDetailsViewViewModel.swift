@@ -25,8 +25,9 @@ final class SubjectDetailsViewViewModel: NSObject {
 	}
 
 	private struct Section: Hashable {
-		var viewModels: [Item]
+		fileprivate var viewModels: [Item]
 
+		fileprivate
 		static func createSubjectDetailsSection(for subject: Subject) -> Section {
 			let examValues: [String]
 
@@ -40,7 +41,10 @@ final class SubjectDetailsViewViewModel: NSObject {
 			return .init(viewModels: examValues.map { .init(viewModel: SubjectDetailsCellViewModel(exam: $0)) })
 		}
 
+		fileprivate
 		static var subjectDetails: Section = .init(viewModels: [])
+
+		fileprivate
 		static let assignments: Section = .init(
 			viewModels: [.init(viewModel: SubjectDetailsAssignmentsCellViewModel(title: "Assignments"))]
 		)
@@ -89,13 +93,14 @@ extension SubjectDetailsViewViewModel {
 		dataSource = DataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
 			guard let self else { fatalError() }
 
-			var examKey = ""
+			var examGradeKey = ""
+			let examDateKey = "FinalExamDate"
 
 			switch indexPath.item {
-				case 0: examKey = "FirstExamGrade"
-				case 1: examKey = "SecondExamGrade"
-				case 2: examKey = subject.hasThreeExams ? "ThirdExamGrade" : "FinalExamGrade"
-				case 3: examKey = subject.hasThreeExams ? "FinalExamGrade" : ""
+				case 0: examGradeKey = "FirstExamGrade"
+				case 1: examGradeKey = "SecondExamGrade"
+				case 2: examGradeKey = subject.hasThreeExams ? "ThirdExamGrade" : "FinalExamGrade"
+				case 3: examGradeKey = subject.hasThreeExams ? "FinalExamGrade" : ""
 				default: break
 			}
 
@@ -108,9 +113,21 @@ extension SubjectDetailsViewViewModel {
 						for: indexPath,
 						item: viewModel
 					)
-					cell.id = subject.name.lowercased().components(separatedBy: .whitespaces).joined() + examKey
+
+					let subjectName = subject.name.lowercased().components(separatedBy: .whitespaces).joined()
+
+					if viewModel.exam == "Final" {
+						cell.isFinalCell = true
+						cell.finalExamDatePicker.date = UserDefaults.standard.object(forKey: subjectName + examDateKey) as? Date ?? .now
+						cell.onSelectedExamDate = { finalExamDate in
+							self.subject.finalExamDate = finalExamDate
+							UserDefaults.standard.set(finalExamDate, forKey: subjectName + examDateKey)
+						}
+					}
+
+					cell.id = subjectName + examGradeKey
 					cell.configure(with: viewModel)
-					cell.completion = { text in
+					cell.onGradeChange = { text in
 						if self.subject.hasThreeExams && indexPath.item == 3 {
 							self.subject.grade = Int(text)
 						}
@@ -123,7 +140,6 @@ extension SubjectDetailsViewViewModel {
 
 				case .assignments:
 					guard let viewModel = item.viewModel as? SubjectDetailsAssignmentsCellViewModel else { fatalError() }
-
 
 					let cell = collectionView.dequeueConfiguredReusableCell(
 						using: subjectDetailsAssignmentsCellRegistration,

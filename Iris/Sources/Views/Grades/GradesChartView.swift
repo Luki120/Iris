@@ -9,7 +9,9 @@ struct GradesChartView: View {
 	var body: some View {
 		if !subjectManager.passedSubjects.isEmpty {
 			ScrollView {
-				Chart(subjectManager.passedSubjects) { subject in
+				Chart(
+					subjectManager.passedSubjects.sorted(using: SortDescriptor(\.finalExamDate))
+				) { subject in
 					LineMark(
 						x: .value("Subjects", subject.name),
 						y: .value("Grade", subject.grade ?? 0)

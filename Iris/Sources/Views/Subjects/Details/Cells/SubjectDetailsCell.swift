@@ -10,27 +10,7 @@ import UIKit
 /// UICollectionViewCell to represent the subject details
 final class SubjectDetailsCell: UICollectionViewCell {
 
-	private lazy var hashtagLabel: UILabel = {
-		let label = UILabel()
-		label.font = .quicksand(withStyle: .medium, size: 20)
-		label.text = "#"
-		label.textAlignment = .center
-		label.backgroundColor = .irisSlateBlue
-		label.translatesAutoresizingMaskIntoConstraints = false
-		label.layer.cornerRadius = 15
-		label.layer.masksToBounds = true
-		contentView.addSubview(label)
-		return label
-	}()
-
-	private lazy var examLabel: UILabel = {
-		let label = UILabel()
-		label.font = .quicksand(withStyle: .semiBold, size: 18)
-		label.textColor = .systemGray
-		label.translatesAutoresizingMaskIntoConstraints = false
-		contentView.addSubview(label)
-		return label
-	}()
+	private var hashtagLabel, examLabel, finalExamLabel: UILabel!
 
 	private(set) lazy var gradeTextField: UITextField = {
 		let textField = UITextField()
@@ -43,8 +23,29 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		return textField
 	}()
 
+	private(set) lazy var finalExamDatePicker: UIDatePicker = {
+		let datePicker = UIDatePicker()
+		datePicker.datePickerMode = .date
+		datePicker.preferredDatePickerStyle = .compact
+		datePicker.translatesAutoresizingMaskIntoConstraints = false
+		datePicker.addTarget(self, action: #selector(didChangeDate(_:)), for: .valueChanged)
+		return datePicker
+	}()
+
+#if !targetEnvironment(macCatalyst)
+	private var datePickerLabel: UILabel {
+		finalExamDatePicker
+			.subviews.first?.subviews.first?.subviews.first?.subviews[1].subviews.first as? UILabel ?? UILabel()
+	}
+#endif
+
+	private var examLabelTopConstraint, examLabelBottomConstraint: NSLayoutConstraint!
+
 	var id: String!
-	var completion: ((String) -> Void)!
+	var onGradeChange: ((String) -> Void)!
+	var onSelectedExamDate: ((Date) -> Void)!
+
+	var isFinalCell = false
 
 	// MARK: - Lifecycle
 
@@ -58,10 +59,22 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		contentView.layer.cornerCurve = .continuous
 		contentView.layer.cornerRadius = 15
 
-		layoutUI()
+		setupUI()
 	}
 
 	// MARK: - Private
+
+	private func setupUI() {
+		hashtagLabel = createLabel(color: .label, fontStyle: .medium, size: 20, text: "#")
+		hashtagLabel.backgroundColor = .irisSlateBlue
+		hashtagLabel.layer.cornerRadius = 15
+		hashtagLabel.layer.masksToBounds = true
+
+		examLabel = createLabel(size: 18)
+		finalExamLabel = createLabel(size: 16, text: "Taken on", addsSubview: false)
+
+		layoutUI()
+	}
 
 	private func layoutUI() {
 		NSLayoutConstraint.activate([
@@ -70,15 +83,68 @@ final class SubjectDetailsCell: UICollectionViewCell {
 			hashtagLabel.widthAnchor.constraint(equalToConstant: 30),
 			hashtagLabel.heightAnchor.constraint(equalToConstant: 30),
 
-			examLabel.topAnchor.constraint(equalTo: hashtagLabel.bottomAnchor, constant: 8),
-			examLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
 			examLabel.leadingAnchor.constraint(equalTo: hashtagLabel.leadingAnchor),
 
 			gradeTextField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 			gradeTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
 			gradeTextField.widthAnchor.constraint(equalToConstant: 30),
-			gradeTextField.heightAnchor.constraint(equalToConstant: 30),
+			gradeTextField.heightAnchor.constraint(equalToConstant: 30)
 		])
+
+		examLabelTopConstraint = examLabel.topAnchor.constraint(equalTo: hashtagLabel.bottomAnchor, constant: 8)
+		examLabelBottomConstraint = examLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
+
+		examLabelTopConstraint.isActive = true
+		examLabelBottomConstraint.isActive = true
+	}
+
+	private func setupFinalCell() {
+		hashtagLabel.isHidden = true
+
+		[finalExamLabel, finalExamDatePicker].forEach { contentView.addSubviews($0) }
+		[examLabelTopConstraint, examLabelBottomConstraint].forEach { $0.isActive = false }
+
+		examLabelTopConstraint = examLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15)
+		examLabelTopConstraint.isActive = true
+
+		NSLayoutConstraint.activate([
+			finalExamLabel.topAnchor.constraint(equalTo: examLabel.bottomAnchor, constant: 10),
+			finalExamLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+			finalExamLabel.leadingAnchor.constraint(equalTo: examLabel.leadingAnchor),
+
+			finalExamDatePicker.leadingAnchor.constraint(equalTo: finalExamLabel.trailingAnchor, constant: 8),
+			finalExamDatePicker.centerYAnchor.constraint(equalTo: finalExamLabel.centerYAnchor)
+		])
+
+#if !targetEnvironment(macCatalyst)
+		datePickerLabel.font = .quicksand(withStyle: .semiBold, size: 12)
+#endif
+	}
+
+	@objc
+	private func didChangeDate(_ sender: UIDatePicker) {
+		onSelectedExamDate(sender.date)
+	}
+
+	// MARK: - Reusable
+
+	private func createLabel(
+		color: UIColor = .systemGray,
+		fontStyle: UIFont.QuicksandStyle = .semiBold,
+		size: CGFloat,
+		text: String = "",
+		addsSubview: Bool = true
+	) -> UILabel {
+		let label = UILabel()
+		label.font = .quicksand(withStyle: fontStyle, size: size)
+		label.text = text
+		label.textColor = color
+		label.textAlignment = .center
+		label.translatesAutoresizingMaskIntoConstraints = false
+		if addsSubview {
+			contentView.addSubview(label)
+		}
+		return label
 	}
 
 }
@@ -91,6 +157,9 @@ extension SubjectDetailsCell {
 	/// 	- with: The view model object
 	func configure(with viewModel: SubjectDetailsCellViewModel) {
 		examLabel.text = viewModel.exam
+
+		guard isFinalCell else { return }
+		setupFinalCell()
 	}
 }
 
@@ -98,9 +167,9 @@ extension SubjectDetailsCell {
 
 extension SubjectDetailsCell: UITextFieldDelegate {
 	func textFieldDidEndEditing(_ textField: UITextField) {
-		guard let id, let completion else { return }
+		guard let onGradeChange, let text = textField.text else { return }
 
-		UserDefaults.standard.set(textField.text, forKey: id)
-		completion(textField.text ?? "")
+		UserDefaults.standard.set(text, forKey: id)
+		onGradeChange(text)
 	}
 }

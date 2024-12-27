@@ -1,5 +1,5 @@
+import Foundation
 import SwiftData
-import struct Foundation.Date
 import struct SwiftUI.Color
 
 /// API model class that represents a Subject object
@@ -11,6 +11,7 @@ final class Subject: Codable {
 	var grade: Int?
 	var isFinished = false
 	var hasThreeExams = false
+	var finalExamDate = Date()
 
 	var tasks = [Task]()
 
@@ -19,14 +20,23 @@ final class Subject: Codable {
 	///		- name: A string that represents the name
 	///		- year: A string that represents the year
 	///		- grade: A nullable integer that represents the grade
-	///		- isFinished: A boolean that represents if I finished the subject, defaults to false
-	///		- hasThreeExams: A boolean that represents wether the subject requires taking three exams or more, defaults to false
-	init(name: String, year: String, grade: Int? = nil, isFinished: Bool = false, hasThreeExams: Bool = false) {
+	///		- isFinished: A boolean that represents if I finished the subject, defaults to`false`
+	///		- hasThreeExams: A boolean that represents wether the subject requires taking three exams or more, defaults to`false`
+	///		- finalExamDate: A `Date` object that represents the subject's final exam date, defaults to `.now`
+	init(
+		name: String,
+		year: String,
+		grade: Int? = nil,
+		isFinished: Bool = false,
+		hasThreeExams: Bool = false,
+		finalExamDate: Date = .now
+	) {
 		self.name = name
 		self.year = year
 		self.grade = grade
 		self.isFinished = isFinished
 		self.hasThreeExams = hasThreeExams
+		self.finalExamDate = finalExamDate
 	}
 
 	// MARK: - Codable
@@ -39,6 +49,11 @@ final class Subject: Codable {
 		grade = try container.decode(Int?.self, forKey: .grade)
 		isFinished = try container.decode(Bool.self, forKey: .isFinished)
 		hasThreeExams = try container.decode(Bool.self, forKey: .hasThreeExams)
+
+		let dateString = try container.decode(String.self, forKey: .finalExamDate)
+
+		guard let finalExamDate = Date.dateFormatter.date(from: dateString) else { return }
+		self.finalExamDate = finalExamDate
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -49,10 +64,11 @@ final class Subject: Codable {
 		try container.encode(grade, forKey: .grade)
 		try container.encode(isFinished, forKey: .isFinished)
 		try container.encode(hasThreeExams, forKey: .hasThreeExams)
+		try container.encode(finalExamDate, forKey: .finalExamDate)
 	}
 
 	private enum CodingKeys: String, CodingKey {
-		case name, year, grade, isFinished, hasThreeExams
+		case name, year, grade, isFinished, hasThreeExams, finalExamDate
 	}
 }
 
@@ -102,4 +118,12 @@ extension Subject: Hashable {
 	static func == (lhs: Subject, rhs: Subject) -> Bool {
 		lhs.name == rhs.name
 	}
+}
+
+private extension Date {
+	static let dateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy-MM-dd"
+		return formatter
+	}()
 }
