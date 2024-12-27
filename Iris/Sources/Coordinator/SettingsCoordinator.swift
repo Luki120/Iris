@@ -5,6 +5,9 @@ final class SettingsCoordinator: Coordinator {
 
 	enum Event {
 		case settingsCellTapped(IndexPath)
+#if targetEnvironment(macCatalyst)
+		case closeButtonTapped
+#endif
 	}
 
 	var navigationController = UINavigationController()
@@ -21,7 +24,7 @@ final class SettingsCoordinator: Coordinator {
 		switch event {
 			case .settingsCellTapped(let indexPath):
 				switch indexPath.section {
-					case 0: openURL(URL(string: githubURL))
+					case 0: openURL(.init(string: githubURL))
 					case 1:
 						switch indexPath.item {
 							case 0: deleteAccount()
@@ -30,9 +33,13 @@ final class SettingsCoordinator: Coordinator {
 								presentLoginVC()
 							default: break
 						}
-					case 2: openURL(URL(string: sourceCodeURL))
+					case 2: openURL(.init(string: sourceCodeURL))
 					default: break
 				}
+
+#if targetEnvironment(macCatalyst)
+			case .closeButtonTapped: rootViewController?.dismiss(animated: true)
+#endif
 		}
 	}
 

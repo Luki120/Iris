@@ -18,6 +18,15 @@ final class SettingsVC: UIViewController {
 		view.backgroundColor = .systemBackground
 		view.addSubview(settingsView)
 		view.pinViewToAllEdges(settingsView)
+
+#if targetEnvironment(macCatalyst)
+		navigationItem.rightBarButtonItem = .init(
+			systemItem: .close,
+			primaryAction: UIAction { _ in
+				self.coordinator?.eventOccurred(with: .closeButtonTapped)
+			}
+		)
+#endif
 	}
 
 }
