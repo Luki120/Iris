@@ -13,22 +13,15 @@ struct PomodoroTimerView: View {
 	@Environment(\.colorScheme) private var colorScheme
 
 	var body: some View {
-		VStack {
-			GeometryReader { proxy in
-				VStack(spacing: 15) {
-					ProgressView()
-						.frame(height: proxy.size.width)
+		VStack(spacing: 15) {
+			ProgressView()
+				.frame(maxWidth: .infinity, maxHeight: 630)
 
-					TimerButtons()
-				}
+			TimerButtons()
 				.padding()
-				.frame(maxWidth: .infinity, maxHeight: .infinity)
-				.background {
-					colorScheme == .dark ? Color.irisBackground : .white
-				}
-				.ignoresSafeArea()
-			}
 		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.background(colorScheme == .dark ? Color.irisBackground : .white)
 		.overlay {
 			ZStack {
 				Color.black
@@ -124,7 +117,7 @@ struct PomodoroTimerView: View {
 				}
 			}
 		}
-		.padding(.top, 50)
+		.padding()
 	}
 
 	@ViewBuilder
