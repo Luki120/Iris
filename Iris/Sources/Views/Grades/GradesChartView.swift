@@ -12,40 +12,49 @@ struct GradesChartView: View {
 				Chart(
 					subjectManager.passedSubjects.sorted(using: SortDescriptor(\.finalExamDate))
 				) { subject in
-					LineMark(
-						x: .value("Subjects", subject.name),
-						y: .value("Grade", subject.grade ?? 0)
-					)
-					.foregroundStyle(Color.purple.gradient)
-					.symbol(.circle)
-
-					PointMark(
-						x: .value("Subjects", subject.name),
-						y: .value("Grade", subject.grade ?? 0)
-					)
-					.opacity(0)
-					.annotation {
-						if tappedGrade == subject.grade {
-							if let grade = subject.grade {
-								Text(String(describing: grade))
-							}
-						}
-					}
-
 					AreaMark(
 						x: .value("Subjects", subject.name),
 						y: .value("Grade", subject.grade ?? 0)
 					)
 					.foregroundStyle(
-						Gradient(colors: [Color(.irisSlateBlue), Color(.irisSlateBlue).opacity(0.1)])
+						Gradient(
+							colors: [.irisSlateBlue, .irisSlateBlue.opacity(0.1)]
+						)
 					)
+					.interpolationMethod(.catmullRom)
+
+					LineMark(
+						x: .value("Subjects", subject.name),
+						y: .value("Grade", subject.grade ?? 0)
+					)
+					.foregroundStyle(.purple.gradient)
+					.interpolationMethod(.catmullRom)
+					.lineStyle(.init(lineWidth: 3, lineCap: .round))
+					.symbol {
+						Circle()
+							.foregroundStyle(.purple.gradient)
+							.frame(width: 8)
+					}
+
+					PointMark(
+						x: .value("Subjects", subject.name),
+						y: .value("Grade", subject.grade ?? 0)
+					)
+					.annotation {
+						if let grade = subject.grade, tappedGrade == grade {
+							Text(String(describing: grade))
+						}
+					}
+					.opacity(0)
 				}
 				.chartOverlay { chartProxy in
 					GeometryReader { _ in
 						Color.clear
 							.contentShape(.rect)
 							.onTapGesture { location in
-								guard let (_, grade) = chartProxy.value(at: location, as: (String, Int).self) else { return }
+								guard let (_, grade) = chartProxy.value(at: location, as: (String, Int).self) else {
+									return
+								}
 								withAnimation(.easeInOut(duration: 0.25)) {
 									tappedGrade = grade
 								}
@@ -53,26 +62,18 @@ struct GradesChartView: View {
 					}
 				}
 				.chartXAxis {
-					AxisMarks {
-						AxisGridLine()
-						AxisValueLabel()
-							.font(.quicksand(withStyle: .medium, size: 10))
-					}
+					GradesAxisContent()
 				}
 				.chartYAxis {
-					AxisMarks {
-						AxisGridLine()
-						AxisValueLabel()
-							.font(.quicksand(withStyle: .medium, size: 10))
-					}
+					GradesAxisContent()
 				}
 				.chartYScale(domain: 0...10)
 				.frame(height: 150)
 				.padding()
 
-				let averageDouble: Double = subjectManager.passedSubjects.average(\.grade)
+				let gradesAverage: Double = subjectManager.passedSubjects.average(\.grade)
 
-				Text(String(describing: "Average: " + String(format: "%.1f", averageDouble)))
+				Text(String(describing: "Average: " + String(describing: gradesAverage)))
 					.font(.quicksand(withStyle: .medium))
 					.frame(maxWidth: .infinity, alignment: .leading)
 					.padding()
@@ -84,6 +85,15 @@ struct GradesChartView: View {
 				Text("There's currently no grades data")
 					.font(.quicksand(withStyle: .medium))
 			}
+		}
+	}
+
+	@AxisContentBuilder
+	private func GradesAxisContent() -> some AxisContent {
+		AxisMarks {
+			AxisGridLine()
+			AxisValueLabel()
+				.font(.quicksand(withStyle: .medium, size: 10))
 		}
 	}
 }
