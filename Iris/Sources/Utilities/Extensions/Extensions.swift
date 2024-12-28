@@ -1,13 +1,26 @@
 import UIKit
 import struct SwiftUI.Color
+import struct SwiftUI.Font
 
-extension Color {
-	static let irisSlateBlue = Color(.irisSlateBlue)
-}
+// MARK: - Foundation
 
 extension String {
 	static let githubImageURL = "https://avatars.githubusercontent.com/u/74214115?v=4"
 }
+
+// MARK: - SwiftUI
+
+extension Color {
+	static let irisSlateBlue = Color(uiColor: .irisSlateBlue)
+}
+
+extension Font {
+	static func quicksand(withStyle style: UIFont.QuicksandStyle, size: CGFloat = 16) -> Font {
+		return .init(UIFont.quicksand(withStyle: style, size: size))
+	}
+}
+
+// MARK: - UIKit
 
 extension UIColor {
 	static let irisSlateBlue = UIColor(red: 0.53, green: 0.37, blue: 1.0, alpha: 1.0)

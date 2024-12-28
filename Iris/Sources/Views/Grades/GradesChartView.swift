@@ -96,12 +96,6 @@ private extension Collection {
 	}
 }
 
-extension Font {
-	static func quicksand(withStyle style: UIFont.QuicksandStyle, size: CGFloat = 16) -> Font {
-		return Font(UIFont.quicksand(withStyle: style, size: size))
-	}
-}
-
 #Preview {
 	GradesChartView()
 }
