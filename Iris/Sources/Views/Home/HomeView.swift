@@ -99,7 +99,7 @@ final class HomeView: UIView {
 
 // MARK: - UICollectionViewCompositionalLayout
 
-extension HomeView {
+private extension HomeView {
 	private func createAllSubjectsLayout(layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
 		let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
 		let item = NSCollectionLayoutItem(layoutSize: itemSize)
