@@ -18,7 +18,10 @@ struct GradesChartView: View {
 					)
 					.foregroundStyle(
 						Gradient(
-							colors: [.irisSlateBlue, .irisSlateBlue.opacity(0.1)]
+							colors: [
+								.irisSlateBlue.opacity(0.8),
+								.irisSlateBlue.opacity(0.2)
+							]
 						)
 					)
 					.interpolationMethod(.catmullRom)
@@ -27,12 +30,12 @@ struct GradesChartView: View {
 						x: .value("Subjects", subject.name),
 						y: .value("Grade", subject.grade ?? 0)
 					)
-					.foregroundStyle(.purple.gradient)
+					.foregroundStyle(Color.irisSlateBlue)
 					.interpolationMethod(.catmullRom)
 					.lineStyle(.init(lineWidth: 3, lineCap: .round))
 					.symbol {
 						Circle()
-							.foregroundStyle(.purple.gradient)
+							.foregroundStyle(Color.irisSlateBlue)
 							.frame(width: 8)
 					}
 
