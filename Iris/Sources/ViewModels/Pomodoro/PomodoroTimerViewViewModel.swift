@@ -20,7 +20,6 @@ final class PomodoroTimerViewViewModel {
 	var minutes = 60
 	var breakMinutes = 20
 
-	private var isBreak = false
 	private var seconds = 0
 	private var totalSeconds = 0
 	private var totalStaticSeconds = 0
@@ -58,11 +57,10 @@ final class PomodoroTimerViewViewModel {
 			timerState = .active(isPaused: false)
 		}
 
-		if isBreak {
+		if session == .break {
 			timerString = "\(breakMinutes):\(seconds < 10 ? "0" : "")\(seconds)"
 			totalSeconds = breakMinutes * 60
 			totalStaticSeconds = totalSeconds
-			scheduleNotification(forSession: .break)
 		}
 		else {
 			timerString = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
@@ -86,7 +84,7 @@ final class PomodoroTimerViewViewModel {
 		guard timerState == .active(isPaused: true) else { return }
 		timerState = .active(isPaused: false)
 
-		scheduleNotification(forSession: isBreak ? .break : .study)
+		scheduleNotification(forSession: session == .break ? .break : .study)
 	}
 
 	func updateTimer() {
@@ -102,13 +100,10 @@ final class PomodoroTimerViewViewModel {
 		guard totalSeconds == 0 else { return }
 		timerState = .inactive
 
-		if isBreak {
-			isBreak = false
-			session = .study
+		if session == .break {
 			stopTimer()
 		}
 		else {
-			isBreak = true
 			session = .break
 			startTimer()
 		}
@@ -122,10 +117,8 @@ final class PomodoroTimerViewViewModel {
 			seconds = 0
 			progress = 1
 		}
-		if session != .study {
-			isBreak = false
-			session = .study
-		}
+
+		session = .study
 		timerString = "00:00"
 		totalSeconds = 0
 		totalStaticSeconds = 0
@@ -153,29 +146,23 @@ extension PomodoroTimerViewViewModel {
 			try? await UNUserNotificationCenter.current().setBadgeCount(0)
 		}
 
-		let elapsedTime = Int(Date().timeIntervalSince(lastActiveTimestamp))
+		let elapsedTime = Int(Date.now.timeIntervalSince(lastActiveTimestamp))
 
-		if totalSeconds - elapsedTime <= 0 {
-			timerState = .inactive
-			progress = 1
-			minutes = 0
-			seconds = 0
-			totalSeconds = 0
+		guard totalSeconds - elapsedTime <= 0 else {
+			totalSeconds -= elapsedTime
+			return
+		}
 
-			if !isBreak {
-				session = .break
-				isBreak = true
-				startTimer()
-			}
-			else {
-				session = .study
-				isBreak = false
-				timerString = "00:00"
-				breakMinutes = 0
+		if session != .break && elapsedTime < breakMinutes * 60 {
+			session = .break
+			totalSeconds = breakMinutes * 60 + (totalSeconds - elapsedTime)
+
+			if totalSeconds > 0 {
+				scheduleNotification(forSession: .break)
 			}
 		}
 		else {
-			totalSeconds -= elapsedTime
+			stopTimer()
 		}
 	}
 }
