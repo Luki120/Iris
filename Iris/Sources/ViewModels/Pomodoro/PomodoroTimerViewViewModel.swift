@@ -14,7 +14,6 @@ import func SwiftUI.withAnimation
 @Observable
 final class PomodoroTimerViewViewModel {
 
-	var isPaused = false
 	var showAlert = false
 	var createNewTimer = false
 
@@ -28,13 +27,20 @@ final class PomodoroTimerViewViewModel {
 	private var lastActiveTimestamp = Date()
 
 	private(set) var session: Session = .study
+	private(set) var timerState: TimerState = .inactive
 	private(set) var progress: CGFloat = 1
-	private(set) var isRunning = false
 	private(set) var timerString = "00:00"
+
+	private let notificationId = "IrisPomodoro"
 
 	enum Session: String {
 		case study = "Study"
 		case `break` = "Break"
+	}
+
+	enum TimerState: Equatable {
+		case inactive
+		case active(isPaused: Bool)
 	}
 
 	init() {
@@ -46,12 +52,12 @@ final class PomodoroTimerViewViewModel {
 	// MARK: - Timer
 
 	func startTimer() {
-		guard !isRunning else { return }
+		guard timerState == .inactive else { return }
 
 		withAnimation(.easeInOut(duration: 0.25)) {
-			isPaused = false
-			isRunning = true
+			timerState = .active(isPaused: false)
 		}
+
 		if isBreak {
 			timerString = "\(breakMinutes):\(seconds < 10 ? "0" : "")\(seconds)"
 			totalSeconds = breakMinutes * 60
@@ -64,24 +70,27 @@ final class PomodoroTimerViewViewModel {
 			totalStaticSeconds = totalSeconds
 			scheduleNotification(forSession: .study)
 		}
+
 		createNewTimer = false
 		UIApplication.shared.isIdleTimerDisabled = true
 	}
 
 	func pauseTimer() {
-		guard isRunning else { return }
-		isPaused = true
-		isRunning = false
+		guard timerState == .active(isPaused: false) else { return }
+		timerState = .active(isPaused: true)
+
+		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
 	}
 
 	func resumeTimer() {
-		guard !isRunning else { return }
-		isPaused = false
-		isRunning = true
+		guard timerState == .active(isPaused: true) else { return }
+		timerState = .active(isPaused: false)
+
+		scheduleNotification(forSession: isBreak ? .break : .study)
 	}
 
 	func updateTimer() {
-		guard isRunning && !isPaused else { return }
+		guard timerState == .active(isPaused: false) else { return }
 
 		totalSeconds -= 1
 		progress = CGFloat(totalSeconds) / CGFloat(totalStaticSeconds)
@@ -91,7 +100,7 @@ final class PomodoroTimerViewViewModel {
 		timerString = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
 
 		guard totalSeconds == 0 else { return }
-		isRunning = false
+		timerState = .inactive
 
 		if isBreak {
 			isBreak = false
@@ -107,7 +116,7 @@ final class PomodoroTimerViewViewModel {
 
 	func stopTimer() {
 		withAnimation {
-			isRunning = false
+			timerState = .inactive
 			breakMinutes = 0
 			minutes = 0
 			seconds = 0
@@ -122,7 +131,7 @@ final class PomodoroTimerViewViewModel {
 		totalStaticSeconds = 0
 
 		UIApplication.shared.isIdleTimerDisabled = false
-		UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
 	}
 
 }
@@ -132,13 +141,13 @@ final class PomodoroTimerViewViewModel {
 extension PomodoroTimerViewViewModel {
 	/// Function to update the timer when the app goes to the background
 	func onBackground() {
-		guard isRunning else { return }
+		guard timerState == .active(isPaused: false) else { return }
 		lastActiveTimestamp = Date()
 	}
 
 	/// Function to update the timer when the app comes to the foreground
 	func onForeground() {
-		guard isRunning else { return }
+		guard timerState == .active(isPaused: false) else { return }
 
 		Task {
 			try? await UNUserNotificationCenter.current().setBadgeCount(0)
@@ -147,7 +156,7 @@ extension PomodoroTimerViewViewModel {
 		let elapsedTime = Int(Date().timeIntervalSince(lastActiveTimestamp))
 
 		if totalSeconds - elapsedTime <= 0 {
-			isRunning = false
+			timerState = .inactive
 			progress = 1
 			minutes = 0
 			seconds = 0
@@ -182,7 +191,7 @@ extension PomodoroTimerViewViewModel {
 		content.sound = .default
 
 		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(totalSeconds), repeats: false)
-		let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+		let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
 
 		UNUserNotificationCenter.current().add(request)
 	}

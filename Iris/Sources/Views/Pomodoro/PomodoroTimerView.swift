@@ -44,7 +44,7 @@ struct PomodoroTimerView: View {
 			viewModel.onForeground()
 		}
 		.onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
-			if viewModel.isRunning {
+			if viewModel.timerState == .active(isPaused: false) {
 				viewModel.updateTimer()
 			}
 		}
@@ -102,14 +102,23 @@ struct PomodoroTimerView: View {
 	@ViewBuilder
 	private func TimerButtons() -> some View {
 		HStack(spacing: 20) {
-			TimerButton(symbol: viewModel.isPaused ? "play.fill" : "pause") {
-				viewModel.isPaused.toggle()
+			TimerButton(
+				symbol: viewModel.timerState != .active(isPaused: false) ? "play.fill" : "pause"
+			) {
+				if viewModel.timerState == .active(isPaused: false) {
+					viewModel.pauseTimer()
+				}
+				else {
+					viewModel.resumeTimer()
+				}
 			}
-			.disabled(!viewModel.isRunning)
-			.opacity(!viewModel.isRunning ? 0.5 : 1)
+			.disabled(viewModel.timerState == .inactive)
+			.opacity(viewModel.timerState == .inactive ? 0.5 : 1)
 
-			TimerButton(symbol: viewModel.isRunning ? "stop.fill" : "timer") {
-				if viewModel.isRunning {
+			TimerButton(
+				symbol: viewModel.timerState != .inactive ? "stop.fill" : "timer"
+			) {
+				if viewModel.timerState == .active(isPaused: false) {
 					viewModel.stopTimer()
 				}
 				else {
