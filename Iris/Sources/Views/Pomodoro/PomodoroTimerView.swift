@@ -118,7 +118,7 @@ struct PomodoroTimerView: View {
 			TimerButton(
 				symbol: viewModel.timerState != .inactive ? "stop.fill" : "timer"
 			) {
-				if viewModel.timerState == .active(isPaused: false) {
+				if viewModel.timerState != .inactive {
 					viewModel.stopTimer()
 				}
 				else {
