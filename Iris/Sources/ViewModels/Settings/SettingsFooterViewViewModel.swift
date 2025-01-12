@@ -12,7 +12,7 @@ import class UIKit.UIApplication
 /// View model struct for SettingsFooterView
 struct SettingsFooterViewViewModel {
 	let fundingPlatforms = FundingPlatform.allCases
-	let copyrightLabel = "© \(Date.now.formatted(.dateTime.year())) Luki120"
+	let copyrightLabel = "© 2024-\(Date.now.formatted(.dateTime.year())) Luki120"
 
 	/// Enum to represent each funding platform for the funding cell
 	enum FundingPlatform: String, CaseIterable {
