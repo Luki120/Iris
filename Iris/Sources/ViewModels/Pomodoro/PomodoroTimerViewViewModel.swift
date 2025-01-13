@@ -20,17 +20,19 @@ final class PomodoroTimerViewViewModel {
 	var minutes = 60
 	var breakMinutes = 20
 
-	private var seconds = 0
-	private var totalSeconds = 0
-	private var totalStaticSeconds = 0
+	private var totalTime: Duration = .zero
+	private var totalStaticTime: Duration = .zero
 	private var lastActiveTimestamp = Date()
 
 	private(set) var session: Session = .study
 	private(set) var timerState: TimerState = .inactive
 	private(set) var progress: CGFloat = 1
-	private(set) var timerString = "00:00"
 
 	private let notificationId = "IrisPomodoro"
+
+	var timerString: String {
+		totalTime.formatted(.time(pattern: .minuteSecond))
+	}
 
 	enum Session: String {
 		case study = "Study"
@@ -58,14 +60,12 @@ final class PomodoroTimerViewViewModel {
 		}
 
 		if session == .break {
-			timerString = "\(breakMinutes):\(seconds < 10 ? "0" : "")\(seconds)"
-			totalSeconds = breakMinutes * 60
-			totalStaticSeconds = totalSeconds
+			totalTime = breakMinutes.asDuration
+			totalStaticTime = totalTime
 		}
 		else {
-			timerString = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
-			totalSeconds = (minutes * 60) + seconds
-			totalStaticSeconds = totalSeconds
+			totalTime = minutes.asDuration
+			totalStaticTime = totalTime
 			scheduleNotification(forSession: .study)
 		}
 
@@ -90,14 +90,10 @@ final class PomodoroTimerViewViewModel {
 	func updateTimer() {
 		guard timerState == .active(isPaused: false) else { return }
 
-		totalSeconds -= 1
-		progress = CGFloat(totalSeconds) / CGFloat(totalStaticSeconds)
-		progress = max(progress, 0)
-		minutes = (totalSeconds / 60) % 60
-		seconds = totalSeconds % 60
-		timerString = "\(minutes):\(seconds < 10 ? "0" : "")\(seconds)"
+		totalTime -= .seconds(1)
+		progress = max(CGFloat(totalTime.components.seconds) / CGFloat(totalStaticTime.components.seconds), 0)
 
-		guard totalSeconds == 0 else { return }
+		guard totalTime <= .zero else { return }
 		timerState = .inactive
 
 		if session == .break {
@@ -112,16 +108,14 @@ final class PomodoroTimerViewViewModel {
 	func stopTimer() {
 		withAnimation {
 			timerState = .inactive
-			breakMinutes = 0
-			minutes = 0
-			seconds = 0
+			breakMinutes = 20
+			minutes = 60
 			progress = 1
 		}
 
 		session = .study
-		timerString = "00:00"
-		totalSeconds = 0
-		totalStaticSeconds = 0
+		totalTime = .zero
+		totalStaticTime = .zero
 
 		UIApplication.shared.isIdleTimerDisabled = false
 		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
@@ -146,18 +140,18 @@ extension PomodoroTimerViewViewModel {
 			try? await UNUserNotificationCenter.current().setBadgeCount(0)
 		}
 
-		let elapsedTime = Int(Date.now.timeIntervalSince(lastActiveTimestamp))
+		let elapsedTime = Duration.seconds(Date.now.timeIntervalSince(lastActiveTimestamp))
 
-		guard totalSeconds - elapsedTime <= 0 else {
-			totalSeconds -= elapsedTime
+		guard totalTime - elapsedTime <= .zero else {
+			totalTime -= elapsedTime
 			return
 		}
 
-		if session != .break && elapsedTime < breakMinutes * 60 {
+		if session != .break && elapsedTime < breakMinutes.asDuration {
 			session = .break
-			totalSeconds = breakMinutes * 60 + (totalSeconds - elapsedTime)
+			totalTime = breakMinutes.asDuration + (totalTime - elapsedTime)
 
-			if totalSeconds > 0 {
+			if totalTime > .zero {
 				scheduleNotification(forSession: .break)
 			}
 		}
@@ -177,9 +171,15 @@ extension PomodoroTimerViewViewModel {
 		content.badge = 1
 		content.sound = .default
 
-		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(totalSeconds), repeats: false)
+		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(totalTime.components.seconds), repeats: false)
 		let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
 
 		UNUserNotificationCenter.current().add(request)
+	}
+}
+
+private extension Int {
+	var asDuration: Duration {
+		Duration.seconds(self * 60)
 	}
 }
