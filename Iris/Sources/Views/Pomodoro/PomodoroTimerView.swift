@@ -89,6 +89,7 @@ struct PomodoroTimerView: View {
 
 			VStack(spacing: 10) {
 				Text(viewModel.timerString)
+					.contentTransition(.numericText())
 					.font(.quicksand(withStyle: .semiBold, size: 45))
 
 				Text(viewModel.session.rawValue)
