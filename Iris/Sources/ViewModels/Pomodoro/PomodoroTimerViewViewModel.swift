@@ -20,19 +20,15 @@ final class PomodoroTimerViewViewModel {
 	var minutes = 60
 	var breakMinutes = 20
 
-	private var totalTime: Duration = .zero
 	private var totalStaticTime: Duration = .zero
 	private var lastActiveTimestamp = Date()
 
 	private(set) var session: Session = .study
+	private(set) var totalTime: Duration = .zero
 	private(set) var timerState: TimerState = .inactive
 	private(set) var progress: CGFloat = 1
 
 	private let notificationId = "IrisPomodoro"
-
-	var timerString: String {
-		totalTime.formatted(.time(pattern: .minuteSecond))
-	}
 
 	enum Session: String {
 		case study = "Study"

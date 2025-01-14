@@ -88,7 +88,7 @@ struct PomodoroTimerView: View {
 			.animation(.linear(duration: 1), value: viewModel.progress)
 
 			VStack(spacing: 10) {
-				Text(viewModel.timerString)
+				Text(viewModel.totalTime, format: .time(pattern: .minuteSecond))
 					.contentTransition(.numericText())
 					.font(.quicksand(withStyle: .semiBold, size: 45))
 

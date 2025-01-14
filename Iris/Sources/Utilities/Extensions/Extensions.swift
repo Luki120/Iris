@@ -16,7 +16,7 @@ extension Color {
 
 extension Font {
 	static func quicksand(withStyle style: UIFont.QuicksandStyle, size: CGFloat = 16) -> Font {
-		return .init(UIFont.quicksand(withStyle: style, size: size))
+		return .custom(style.rawValue, size: size)
 	}
 }
 
