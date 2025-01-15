@@ -6,10 +6,9 @@
 	<string>me.luki.iris</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/Quicksand/Quicksand-Regular.ttf</string>
-		<string>Fonts/Quicksand/Quicksand-Medium.ttf</string>
-		<string>Fonts/Quicksand/Quicksand-SemiBold.ttf</string>
-		<string>Fonts/Quicksand/Quicksand-Bold.ttf</string>
+		<string>Fonts/Quicksand/Quicksand-Medium.woff2</string>
+		<string>Fonts/Quicksand/Quicksand-SemiBold.woff2</string>
+		<string>Fonts/Quicksand/Quicksand-Bold.woff2</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

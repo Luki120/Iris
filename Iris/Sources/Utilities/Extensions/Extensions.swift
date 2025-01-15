@@ -28,7 +28,6 @@ extension UIColor {
 
 extension UIFont {
 	enum QuicksandStyle: String {
-		case regular = "Quicksand Regular"
 		case medium = "Quicksand Medium"
 		case semiBold = "Quicksand SemiBold"
 		case bold = "Quicksand Bold"
