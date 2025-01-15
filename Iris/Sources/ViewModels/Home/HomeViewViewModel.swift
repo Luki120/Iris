@@ -21,7 +21,7 @@ final class HomeViewViewModel: NSObject {
 		let viewModels: [Item]
 
 		static let allSubjects: Section = .init(
-			viewModels: [.init(viewModel: AllSubjectsCellViewModel(count: 37, title: "Subjects"))]
+			viewModels: [.init(viewModel: AllSubjectsCellViewModel(count: 35, title: "Subjects"))]
 		)
 
 		static let currentlyTakingSubjects: Section = .init(viewModels: [])
