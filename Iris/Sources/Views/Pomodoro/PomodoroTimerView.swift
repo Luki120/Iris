@@ -90,7 +90,7 @@ struct PomodoroTimerView: View {
 			VStack(spacing: 10) {
 				Text(viewModel.totalTime, format: .time(pattern: .minuteSecond))
 					.contentTransition(.numericText())
-					.font(.quicksand(withStyle: .semiBold, size: 45))
+					.font(.system(size: 45, weight: .semibold).monospacedDigit())
 
 				Text(viewModel.session.rawValue)
 					.font(.quicksand(withStyle: .medium, size: 18))
@@ -218,18 +218,16 @@ struct PomodoroTimerView: View {
 			)
 	}
 
-	private var gradient: LinearGradient {
-		return .init(
-			colors: [
-				.irisSlateBlue,
-				.irisSlateBlue.opacity(0.5),
-				.irisSlateBlue.opacity(0.3),
-				.irisSlateBlue.opacity(0.1),
-			],
-			startPoint: .topLeading,
-			endPoint: .bottomTrailing
-		)
-	}
+	private let gradient: LinearGradient = .init(
+		colors: [
+			.irisSlateBlue,
+			.irisSlateBlue.opacity(0.5),
+			.irisSlateBlue.opacity(0.3),
+			.irisSlateBlue.opacity(0.1)
+		],
+		startPoint: .topLeading,
+		endPoint: .bottomTrailing
+	)
 }
 
 private extension Color {
