@@ -200,7 +200,10 @@ struct PomodoroTimerView: View {
 		.frame(maxWidth: .infinity)
 		.background(
 			colorScheme == .dark ? Color.irisBackground : .white,
-			in: CustomCornersShape(radius: 15)
+			in: UnevenRoundedRectangle(
+				cornerRadii: .init(topLeading: 15, topTrailing: 15),
+				style: .continuous
+			)
 		)
 	}
 

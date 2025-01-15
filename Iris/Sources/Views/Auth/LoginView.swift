@@ -91,7 +91,13 @@ struct LoginView: View {
 				}
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.background(Color.white, in: CustomCornersShape())
+			.background(
+				Color.white,
+				in: UnevenRoundedRectangle(
+					cornerRadii: .init(topLeading: 25, topTrailing: 25),
+					style: .continuous
+				)
+			)
 			.ignoresSafeArea()
 			.scrollIndicators(.hidden)
 		}
@@ -140,16 +146,6 @@ struct LoginView: View {
 				.frame(maxWidth: .infinity, alignment: .trailing)
 			}
 		}
-	}
-}
-
-struct CustomCornersShape: Shape {
-	var radius: CGFloat = 25.0
-
-	func path(in rect: CGRect) -> Path {
-		let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: .init(width: radius, height: radius))
-
-		return Path(path.cgPath)
 	}
 }
 
