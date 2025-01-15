@@ -65,7 +65,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 	// MARK: - Private
 
 	private func setupUI() {
-		hashtagLabel = createLabel(color: .label, fontStyle: .medium, size: 20, text: "#")
+		hashtagLabel = createLabel(color: .white, fontStyle: .medium, size: 20, text: "#")
 		hashtagLabel.backgroundColor = .irisSlateBlue
 		hashtagLabel.layer.cornerRadius = 15
 		hashtagLabel.layer.masksToBounds = true
