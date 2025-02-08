@@ -87,7 +87,7 @@ final class PomodoroTimerViewViewModel {
 		guard timerState == .active(isPaused: false) else { return }
 
 		totalTime -= .seconds(1)
-		progress = max(CGFloat(totalTime.components.seconds) / CGFloat(totalStaticTime.components.seconds), 0)
+		progress = min(max(CGFloat(totalTime.components.seconds) / CGFloat(totalStaticTime.components.seconds), 0), 1)
 
 		guard totalTime <= .zero else { return }
 		timerState = .inactive
@@ -131,36 +131,44 @@ extension PomodoroTimerViewViewModel {
 	/// Function to update the timer when the app comes to the foreground
 	func onForeground() {
 		guard timerState == .active(isPaused: false) else { return }
+		let elapsedTime = Duration.seconds(Date.now.timeIntervalSince(lastActiveTimestamp))
 
 		Task {
 			try? await UNUserNotificationCenter.current().setBadgeCount(0)
 		}
-
-		let elapsedTime = Duration.seconds(Date.now.timeIntervalSince(lastActiveTimestamp))
 
 		guard totalTime - elapsedTime <= .zero else {
 			totalTime -= elapsedTime
 			return
 		}
 
-		if session != .break && elapsedTime < breakMinutes.asDuration {
+		let remainingTime = totalTime + breakMinutes.asDuration - elapsedTime
+
+		guard session != .break else {
+			stopTimer()
+			return
+		}
+
+		if remainingTime <= .zero {
+			stopTimer()
+		}
+
+		else {
 			session = .break
-			totalTime = breakMinutes.asDuration + (totalTime - elapsedTime)
+			totalTime = remainingTime
+			totalStaticTime = breakMinutes.asDuration
 
 			if totalTime > .zero {
 				scheduleNotification(forSession: .break)
 			}
-		}
-		else {
-			stopTimer()
 		}
 	}
 }
 
 // MARK: - UserNotifications
 
-extension PomodoroTimerViewViewModel {
-	private func scheduleNotification(forSession session: Session) {
+private extension PomodoroTimerViewViewModel {
+	func scheduleNotification(forSession session: Session) {
 		let content = UNMutableNotificationContent()
 		content.title = "Pomodoro Timer"
 		content.body = session == .study ? "Study session finished, starting break" : "Break finished, get back to work!"
