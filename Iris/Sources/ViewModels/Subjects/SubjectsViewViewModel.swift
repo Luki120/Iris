@@ -1,4 +1,3 @@
-import Combine
 import UIKit
 
 /// View model class for SubjectsView
@@ -13,7 +12,6 @@ final class SubjectsViewViewModel: NSObject {
 	}
 
 	private var viewModels = [SubjectCellViewModel]()
-	private var subscriptions = Set<AnyCancellable>()
 
 	// ! UICollectionViewDiffableDataSource
 
