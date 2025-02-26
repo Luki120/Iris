@@ -52,11 +52,12 @@ struct SubjectDetailsAssignmentsView: View {
 						subject.tasks.append(.init(title: "", priority: .normal))
 					}
 				}
+				.font(.quicksand(withStyle: .medium))
 				.foregroundStyle(.primary)
 				.frame(width: 120, height: 50)
 				.background(Color.irisSlateBlue, in: .capsule)
 				.padding(.bottom, 20)
-				.shadow(color: .primary.opacity(0.5), radius: 4)
+				.shadow(color: .irisSlateBlue, radius: 4)
 			}
 			.frame(maxWidth: .infinity)
 			.background(
