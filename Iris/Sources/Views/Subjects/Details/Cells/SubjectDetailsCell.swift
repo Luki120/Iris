@@ -18,6 +18,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		textField.delegate = self
 		textField.keyboardType = .numberPad
 		textField.textAlignment = .center
+		textField.addDoneButton()
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(textField)
 		return textField
@@ -171,5 +172,31 @@ extension SubjectDetailsCell: UITextFieldDelegate {
 
 		UserDefaults.standard.set(text, forKey: id)
 		onGradeChange(text)
+	}
+}
+
+private extension UITextField {
+	func addDoneButton() {
+		guard keyboardType == .numberPad else { return }
+
+		let toolbar = UIToolbar()
+		toolbar.barStyle = .default
+
+		let flexibleSpaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		let doneButtonItem = UIBarButtonItem(
+			title: "Done",
+			style: .done,
+			target: self,
+			action: #selector(didTapDoneButton)
+		)
+		toolbar.items = [flexibleSpaceItem, doneButtonItem]
+		toolbar.sizeToFit()
+
+		inputAccessoryView = toolbar
+	}
+
+	@objc
+	private func didTapDoneButton() {
+		resignFirstResponder()
 	}
 }
