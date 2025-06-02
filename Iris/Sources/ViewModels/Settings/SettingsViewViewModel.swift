@@ -13,9 +13,8 @@ protocol SettingsViewViewModelDelegate: AnyObject {
 	func didTapCell(at indexPath: IndexPath)
 }
 
-/// View model class for SettingsView
+/// View model class for `SettingsView`
 final class SettingsViewViewModel: NSObject {
-
 	weak var delegate: SettingsViewViewModelDelegate?
 
 	// MARK: - UICollectionViewDiffableDataSource
@@ -26,21 +25,17 @@ final class SettingsViewViewModel: NSObject {
 		case sourceCode(SourceCodeCellViewViewModel)
 	}
 
-	private enum Section {
-		case developer, accountSettings, sourceCode
+	private enum Section: String {
+		case developer = "Developer"
+		case accountSettings = "Settings"
+		case sourceCode = "View the source"
 
-		var title: String {
-			switch self {
-				case .developer: return "Developer"
-				case .accountSettings: return "Settings"
-				case .sourceCode: return "View the source"
-			}
-		}
+		var title: String { rawValue }
 	}
 
 	private let cells: [CellType] = [
 		.developer(.init(name: "Luki120")),
-		.accountSettings([.init(action: "Delete account"), .init(action: "Sign out")]),
+		.accountSettings([.init(action: "Sign out"), .init(action: "Delete account"), .init(action: "Purge all data")]),
 		.sourceCode(.init(title: "Source code"))
 	]
 
@@ -61,11 +56,11 @@ final class SettingsViewViewModel: NSObject {
 		}
 		cell.secondaryGroupedBackgroundConfiguration()
 	}
-	private let accountSettingsCellRegistration = AccountSettingsCellRegistration { cell, _, viewModel in
+	private let accountSettingsCellRegistration = AccountSettingsCellRegistration { cell, indexPath, viewModel in
 		var configuration = cell.defaultContentConfiguration()
 		configuration.text = viewModel.action
 		configuration.textProperties.font = .quicksand(withStyle: .medium)
-		configuration.textProperties.color = .systemRed
+		configuration.textProperties.color = indexPath.item == 0 ? .label : .systemRed
 
 		cell.contentConfiguration = configuration
 		cell.secondaryGroupedBackgroundConfiguration()
@@ -78,38 +73,11 @@ final class SettingsViewViewModel: NSObject {
 		cell.contentConfiguration = configuration
 		cell.secondaryGroupedBackgroundConfiguration()
 	}
-
-}
-
-extension SettingsViewViewModel.CellType {
-	var isDeveloper: Bool {
-		guard case .developer = self else { return false }
-		return true
-	}
-	var isAccountSettings: Bool {
-		guard case .accountSettings = self else { return false }
-		return true
-	}
-	var isSourceCode: Bool {
-		guard case .sourceCode = self else { return false }
-		return true
-	}
-}
-
-extension UICollectionViewListCell {
-	func secondaryGroupedBackgroundConfiguration() {
-		self.configurationUpdateHandler = { cell, _ in
-			var backgroundConfig = UIBackgroundConfiguration.listGroupedCell()
-			backgroundConfig.backgroundColor = .secondarySystemGroupedBackground
-			cell.backgroundConfiguration = backgroundConfig
-		}
-	}
 }
 
 // MARK: - UICollectionView
 
 extension SettingsViewViewModel {
-
 	/// Function to setup the collection view's diffable data source
 	/// - Parameters:
 	///		- collectionView: The collection view
@@ -188,12 +156,36 @@ extension SettingsViewViewModel {
 		snapshot.appendItems(cells.filter(\.isSourceCode), toSection: .sourceCode)
 		dataSource.apply(snapshot)
 	}
-
 }
 
 extension SettingsViewViewModel: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		collectionView.deselectItem(at: indexPath, animated: true)
 		delegate?.didTapCell(at: indexPath)
+	}
+}
+
+extension UICollectionViewListCell {
+	func secondaryGroupedBackgroundConfiguration() {
+		self.configurationUpdateHandler = { cell, _ in
+			var backgroundConfig = UIBackgroundConfiguration.listGroupedCell()
+			backgroundConfig.backgroundColor = .secondarySystemGroupedBackground
+			cell.backgroundConfiguration = backgroundConfig
+		}
+	}
+}
+
+extension SettingsViewViewModel.CellType {
+	var isDeveloper: Bool {
+		guard case .developer = self else { return false }
+		return true
+	}
+	var isAccountSettings: Bool {
+		guard case .accountSettings = self else { return false }
+		return true
+	}
+	var isSourceCode: Bool {
+		guard case .sourceCode = self else { return false }
+		return true
 	}
 }

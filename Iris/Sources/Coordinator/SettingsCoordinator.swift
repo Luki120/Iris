@@ -1,6 +1,6 @@
 import UIKit
 
-/// Coordinator which will take care of navigation events related to SettingsVC
+/// Coordinator which will take care of navigation events related to `SettingsVC`
 final class SettingsCoordinator: Coordinator {
 
 	enum Event {
@@ -27,10 +27,11 @@ final class SettingsCoordinator: Coordinator {
 					case 0: openURL(.init(string: githubURL))
 					case 1:
 						switch indexPath.item {
-							case 0: deleteAccount()
-							case 1:
+							case 0:
 								UserDefaults.standard.removeObject(forKey: "jwtToken")
 								presentLoginVC()
+							case 1: deleteAccount()
+							case 2: SubjectsManager.shared.purgeAllData()
 							default: break
 						}
 					case 2: openURL(.init(string: sourceCodeURL))
