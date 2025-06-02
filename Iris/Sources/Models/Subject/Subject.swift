@@ -7,14 +7,14 @@ import struct SwiftUI.Color
 final class Subject: Codable {
 	private(set) var name: String
 	private(set) var year: String
-	
+
 	var grades = [Int]()
 	var isFinished = false
 	var hasThreeExams = false
 	var finalExamDate = Date()
-	
+
 	var tasks = [Task]()
-	
+
 	/// Designated initializer
 	///  - Parameters:
 	///		- name: A string that represents the name
@@ -38,27 +38,27 @@ final class Subject: Codable {
 		self.hasThreeExams = hasThreeExams
 		self.finalExamDate = finalExamDate
 	}
-	
+
 	// MARK: - Codable
-	
+
 	required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		
+
 		name = try container.decode(String.self, forKey: .name)
 		year = try container.decode(String.self, forKey: .year)
 		grades = try container.decode([Int].self, forKey: .grades)
 		isFinished = try container.decode(Bool.self, forKey: .isFinished)
 		hasThreeExams = try container.decode(Bool.self, forKey: .hasThreeExams)
-		
+
 		let dateString = try container.decode(String.self, forKey: .finalExamDate)
-		
+
 		guard let finalExamDate = Date.dateFormatter.date(from: dateString) else { return }
 		self.finalExamDate = finalExamDate
 	}
-	
+
 	func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
-		
+
 		try container.encode(name, forKey: .name)
 		try container.encode(year, forKey: .year)
 		try container.encode(grades, forKey: .grades)
@@ -66,7 +66,7 @@ final class Subject: Codable {
 		try container.encode(hasThreeExams, forKey: .hasThreeExams)
 		try container.encode(finalExamDate, forKey: .finalExamDate)
 	}
-	
+
 	private enum CodingKeys: String, CodingKey {
 		case name, year, grades, isFinished, hasThreeExams, finalExamDate
 	}
@@ -78,17 +78,16 @@ extension Subject {
 	final class Task {
 		var title: String
 		var priority: Priority = Priority.normal
-		
+
 		var examDate = Date()
 		var isCompleted = false
-		
 		private(set) var timestamp = Date()
-		
+
 		@Transient
 		enum Priority: String, CaseIterable, Codable {
 			case normal = "Normal"
 			case exam = "Exam"
-			
+
 			var color: Color {
 				switch self {
 					case .normal: return .green
@@ -96,7 +95,7 @@ extension Subject {
 				}
 			}
 		}
-		
+
 		/// Designated initializer
 		///  - Parameters:
 		///		- title: A string that represents the assignment's title
@@ -114,7 +113,7 @@ extension Subject: Hashable {
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(name)
 	}
-	
+
 	static func == (lhs: Subject, rhs: Subject) -> Bool {
 		lhs.name == rhs.name
 	}
