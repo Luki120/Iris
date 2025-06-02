@@ -11,9 +11,8 @@ protocol SubjectDetailsViewViewModelDelegate: AnyObject {
 	func didTapAssignmentsCell(for subject: Subject)
 }
 
-/// View model class for SubjectDetailsView
+/// View model class for `SubjectDetailsView`
 final class SubjectDetailsViewViewModel: NSObject {
-
 	var title: String { return subject.name }
 
 	weak var delegate: SubjectDetailsViewViewModelDelegate?
@@ -72,20 +71,18 @@ final class SubjectDetailsViewViewModel: NSObject {
 
 	/// Designated initializer
 	/// - Parameters:
-	/// 	- subject: The subject
+	/// 	- subject: The `Subject` object
 	init(subject: Subject) {
 		self.subject = subject
 
 		Section.subjectDetails = .createSubjectDetailsSection(for: subject)
 		sections = [.subjectDetails, .assignments]
 	}
-
 }
 
 // MARK: - UICollectionView
 
 extension SubjectDetailsViewViewModel {
-
 	/// Function to setup the collection view's diffable data source
 	/// - Parameters:
 	///		- collectionView: The collection view
@@ -128,11 +125,16 @@ extension SubjectDetailsViewViewModel {
 					cell.id = subjectName + examGradeKey
 					cell.configure(with: viewModel)
 					cell.onGradeChange = { text in
+						guard !text.isEmpty else {
+							self.subject.grades.removeAll()
+							return
+						}
+
 						if self.subject.hasThreeExams && indexPath.item == 3 {
-							self.subject.grade = Int(text)
+							self.subject.grades.append(Int(text) ?? 0)
 						}
 						else if indexPath.item == 2 {
-							self.subject.grade = Int(text)
+							self.subject.grades.append(Int(text) ?? 0)
 						}
 					}
 					cell.gradeTextField.text = UserDefaults.standard.string(forKey: cell.id)
@@ -160,13 +162,15 @@ extension SubjectDetailsViewViewModel {
 
 		var updatedSections: [Section] = [.subjectDetails, .assignments]
 		if subject.hasThreeExams {
-			updatedSections[0].viewModels.insert(.init(viewModel: SubjectDetailsCellViewModel(exam: "Tercer parcial")), at: 2)
+			updatedSections[0].viewModels.insert(
+				.init(viewModel: SubjectDetailsCellViewModel(exam: "Tercer parcial")),
+				at: 2
+			)
 		}
 		snapshot.appendSections(updatedSections)
 		updatedSections.forEach { snapshot.appendItems($0.viewModels, toSection: $0) }
 		dataSource.apply(snapshot)
 	}
-
 }
 
 extension SubjectDetailsViewViewModel: UICollectionViewDelegate {

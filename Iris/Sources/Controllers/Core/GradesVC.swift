@@ -1,11 +1,14 @@
 import class SwiftUI.UIHostingController
+import protocol SwiftUI.View
 import UIKit
 
 /// Controller that'll show the grades chart view
 final class GradesVC: UIViewController {
 	var coordinator: GradesCoordinator?
 
-	private let hostingController = UIHostingController(rootView: GradesChartView())
+	private let hostingController: UIHostingController<some View> = UIHostingController(
+		rootView: GradesChartView().font(.quicksand(withStyle: .medium))
+	)
 
 	// MARK: - Lifecycle
 

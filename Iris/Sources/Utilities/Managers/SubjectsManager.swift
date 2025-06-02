@@ -4,7 +4,6 @@ import SwiftData
 /// Singleton to handle finished & curently taking subjects
 @Observable
 final class SubjectsManager {
-
 	private(set) var context: ModelContext?
 	private(set) var currentlyTakingSubjects = [Subject]()
 	private(set) var passedSubjects = [Subject]()
@@ -21,32 +20,14 @@ final class SubjectsManager {
 		let descriptor = FetchDescriptor<Subject>(sortBy: [SortDescriptor(\.name)])
 		guard let subjects = try? context?.fetch(descriptor) else { return }
 
-		(currentlyTakingSubjects, passedSubjects) = subjects.reduce(into: ([], [])) {
-			if $1.isFinished {
-				$0.1.append($1)
-			}
-			else {
-				$0.0.append($1)
-			}
-
-			let finalExamKey = $1.name.lowercased().components(separatedBy: .whitespaces).joined() + "FinalExamGrade"
-			let finalExamDateKey = $1.name.lowercased().components(separatedBy: .whitespaces).joined() + "FinalExamDate"
-
-			if UserDefaults.standard.object(forKey: finalExamKey) != nil {
-				$1.grade = UserDefaults.standard.integer(forKey: finalExamKey)
-			}
-
-			if UserDefaults.standard.object(forKey: finalExamDateKey) != nil {
-				$1.finalExamDate = UserDefaults.standard.object(forKey: finalExamDateKey) as? Date ?? .now
-			}
-		}
+		currentlyTakingSubjects = subjects.filter { !$0.isFinished }
+		passedSubjects = subjects.filter { $0.isFinished }
 	}
 }
 
+// MARK: - Public
+
 extension SubjectsManager {
-
-	// MARK: - Public
-
 	/// Function to track currently taking subjects
 	/// - Parameters:
 	///		- subject: The subject object
@@ -54,7 +35,7 @@ extension SubjectsManager {
 		let subject = Subject(
 			name: subject.name,
 			year: subject.year,
-			grade: subject.grade,
+			grades: subject.grades,
 			isFinished: subject.isFinished,
 			hasThreeExams: subject.hasThreeExams,
 			finalExamDate: subject.finalExamDate
@@ -99,4 +80,16 @@ extension SubjectsManager {
 		context?.insert(subject)
 	}
 
+	/// Function to purge all data from the SwiftData container, for development purposes
+	func purgeAllData() {
+		if #available(iOS 18, *) {
+			try? sharedContainer?.erase()
+		}
+		else {
+			try? context?.delete(model: Subject.self)
+			try? context?.delete(model: Subject.Task.self)
+		}
+
+		exit(0)
+	}
 }

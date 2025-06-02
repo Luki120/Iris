@@ -1,8 +1,7 @@
 import UIKit
 
-/// View model class for SubjectsView
+/// View model class for `SubjectsView`
 final class SubjectsViewViewModel: NSObject {
-
 	private var subjects = [Subject]() {
 		didSet {
 			viewModels += subjects.compactMap { subject in
@@ -13,15 +12,15 @@ final class SubjectsViewViewModel: NSObject {
 
 	private var viewModels = [SubjectCellViewModel]()
 
-	// ! UICollectionViewDiffableDataSource
+	// MARK: - UICollectionViewDiffableDataSource
 
 	private typealias CellRegistration = UICollectionView.CellRegistration<SubjectCell, SubjectCellViewModel>
-	private typealias DataSource = UICollectionViewDiffableDataSource<Sections, SubjectCellViewModel>
-	private typealias Snapshot = NSDiffableDataSourceSnapshot<Sections, SubjectCellViewModel>
+	private typealias DataSource = UICollectionViewDiffableDataSource<Section, SubjectCellViewModel>
+	private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, SubjectCellViewModel>
 
 	private var dataSource: DataSource!
 
-	private enum Sections {
+	private enum Section {
 		case main
 	}
 
@@ -36,19 +35,17 @@ final class SubjectsViewViewModel: NSObject {
 		Task.detached(priority: .background) {
 			guard let subjects = try? await SubjectsService.shared.fetchSubjects(withURL: url) else { return }
 
-			await MainActor.run {
+			Task { @MainActor in
 				self.subjects = subjects
 				self.applyDiffableDataSourceSnapshot()
 			}
 		}
 	}
-
 }
 
-// ! UICollectionView
+// MARK: - UICollectionView
 
 extension SubjectsViewViewModel {
-
 	/// Function to setup the collection view's diffable data source
 	/// - Parameters:
 	///		- collectionView: The collection view
@@ -74,15 +71,12 @@ extension SubjectsViewViewModel {
 		snapshot.appendItems(viewModels)
 		dataSource.apply(snapshot)
 	}
-
 }
 
 extension SubjectsViewViewModel: UICollectionViewDelegate {
-
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		collectionView.deselectItem(at: indexPath, animated: true)
 
 		SubjectsManager.shared.takeSubject(subjects[indexPath.item])
 	}
-
 }

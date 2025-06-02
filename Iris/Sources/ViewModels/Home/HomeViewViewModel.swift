@@ -6,9 +6,8 @@ protocol HomeViewViewModelDelegate: AnyObject {
 	func didTap(subject: Subject)
 }
 
-/// View model class for HomeView
+/// View model class for `HomeView`
 final class HomeViewViewModel: NSObject {
-
 	weak var delegate: HomeViewViewModelDelegate?
 
 	// MARK: - UICollectionViewDiffableDataSource
@@ -38,11 +37,11 @@ final class HomeViewViewModel: NSObject {
 
 	private var dataSource: DataSource!
 
-	private let allSubjectsCell = AllSubjectsCellRegistration { cell, _, viewModel in
+	private let allSubjectsCellRegistration = AllSubjectsCellRegistration { cell, _, viewModel in
 		cell.configure(with: viewModel)
 	}
 
-	private let currentlyTakingSubjectCell = CurrentlyTakingSubjectCellRegistration { cell, _, viewModel in
+	private let currentlyTakingSubjectCellRegistration = CurrentlyTakingSubjectCellRegistration { cell, _, viewModel in
 		cell.configure(with: viewModel)
 	}
 
@@ -87,13 +86,11 @@ final class HomeViewViewModel: NSObject {
 
 		return nil
 	}
-
 }
 
 // MARK: - UICollectionView
 
 extension HomeViewViewModel {
-
 	/// Function to setup the collection view's diffable data source
 	/// - Parameters:
 	///		- collectionView: The collection view
@@ -107,7 +104,7 @@ extension HomeViewViewModel {
 					guard let allSubjectsViewModel = item.viewModel as? AllSubjectsCellViewModel else { fatalError() }
 
 					return collectionView.dequeueConfiguredReusableCell(
-						using: allSubjectsCell,
+						using: allSubjectsCellRegistration,
 						for: indexPath,
 						item: allSubjectsViewModel
 					)
@@ -116,7 +113,7 @@ extension HomeViewViewModel {
 					guard let currentlyTakingSubjectViewModel = item.viewModel as? CurrentlyTakingSubjectCellViewModel else { fatalError() }
 
 					return collectionView.dequeueConfiguredReusableCell(
-						using: currentlyTakingSubjectCell,
+						using: currentlyTakingSubjectCellRegistration,
 						for: indexPath,
 						item: currentlyTakingSubjectViewModel
 					)
@@ -164,17 +161,17 @@ extension HomeViewViewModel {
 		}
 		dataSource.apply(snapshot)
 	}
-
 }
 
 extension HomeViewViewModel: UICollectionViewDelegate {
-
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		collectionView.deselectItem(at: indexPath, animated: true)
 
 		switch sections[indexPath.section] {
 			case .allSubjects: delegate?.didTapAllSubjectsCell()
-			case .currentlyTakingSubjects: delegate?.didTap(subject: SubjectsManager.shared.currentlyTakingSubjects[indexPath.item])
+			case .currentlyTakingSubjects: delegate?.didTap(
+				subject: SubjectsManager.shared.currentlyTakingSubjects[indexPath.item]
+			)
 			default: break
 		}
 	}
@@ -202,7 +199,7 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 						self.dataSource.apply(self.dataSource.snapshot())
 					}
 
-					guard subject.grade == nil || subject.grade == 0 else {
+					guard subject.grades.isEmpty else {
 						return UIMenu(options: .displayInline, children: [passedAction, deleteAction])
 					}
 					return UIMenu(options: .displayInline, children: [deleteAction])
@@ -212,5 +209,4 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 			default: return nil
 		}
 	}
-
 }
