@@ -2,9 +2,9 @@ import Foundation
 import SwiftData
 import struct SwiftUI.Color
 
-/// API model class that represents a Subject object
+/// API model class that represents a `Subject` object
 @Model
-final class Subject: Codable {
+final class Subject {
 	private(set) var name: String
 	private(set) var year: String
 
@@ -37,38 +37,6 @@ final class Subject: Codable {
 		self.isFinished = isFinished
 		self.hasThreeExams = hasThreeExams
 		self.finalExamDate = finalExamDate
-	}
-
-	// MARK: - Codable
-
-	required init(from decoder: Decoder) throws {
-		let container = try decoder.container(keyedBy: CodingKeys.self)
-
-		name = try container.decode(String.self, forKey: .name)
-		year = try container.decode(String.self, forKey: .year)
-		grades = try container.decode([Int].self, forKey: .grades)
-		isFinished = try container.decode(Bool.self, forKey: .isFinished)
-		hasThreeExams = try container.decode(Bool.self, forKey: .hasThreeExams)
-
-		let dateString = try container.decode(String.self, forKey: .finalExamDate)
-
-		guard let finalExamDate = Date.dateFormatter.date(from: dateString) else { return }
-		self.finalExamDate = finalExamDate
-	}
-
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-
-		try container.encode(name, forKey: .name)
-		try container.encode(year, forKey: .year)
-		try container.encode(grades, forKey: .grades)
-		try container.encode(isFinished, forKey: .isFinished)
-		try container.encode(hasThreeExams, forKey: .hasThreeExams)
-		try container.encode(finalExamDate, forKey: .finalExamDate)
-	}
-
-	private enum CodingKeys: String, CodingKey {
-		case name, year, grades, isFinished, hasThreeExams, finalExamDate
 	}
 }
 
@@ -104,6 +72,21 @@ extension Subject {
 			self.title = title
 			self.priority = priority
 		}
+	}
+}
+
+extension Subject {
+	convenience init(from subjectDTO: SubjectDTO) {
+		let parsedDate = Date.dateFormatter.date(from: subjectDTO.finalExamDate) ?? .now
+
+		self.init(
+			name: subjectDTO.name,
+			year: subjectDTO.year,
+			grades: subjectDTO.grades,
+			isFinished: subjectDTO.isFinished,
+			hasThreeExams: subjectDTO.hasThreeExams,
+			finalExamDate: parsedDate
+		)
 	}
 }
 

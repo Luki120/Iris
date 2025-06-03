@@ -1,6 +1,7 @@
 import UIKit
 
 /// View model class for `SubjectsView`
+@MainActor
 final class SubjectsViewViewModel: NSObject {
 	private var subjects = [Subject]() {
 		didSet {
@@ -32,13 +33,11 @@ final class SubjectsViewViewModel: NSObject {
 	private func fetchSubjects() {
 		guard let url = URL(string: SubjectsService.Constants.baseURL) else { return }
 
-		Task.detached(priority: .background) {
+		Task {
 			guard let subjects = try? await SubjectsService.shared.fetchSubjects(withURL: url) else { return }
 
-			Task { @MainActor in
-				self.subjects = subjects
-				self.applyDiffableDataSourceSnapshot()
-			}
+			self.subjects = subjects.map { .init(from: $0) }
+			self.applyDiffableDataSourceSnapshot()
 		}
 	}
 }
@@ -76,7 +75,6 @@ extension SubjectsViewViewModel {
 extension SubjectsViewViewModel: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		collectionView.deselectItem(at: indexPath, animated: true)
-
 		SubjectsManager.shared.takeSubject(subjects[indexPath.item])
 	}
 }

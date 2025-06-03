@@ -1,8 +1,7 @@
 import Foundation
 
-/// Singleton service to make API calls
-final class SubjectsService {
-
+/// Actor  to make API calls
+final actor SubjectsService {
 	static let shared = SubjectsService()
 	private init() {}
 
@@ -14,17 +13,16 @@ final class SubjectsService {
 	}
 
 	/// Function to make API calls
-	/// - Parameters:
-	///		- withURL: The API call url
-	/// - Returns: An array of subjects
-	func fetchSubjects(withURL url: URL) async throws -> [Subject] {
+	/// - Parameter url: The API call url
+	/// - Returns: `[SubjectDTO]`
+	func fetchSubjects(withURL url: URL) async throws -> [SubjectDTO] {
 		if let cachedData = apiCache[url.absoluteString] {
-			return try JSONDecoder().decode([Subject].self, from: cachedData)
+			return try JSONDecoder().decode([SubjectDTO].self, from: cachedData)
 		}
 
 		let (data, _) = try await URLSession.shared.data(from: url)
 		apiCache[url.absoluteString] = data
 
-		return try JSONDecoder().decode([Subject].self, from: data)
+		return try JSONDecoder().decode([SubjectDTO].self, from: data)
 	}
 }
