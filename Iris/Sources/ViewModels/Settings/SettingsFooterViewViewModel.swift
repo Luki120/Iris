@@ -9,7 +9,7 @@ import Foundation
 import struct SwiftUI.Image
 import class UIKit.UIApplication
 
-/// View model struct for SettingsFooterView
+/// View model struct for `SettingsFooterView`
 struct SettingsFooterViewViewModel {
 	let fundingPlatforms = FundingPlatform.allCases
 	let copyrightLabel = "© 2024-\(Date.now.formatted(.dateTime.year())) Luki120"
@@ -34,17 +34,5 @@ struct SettingsFooterViewViewModel {
 				case .paypal: return URL(string: "https://paypal.me/Luki120")
 			}
 		}
-	}
-}
-
-// MARK: - Public
-
-extension SettingsFooterViewViewModel {
-	/// Function to open a link with a given url
-	/// - Parameters:
-	/// 	- url: The url
-	func openURL(_ url: URL?) {
-		guard let url else { return }
-		UIApplication.shared.open(url)
 	}
 }

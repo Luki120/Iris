@@ -21,7 +21,7 @@ struct SettingsFooterView: View {
 						.frame(width: 25, height: 25)
 						.contentShape(.rect)
 						.onTapGesture {
-							viewModel.openURL(platform.url)
+							UIApplication.shared.openURL(platform.url)
 						}
 				}
 			}

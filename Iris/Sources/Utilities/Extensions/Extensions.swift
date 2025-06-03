@@ -22,6 +22,14 @@ extension Font {
 
 // MARK: - UIKit
 
+extension UIApplication {
+	@MainActor
+	func openURL(_ url: URL?) {
+		guard let url else { return }
+		UIApplication.shared.open(url)
+	}
+}
+
 extension UIColor {
 	static let irisSlateBlue = UIColor(red: 0.53, green: 0.37, blue: 1.0, alpha: 1.0)
 }

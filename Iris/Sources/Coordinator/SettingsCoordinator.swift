@@ -2,7 +2,6 @@ import UIKit
 
 /// Coordinator which will take care of navigation events related to `SettingsVC`
 final class SettingsCoordinator: Coordinator {
-
 	enum Event {
 		case settingsCellTapped(IndexPath)
 #if targetEnvironment(macCatalyst)
@@ -24,7 +23,7 @@ final class SettingsCoordinator: Coordinator {
 		switch event {
 			case .settingsCellTapped(let indexPath):
 				switch indexPath.section {
-					case 0: openURL(.init(string: githubURL))
+					case 0: UIApplication.shared.openURL(.init(string: githubURL))
 					case 1:
 						switch indexPath.item {
 							case 0:
@@ -34,7 +33,7 @@ final class SettingsCoordinator: Coordinator {
 							case 2: SubjectsManager.shared.purgeAllData()
 							default: break
 						}
-					case 2: openURL(.init(string: sourceCodeURL))
+					case 2: UIApplication.shared.openURL(.init(string: sourceCodeURL))
 					default: break
 				}
 
@@ -57,15 +56,10 @@ final class SettingsCoordinator: Coordinator {
 					case .unauthorized: break
 				}
 			}
-			catch let error as AuthError {
+			catch let error as AuthService.AuthError {
 				print(error.description)
 			}
 		}
-	}
-
-	private func openURL(_ url: URL?) {
-		guard let url else { return }
-		UIApplication.shared.open(url)
 	}
 
 	private func presentLoginVC() {
@@ -76,5 +70,4 @@ final class SettingsCoordinator: Coordinator {
 		rootViewController?.dismiss(animated: true)
 		rootViewController?.present(loginVC, animated: true)
 	}
-
 }
