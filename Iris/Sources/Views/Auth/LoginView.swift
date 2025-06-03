@@ -105,6 +105,7 @@ struct LoginView: View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.fullScreenCover(isPresented: $viewModel.presentHomeVC) {
 			TabBarVCRepresentable()
+				.ignoresSafeArea()
 		}
 	}
 
