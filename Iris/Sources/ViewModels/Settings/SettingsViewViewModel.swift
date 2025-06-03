@@ -9,11 +9,13 @@ import Foundation
 import SwiftUI
 import UIKit.UICollectionView
 
+@MainActor
 protocol SettingsViewViewModelDelegate: AnyObject {
 	func didTapCell(at indexPath: IndexPath)
 }
 
 /// View model class for `SettingsView`
+@MainActor
 final class SettingsViewViewModel: NSObject {
 	weak var delegate: SettingsViewViewModelDelegate?
 

@@ -29,6 +29,7 @@
 		145E3FA82CACBFF2005EED89 /* PomodoroCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA72CACBFF2005EED89 /* PomodoroCoordinator.swift */; };
 		145E3FAA2CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145E3FA92CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift */; };
 		1460735B2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1460735A2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift */; };
+		14660F3F2DEE714A006B3DA4 /* SubjectDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14660F3E2DEE7147006B3DA4 /* SubjectDTO.swift */; };
 		1470360E2C74845600578925 /* SubjectDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470360D2C74845600578925 /* SubjectDetailsView.swift */; };
 		147036102C74855300578925 /* SubjectDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470360F2C74855300578925 /* SubjectDetailsVC.swift */; };
 		147036122C7485FC00578925 /* SubjectDetailsViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147036112C7485FC00578925 /* SubjectDetailsViewViewModel.swift */; };
@@ -91,6 +92,7 @@
 		145E3FA72CACBFF2005EED89 /* PomodoroCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroCoordinator.swift; sourceTree = "<group>"; };
 		145E3FA92CACCF1D005EED89 /* PomodoroTimerViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerViewViewModel.swift; sourceTree = "<group>"; };
 		1460735A2C9A76A900C1CB74 /* SubjectDetailsAssignmentCellViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentCellViewViewModel.swift; sourceTree = "<group>"; };
+		14660F3E2DEE7147006B3DA4 /* SubjectDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDTO.swift; sourceTree = "<group>"; };
 		1470360D2C74845600578925 /* SubjectDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsView.swift; sourceTree = "<group>"; };
 		1470360F2C74855300578925 /* SubjectDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsVC.swift; sourceTree = "<group>"; };
 		147036112C7485FC00578925 /* SubjectDetailsViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsViewViewModel.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 		1492E0542C94CAAF00E8315E /* Subject */ = {
 			isa = PBXGroup;
 			children = (
+				14660F3E2DEE7147006B3DA4 /* SubjectDTO.swift */,
 				14C7D00D2C58F2DC007F6A2E /* Subject.swift */,
 			);
 			path = Subject;
@@ -652,6 +655,7 @@
 				14C7D0542C58FEBD007F6A2E /* GradesVC.swift in Sources */,
 				14C7D0242C58F2DD007F6A2E /* AllSubjectsCellViewModel.swift in Sources */,
 				140F5A902C9CA6250093A159 /* DeveloperCellViewViewModel.swift in Sources */,
+				14660F3F2DEE714A006B3DA4 /* SubjectDTO.swift in Sources */,
 				140F5A882C9CA41C0093A159 /* SettingsView.swift in Sources */,
 				1492E0522C94C74D00E8315E /* AuthService.swift in Sources */,
 				1470360E2C74845600578925 /* SubjectDetailsView.swift in Sources */,
@@ -836,7 +840,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -868,7 +872,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

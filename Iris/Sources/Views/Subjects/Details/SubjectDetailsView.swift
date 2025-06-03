@@ -1,13 +1,12 @@
 import UIKit
 
-
+@MainActor
 protocol SubjectDetailsViewDelegate: AnyObject {
 	func subjectDetailsView(_ subjectDetailsView: SubjectDetailsView, didTapAssignmentsCell forSubject: Subject)
 }
 
 /// Subjects detail view
 final class SubjectDetailsView: UIView {
-
 	private let viewModel: SubjectDetailsViewViewModel
 
 	private lazy var compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -52,7 +51,6 @@ final class SubjectDetailsView: UIView {
 		viewModel.delegate = self
 		viewModel.setupCollectionViewDiffableDataSource(for: subjectDetailsCollectionView)
 	}
-
 }
 
 // MARK: - SubjectDetailsViewViewModelDelegate

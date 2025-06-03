@@ -9,7 +9,8 @@ import Foundation
 import UIKit.UIImage
 import func SwiftUI.withAnimation
 
-/// View model class for DeveloperCellView
+/// View model class for `DeveloperCellView`
+@MainActor
 @Observable
 final class DeveloperCellViewViewModel {
 	@ObservationIgnored
@@ -44,16 +45,16 @@ final class DeveloperCellViewViewModel {
 			}
 		}
 	}
-
 }
 
 // MARK: - Hashable
 
 extension DeveloperCellViewViewModel: Hashable {
-	func hash(into hasher: inout Hasher) {
+	nonisolated func hash(into hasher: inout Hasher) {
 		hasher.combine(name)
 	}
 
+	nonisolated
 	static func == (lhs: DeveloperCellViewViewModel, rhs: DeveloperCellViewViewModel) -> Bool {
 		return lhs.name == rhs.name
 	}

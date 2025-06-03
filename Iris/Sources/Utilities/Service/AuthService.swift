@@ -7,28 +7,27 @@
 
 import Foundation
 
-enum AuthResult {
-	case success
-	case unauthorized
-}
-
-enum AuthError: String, Error {
-	case badURL = "Malformed API URL"
-	case badServerResponse = "Bad server response"
-	case conflict = "A conflict occurred, please check server logs"
-	case unknownError = "An unknown error occured"
-
-	var description: String { rawValue }
-}
-
 /// Singleton auth service to make API calls related to authentication
-final class AuthService {
-
+final actor AuthService {
 	static let shared = AuthService()
 	private init() {}
 
 	private enum Constants {
 		static let baseURL = "https://ianthea-luki120.koyeb.app/v1/auth/"
+	}
+
+	enum Result {
+		case success
+		case unauthorized
+	}
+
+	enum AuthError: String, Error {
+		case badURL = "Malformed API URL"
+		case badServerResponse = "Bad server response"
+		case conflict = "A conflict occurred, please check server logs"
+		case unknownError = "An unknown error occured"
+
+		var description: String { rawValue }
 	}
 
 	private enum Route: String {
@@ -39,9 +38,9 @@ final class AuthService {
 	/// - Parameters:
 	///		- username: A string that represents the username
 	///		- password: A string that represents the password
-	///	- Returns: AuthResult
-	/// - Throws: An error of type AuthError
-	func signUp(username: String, password: String) async throws -> AuthResult {
+	///	- Returns: `Result`
+	/// - Throws: `AuthError`
+	func signUp(username: String, password: String) async throws -> Result {
 		guard let url = URL(string: Constants.baseURL + Route.signup.rawValue) else { throw AuthError.badURL }
 
 		var request = URLRequest(url: url)
@@ -70,9 +69,9 @@ final class AuthService {
 	/// - Parameters:
 	///		- username: A string that represents the username
 	///		- password: A strrng that represents the password
-	///	- Returns: AuthResult
-	/// - Throws: An error of type AuthError
-	func signIn(username: String, password: String) async throws -> AuthResult {
+	///	- Returns: `Result`
+	/// - Throws: `AuthError`
+	func signIn(username: String, password: String) async throws -> Result {
 		guard let url = URL(string: Constants.baseURL + Route.signin.rawValue) else { throw AuthError.badURL }
 
 		var request = URLRequest(url: url)
@@ -101,9 +100,9 @@ final class AuthService {
 	}
 
 	/// Function to authenticate a user
-	///	- Returns: AuthResult
-	/// - Throws: An error of type AuthError
-	func authenticate() async throws -> AuthResult {
+	///	- Returns: `Result`
+	/// - Throws: `AuthError`
+	func authenticate() async throws -> Result {
 		guard let token = UserDefaults.standard.string(forKey: "jwtToken") else { return .unauthorized }
 		guard let url = URL(string: Constants.baseURL + Route.authenticate.rawValue) else { throw AuthError.badURL }
 
@@ -127,9 +126,9 @@ final class AuthService {
 	}
 
 	/// Function to delete an account with the user id that matches the JWT token stored in UserDefaults
-	///	- Returns: AuthResult
-	/// - Throws: An error of type AuthError
-	func deleteAccount() async throws -> AuthResult {
+	///	- Returns: `Result`
+	/// - Throws: `AuthError`
+	func deleteAccount() async throws -> Result {
 		let userId = try await getUserId()
 		guard let url = URL(string: Constants.baseURL + Route.users.rawValue + "/\(userId)") else { throw AuthError.badURL }
 

@@ -1,12 +1,13 @@
 import UIKit
 
-
+@MainActor
 protocol HomeViewViewModelDelegate: AnyObject {
 	func didTapAllSubjectsCell()
 	func didTap(subject: Subject)
 }
 
 /// View model class for `HomeView`
+@MainActor
 final class HomeViewViewModel: NSObject {
 	weak var delegate: HomeViewViewModelDelegate?
 
@@ -26,7 +27,7 @@ final class HomeViewViewModel: NSObject {
 		static let currentlyTakingSubjects: Section = .init(viewModels: [])
 	}
 
-	private(set) var sections: [Section] = [.allSubjects, .currentlyTakingSubjects]
+	let sections: [Section] = [.allSubjects, .currentlyTakingSubjects]
 
 	private typealias AllSubjectsCellRegistration = UICollectionView.CellRegistration<AllSubjectsCell, AllSubjectsCellViewModel>
 	private typealias CurrentlyTakingSubjectCellRegistration = UICollectionView.CellRegistration<CurrentlyTakingSubjectCell, CurrentlyTakingSubjectCellViewModel>
@@ -68,7 +69,9 @@ final class HomeViewViewModel: NSObject {
 
 				headerView.titleLabel.text = SubjectsManager.shared.currentlyTakingSubjects.isEmpty ? "" : "Currently taking"
 			}
-			self.observeSubjects()
+			MainActor.assumeIsolated {
+				self.observeSubjects()
+			}
 		}
 	}
 
@@ -210,3 +213,5 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 		}
 	}
 }
+
+extension AnyHashable: @unchecked @retroactive Sendable {}

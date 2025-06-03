@@ -9,6 +9,7 @@ final class SubjectsManager {
 	private(set) var passedSubjects = [Subject]()
 	private(set) var sharedContainer: ModelContainer?
 
+	@MainActor
 	static let shared = SubjectsManager()
 
 	private init() {
@@ -30,7 +31,7 @@ final class SubjectsManager {
 extension SubjectsManager {
 	/// Function to track currently taking subjects
 	/// - Parameters:
-	///		- subject: The subject object
+	///		- subject: The `Subject` object
 	func takeSubject(_ subject: Subject) {
 		let subject = Subject(
 			name: subject.name,
@@ -50,7 +51,7 @@ extension SubjectsManager {
 
 	/// Function to delete a subject at the given index
 	/// - Parameters:
-	///		- subject: The subject object
+	///		- subject: The `Subject` object
 	///		- index: The index for the subject
 	func delete(subject: Subject, at index: Int, markAsPassed: Bool = false) {
 		if !markAsPassed {
@@ -68,7 +69,7 @@ extension SubjectsManager {
 
 	/// Function to mark a subject as passed at the given index
 	/// - Parameters:
-	///		- subject: The subject object
+	///		- subject: The `Subject` object
 	///		- index: The index for the subject
 	func markSubjectAsPassed(_ subject: Subject, at index: Int) {
 		delete(subject: subject, at: index, markAsPassed: true)
@@ -90,6 +91,7 @@ extension SubjectsManager {
 			try? context?.delete(model: Subject.Task.self)
 		}
 
+		UserDefaults.standard.dictionaryRepresentation().keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
 		exit(0)
 	}
 }

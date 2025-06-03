@@ -11,9 +11,9 @@ import class UIKit.UIApplication
 import func SwiftUI.withAnimation
 
 /// View model class for PomodoroTimerView
+@MainActor
 @Observable
 final class PomodoroTimerViewViewModel {
-
 	var showAlert = false
 	var createNewTimer = false
 
@@ -116,7 +116,6 @@ final class PomodoroTimerViewViewModel {
 		UIApplication.shared.isIdleTimerDisabled = false
 		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
 	}
-
 }
 
 // MARK: - Background update logic

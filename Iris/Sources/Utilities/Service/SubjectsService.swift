@@ -1,6 +1,6 @@
 import Foundation
 
-/// Actor  to make API calls
+/// Actor to make API calls
 final actor SubjectsService {
 	static let shared = SubjectsService()
 	private init() {}

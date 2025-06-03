@@ -7,13 +7,13 @@
 
 import UIKit
 
+@MainActor
 protocol SettingsViewDelegate: AnyObject  {
 	func settingsView(_ settingsView: SettingsView, didTapCellAt: IndexPath)
 }
 
 /// View that'll show the settings view
 final class SettingsView: UIView {
-
 	private let viewModel = SettingsViewViewModel()
 
 	private lazy var settingsCollectionView: UICollectionView = {
@@ -48,7 +48,6 @@ final class SettingsView: UIView {
 		viewModel.delegate = self
 		viewModel.setupCollectionViewDiffableDataSource(for: settingsCollectionView)
 	}
-
 }
 
 // MARK: - SettingsViewViewModelDelegate

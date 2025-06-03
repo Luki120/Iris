@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 /// View model class for LoginView
+@MainActor
 @Observable
 final class LoginViewViewModel {
-
 	var username = ""
 	var password = ""
 	var errorMessage = ""
@@ -20,7 +20,6 @@ final class LoginViewViewModel {
 	var showPassword = false
 	var isRegistering = false
 	var presentHomeVC = false
-
 	var shouldShowToast = true
 
 	// MARK: - Private
@@ -43,7 +42,7 @@ final class LoginViewViewModel {
 					case .unauthorized: break
 				}
 			}
-			catch let error as AuthError {
+			catch let error as AuthService.AuthError {
 				presentToast(withErrorMessage: error.description)
 			}
 		}
@@ -69,7 +68,6 @@ final class LoginViewViewModel {
 					self.shouldShowToast = true
 				}
 			}
-
 		}
 	}
 
@@ -91,7 +89,6 @@ final class LoginViewViewModel {
 
 		return true
 	}
-
 }
 
 // MARK: - Public

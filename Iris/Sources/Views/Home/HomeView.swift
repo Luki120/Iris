@@ -1,6 +1,6 @@
 import UIKit
 
-
+@MainActor
 protocol HomeViewDelegate: AnyObject {
 	func didTapAllSubjectsCell(in: HomeView)
 	func didTapProfilePictureButton(in: HomeView)
@@ -9,7 +9,6 @@ protocol HomeViewDelegate: AnyObject {
 
 /// Home view
 final class HomeView: UIView {
-
 	private let viewModel = HomeViewViewModel()
 
 	private lazy var compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -65,7 +64,7 @@ final class HomeView: UIView {
 	// MARK: - Private
 
 	private func createTitle() -> String {
-		let hour = Calendar.current.component(.hour, from: Date())
+		let hour = Calendar.current.component(.hour, from: .now)
 
 		switch hour {
 			case 6..<12: return "Good morning, Luki"
@@ -94,7 +93,6 @@ final class HomeView: UIView {
 			}
 		}
 	}
-
 }
 
 // MARK: - UICollectionViewCompositionalLayout
