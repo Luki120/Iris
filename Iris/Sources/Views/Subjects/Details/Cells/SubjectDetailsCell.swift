@@ -7,10 +7,10 @@
 
 import UIKit
 
-/// UICollectionViewCell to represent the subject details
+/// `UICollectionViewCell` to represent the subject details
 final class SubjectDetailsCell: UICollectionViewCell {
-
 	private var hashtagLabel, examLabel, finalExamLabel: UILabel!
+	private var examLabelTopConstraint, examLabelBottomConstraint: NSLayoutConstraint!
 
 	private(set) lazy var gradeTextField: UITextField = {
 		let textField = UITextField()
@@ -40,13 +40,8 @@ final class SubjectDetailsCell: UICollectionViewCell {
 	}
 #endif
 
-	private var examLabelTopConstraint, examLabelBottomConstraint: NSLayoutConstraint!
-
-	var id: String!
 	var onGradeChange: ((String) -> Void)!
 	var onSelectedExamDate: ((Date) -> Void)!
-
-	var isFinalCell = false
 
 	// MARK: - Lifecycle
 
@@ -147,7 +142,6 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		}
 		return label
 	}
-
 }
 
 // MARK: - Public
@@ -159,7 +153,7 @@ extension SubjectDetailsCell {
 	func configure(with viewModel: SubjectDetailsCellViewModel) {
 		examLabel.text = viewModel.exam
 
-		guard isFinalCell else { return }
+		guard viewModel.isFinalCell else { return }
 		setupFinalCell()
 	}
 }
@@ -169,8 +163,6 @@ extension SubjectDetailsCell {
 extension SubjectDetailsCell: UITextFieldDelegate {
 	func textFieldDidEndEditing(_ textField: UITextField) {
 		guard let onGradeChange, let text = textField.text else { return }
-
-		UserDefaults.standard.set(text, forKey: id)
 		onGradeChange(text)
 	}
 }

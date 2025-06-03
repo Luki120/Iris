@@ -7,11 +7,13 @@
 
 import UIKit
 
+@MainActor
 protocol SubjectDetailsViewViewModelDelegate: AnyObject {
 	func didTapAssignmentsCell(for subject: Subject)
 }
 
 /// View model class for `SubjectDetailsView`
+@MainActor
 final class SubjectDetailsViewViewModel: NSObject {
 	var title: String { return subject.name }
 
@@ -33,15 +35,18 @@ final class SubjectDetailsViewViewModel: NSObject {
 			if subject.name == "Physiology" {
 				examValues = ["R2", "R1", "Final"]
 			}
-			else {
+			else if !subject.hasThreeExams {
 				examValues = ["Primer parcial", "Segundo parcial", "Final"]
+			}
+			else {
+				examValues = ["Primer parcial", "Segundo parcial", "Tercer parcial", "Final"]
 			}
 
 			return .init(viewModels: examValues.map { .init(viewModel: SubjectDetailsCellViewModel(exam: $0)) })
 		}
 
-		fileprivate
-		static var subjectDetails: Section = .init(viewModels: [])
+		@MainActor
+		fileprivate static var subjectDetails: Section = .init(viewModels: [])
 
 		fileprivate
 		static let assignments: Section = .init(
@@ -70,13 +75,22 @@ final class SubjectDetailsViewViewModel: NSObject {
 	private let subject: Subject
 
 	/// Designated initializer
-	/// - Parameters:
-	/// 	- subject: The `Subject` object
+	/// - Parameter subject: The `Subject` object
 	init(subject: Subject) {
 		self.subject = subject
 
 		Section.subjectDetails = .createSubjectDetailsSection(for: subject)
 		sections = [.subjectDetails, .assignments]
+	}
+
+	private func examGradeKey(for index: Int) -> String {
+		switch index {
+			case 0: return "FirstExamGrade"
+			case 1: return "SecondExamGrade"
+			case 2: return subject.hasThreeExams ? "ThirdExamGrade" : "FinalExamGrade"
+			case 3: return "FinalExamGrade"
+			default: return ""
+		}
 	}
 }
 
@@ -84,26 +98,16 @@ final class SubjectDetailsViewViewModel: NSObject {
 
 extension SubjectDetailsViewViewModel {
 	/// Function to setup the collection view's diffable data source
-	/// - Parameters:
-	///		- collectionView: The collection view
+	/// - Parameter collectionView: The collection view
 	func setupCollectionViewDiffableDataSource(for collectionView: UICollectionView) {
 		dataSource = DataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
 			guard let self else { fatalError() }
 
-			var examGradeKey = ""
-			let examDateKey = "FinalExamDate"
-
-			switch indexPath.item {
-				case 0: examGradeKey = "FirstExamGrade"
-				case 1: examGradeKey = "SecondExamGrade"
-				case 2: examGradeKey = subject.hasThreeExams ? "ThirdExamGrade" : "FinalExamGrade"
-				case 3: examGradeKey = subject.hasThreeExams ? "FinalExamGrade" : ""
-				default: break
-			}
+			let examGradeKey = examGradeKey(for: indexPath.item)
 
 			switch sections[indexPath.section] {
 				case .subjectDetails:
-					guard let viewModel = item.viewModel as? SubjectDetailsCellViewModel else { fatalError() }
+					guard var viewModel = item.viewModel as? SubjectDetailsCellViewModel else { fatalError() }
 
 					let cell = collectionView.dequeueConfiguredReusableCell(
 						using: subjectDetailsCellRegistration,
@@ -111,33 +115,32 @@ extension SubjectDetailsViewViewModel {
 						item: viewModel
 					)
 
-					let subjectName = subject.name.lowercased().components(separatedBy: .whitespaces).joined()
+					let subjectName = subject.name.components(separatedBy: .whitespaces).joined()
 
 					if viewModel.exam == "Final" {
-						cell.isFinalCell = true
-						cell.finalExamDatePicker.date = UserDefaults.standard.object(forKey: subjectName + examDateKey) as? Date ?? .now
+						viewModel.isFinalCell = true
+						cell.finalExamDatePicker.date = subject.finalExamDate
 						cell.onSelectedExamDate = { finalExamDate in
 							self.subject.finalExamDate = finalExamDate
-							UserDefaults.standard.set(finalExamDate, forKey: subjectName + examDateKey)
 						}
 					}
 
-					cell.id = subjectName + examGradeKey
-					cell.configure(with: viewModel)
 					cell.onGradeChange = { text in
-						guard !text.isEmpty else {
-							self.subject.grades.removeAll()
-							return
+						if viewModel.exam == "Final" {
+							guard !text.isEmpty else {
+								self.subject.grades.removeAll()
+								return
+							}
+
+							guard let grade = Int(text) else { return }
+							self.subject.grades.append(grade)
 						}
 
-						if self.subject.hasThreeExams && indexPath.item == 3 {
-							self.subject.grades.append(Int(text) ?? 0)
-						}
-						else if indexPath.item == 2 {
-							self.subject.grades.append(Int(text) ?? 0)
-						}
+						UserDefaults.standard.set(text, forKey: subjectName + " - " + examGradeKey)
 					}
-					cell.gradeTextField.text = UserDefaults.standard.string(forKey: cell.id)
+
+					cell.configure(with: viewModel)
+					cell.gradeTextField.text = UserDefaults.standard.string(forKey: subjectName + " - " + examGradeKey)
 					return cell
 
 				case .assignments:
@@ -159,16 +162,8 @@ extension SubjectDetailsViewViewModel {
 
 	private func applyDiffableDataSourceSnapshot() {
 		var snapshot = Snapshot()
-
-		var updatedSections: [Section] = [.subjectDetails, .assignments]
-		if subject.hasThreeExams {
-			updatedSections[0].viewModels.insert(
-				.init(viewModel: SubjectDetailsCellViewModel(exam: "Tercer parcial")),
-				at: 2
-			)
-		}
-		snapshot.appendSections(updatedSections)
-		updatedSections.forEach { snapshot.appendItems($0.viewModels, toSection: $0) }
+		snapshot.appendSections(sections)
+		sections.forEach { snapshot.appendItems($0.viewModels, toSection: $0) }
 		dataSource.apply(snapshot)
 	}
 }
