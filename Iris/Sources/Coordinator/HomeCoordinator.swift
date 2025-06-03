@@ -1,8 +1,7 @@
 import UIKit
 
-/// Coordinator which will take care of navigation events related to HomeVC
+/// Coordinator which will take care of navigation events related to `HomeVC`
 final class HomeCoordinator: Coordinator {
-
 	enum Event {
 		case allSubjectsCellTapped
 		case currentlyTakingSubjectCellTapped(subject: Subject)
@@ -22,7 +21,6 @@ final class HomeCoordinator: Coordinator {
 		homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(resource: .home), tag: 0)
 
 		navigationController.viewControllers = [homeVC]
-
 		initSettingsVC()
 	}
 
@@ -46,7 +44,6 @@ final class HomeCoordinator: Coordinator {
 				navigationController.present(navVC, animated: true)
 		}
 	}
-
 	private func initSettingsVC() {
 		settingsVC = SettingsVC()
 		settingsVC.title = "Settings"
@@ -54,5 +51,4 @@ final class HomeCoordinator: Coordinator {
 		let settingsCoordinator = SettingsCoordinator()
 		settingsVC.coordinator = settingsCoordinator
 	}
-
 }

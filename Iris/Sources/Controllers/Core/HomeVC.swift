@@ -2,7 +2,6 @@ import UIKit
 
 /// Controller that'll show the home view
 final class HomeVC: UIViewController {
-
 	var coordinator: HomeCoordinator?
 
 	private let homeView = HomeView()
@@ -25,7 +24,6 @@ final class HomeVC: UIViewController {
 		view.addSubview(homeView)
 		view.pinViewToSafeAreas(homeView)
 	}
-
 }
 
 // MARK: - HomeViewDelegate

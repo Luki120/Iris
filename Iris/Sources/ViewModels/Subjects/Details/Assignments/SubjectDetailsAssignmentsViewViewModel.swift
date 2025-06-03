@@ -7,13 +7,12 @@
 
 import UserNotifications
 
-/// View model struct for SubjectDetailsAssignmentsView
+/// View model struct for `SubjectDetailsAssignmentsView`
 struct SubjectDetailsAssignmentsViewViewModel {
 	let subject: Subject
 
 	/// Designated initializer
-	/// - Parameters:
-	/// 	- subject: The subject
+	/// - Parameter subject: The `Subject` object
 	init(subject: Subject) {
 		self.subject = subject
 

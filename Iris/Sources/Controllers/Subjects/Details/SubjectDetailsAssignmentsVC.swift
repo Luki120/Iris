@@ -5,14 +5,12 @@
 //  Created by Luki on 09/09/2024.
 //
 
-import SwiftData
 import class SwiftUI.UIHostingController
 import protocol SwiftUI.View
 import UIKit
 
 /// Controller that'll show the subject's assignments view
 final class SubjectDetailsAssignmentsVC: UIViewController {
-
 	private let viewModel: SubjectDetailsAssignmentsViewViewModel
 
 	// MARK: - Lifecycle
@@ -22,15 +20,16 @@ final class SubjectDetailsAssignmentsVC: UIViewController {
 	}
 
 	/// Designated initializer
-	/// - Parameters:
-	///		- viewModel: The view model object for this vc's view
+	/// - Parameter viewModel: The view model object for this vc's view
 	init(viewModel: SubjectDetailsAssignmentsViewViewModel) {
 		self.viewModel = viewModel
 		super.init(nibName: nil, bundle: nil)
 
 		guard let container = SubjectsManager.shared.sharedContainer else { return }
 
-		let subjectDetailsAssignmentsView = SubjectDetailsAssignmentsView(subject: viewModel.subject).modelContext(.init(container))
+		let subjectDetailsAssignmentsView = SubjectDetailsAssignmentsView(subject: viewModel.subject)
+			.modelContext(.init(container))
+
 		let hostingController = UIHostingController(rootView: subjectDetailsAssignmentsView)
 
 		addChild(hostingController)
@@ -44,5 +43,4 @@ final class SubjectDetailsAssignmentsVC: UIViewController {
 		title = "Assignments"
 		view.backgroundColor = .systemBackground
 	}
-
 }

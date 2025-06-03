@@ -7,7 +7,7 @@
 
 import protocol Swift.Hashable
 
-/// View model struct for the source code cel
+/// View model struct for the source code cell
 struct SourceCodeCellViewViewModel: Hashable {
 	let title: String
 }

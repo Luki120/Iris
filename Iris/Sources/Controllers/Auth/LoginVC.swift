@@ -10,7 +10,6 @@ import UIKit
 
 /// Controller that'll show the login view
 final class LoginVC: UIViewController {
-
 	private let hostingController = UIHostingController(rootView: LoginView())
 
 	// MARK: - Lifecycle
@@ -24,5 +23,4 @@ final class LoginVC: UIViewController {
 		view.addSubview(hostingController.view)
 		view.pinViewToAllEdges(hostingController.view)
 	}
-
 }

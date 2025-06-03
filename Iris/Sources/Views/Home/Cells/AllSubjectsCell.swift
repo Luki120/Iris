@@ -1,8 +1,7 @@
 import UIKit
 
-/// UICollectionViewCell subclass to represent the all subjects cell
+/// `UICollectionViewCell` subclass to represent the all subjects cell
 final class AllSubjectsCell: UICollectionViewCell {
-
 	private lazy var totalSubjectsLabel: UILabel = {
 		let label = UILabel()
 		label.numberOfLines = 0
@@ -36,7 +35,6 @@ final class AllSubjectsCell: UICollectionViewCell {
 		totalSubjectsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
 		totalSubjectsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
 	}
-
 }
 
 // MARK: - Public

@@ -7,9 +7,8 @@
 
 import UIKit
 
-/// UICollectionViewCell to represent the tasks cell
+/// `UICollectionViewCell` to represent the tasks cell
 final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
-
 	private lazy var tasksImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.image = UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 15))
@@ -72,7 +71,6 @@ final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
 			arrowLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
 		])
 	}
-
 }
 
 // MARK: - Public

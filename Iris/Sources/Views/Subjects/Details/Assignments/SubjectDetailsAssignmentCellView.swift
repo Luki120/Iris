@@ -9,7 +9,6 @@ import SwiftUI
 
 /// Struct to represent the assignment cell for the assignments view
 struct SubjectDetailsAssignmentCellView: View {
-
 	let subject: Subject
 	@Bindable private(set) var task: Subject.Task
 

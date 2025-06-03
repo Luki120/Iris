@@ -10,7 +10,6 @@ import UIKit.UINavigationController
 
 /// Coordinator which will take care of navigation events related to PomodoroTimerVC
 final class PomodoroCoordinator: Coordinator {
-
 	enum Event {}
 
 	var navigationController = UINavigationController()
@@ -24,5 +23,4 @@ final class PomodoroCoordinator: Coordinator {
 	}
 
 	func eventOccurred(with event: Event) {}
-
 }

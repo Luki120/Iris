@@ -2,7 +2,6 @@ import UIKit
 
 /// Controller that'll show the subjects view
 final class SubjectsVC: UIViewController {
-
 	private let subjectsView = SubjectsView()
 
 	// MARK: - Lifecycle
@@ -16,5 +15,4 @@ final class SubjectsVC: UIViewController {
 		view.addSubview(subjectsView)
 		view.pinViewToSafeAreas(subjectsView)
 	}
-
 }

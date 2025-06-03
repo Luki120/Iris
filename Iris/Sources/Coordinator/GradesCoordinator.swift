@@ -2,7 +2,6 @@ import UIKit
 
 /// Coordinator which will take care of navigation events related to GradesVC
 final class GradesCoordinator: Coordinator {
-
     enum Event {}
 
     var navigationController = UINavigationController()
@@ -16,5 +15,4 @@ final class GradesCoordinator: Coordinator {
     }
 
     func eventOccurred(with event: Event) {}
-
 }

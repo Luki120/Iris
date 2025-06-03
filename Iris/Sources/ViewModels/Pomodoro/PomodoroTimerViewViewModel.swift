@@ -10,11 +10,10 @@ import UserNotifications
 import class UIKit.UIApplication
 import func SwiftUI.withAnimation
 
-/// View model class for PomodoroTimerView
+/// View model class for `PomodoroTimerView`
 @MainActor
 @Observable
 final class PomodoroTimerViewViewModel {
-	var showAlert = false
 	var createNewTimer = false
 
 	var minutes = 60

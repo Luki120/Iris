@@ -2,7 +2,6 @@ import UIKit
 
 /// Controller that'll show the settings view
 final class SettingsVC: UIViewController {
-
 	private let settingsView = SettingsView()
 
 	var coordinator: SettingsCoordinator?
@@ -28,7 +27,6 @@ final class SettingsVC: UIViewController {
 		)
 #endif
 	}
-
 }
 
 // MARK: - SettingsViewDelegate

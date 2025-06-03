@@ -9,7 +9,6 @@ import UIKit
 
 /// Controller that'll show the subjects view
 final class SubjectDetailsVC: UIViewController {
-
 	private let subjectDetailsViewViewModel: SubjectDetailsViewViewModel
 	private let subjectDetailsView: SubjectDetailsView
 
@@ -31,6 +30,7 @@ final class SubjectDetailsVC: UIViewController {
 	}
 
 	override func viewDidLoad() {
+		super.viewDidLoad()
 		title = subjectDetailsViewViewModel.title
 
 		view.backgroundColor = .systemBackground
@@ -39,7 +39,6 @@ final class SubjectDetailsVC: UIViewController {
 
 		subjectDetailsView.delegate = self
 	}
-
 }
 
 // MARK: - SubjectDetailsViewDelegate

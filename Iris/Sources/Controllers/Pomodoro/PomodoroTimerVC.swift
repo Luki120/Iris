@@ -10,7 +10,6 @@ import UIKit
 
 /// Controller that'll show the pomodoro timer view
 final class PomodoroTimerVC: UIViewController {
-
 	private let hostingController = UIHostingController(rootView: PomodoroTimerView())
 
 	// MARK: - Lifecycle
@@ -24,5 +23,4 @@ final class PomodoroTimerVC: UIViewController {
 		view.addSubview(hostingController.view)
 		view.pinViewToAllEdges(hostingController.view)
 	}
-
 }

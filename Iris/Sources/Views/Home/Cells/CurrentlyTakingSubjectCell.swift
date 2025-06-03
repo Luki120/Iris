@@ -1,6 +1,6 @@
 import UIKit
 
-/// UICollectionViewCell subclass to represent the currently taking subject cell
+/// `UICollectionViewCell` subclass to represent the currently taking subject cell
 final class CurrentlyTakingSubjectCell: SubjectCell {
 	/// Function to configure the cell with its respective view model
 	/// -  Parameters:

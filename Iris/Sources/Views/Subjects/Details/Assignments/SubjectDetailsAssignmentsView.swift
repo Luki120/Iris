@@ -9,7 +9,6 @@ import SwiftUI
 
 /// View that'll show the subject's assignments
 struct SubjectDetailsAssignmentsView: View {
-
 	let subject: Subject
 
 	private var examsList: [Subject.Task] {
@@ -87,7 +86,6 @@ struct SubjectDetailsAssignmentsView: View {
 
 /// View that'll show the completed assignments
 private struct CompletedAssignmentsView: View {
-
 	let subject: Subject
 	@State private var showAll = false
 

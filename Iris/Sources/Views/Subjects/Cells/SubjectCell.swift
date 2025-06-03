@@ -1,8 +1,7 @@
 import UIKit
 
-/// UICollectionViewCell subclass to represent the subject cell
+/// `UICollectionViewCell` subclass to represent the subject cell
 class SubjectCell: UICollectionViewCell {
-
 	private(set) lazy var subjectNameLabel: UILabel = {
 		let label = UILabel()
 		label.font = .quicksand(withStyle: .bold)
@@ -38,7 +37,6 @@ class SubjectCell: UICollectionViewCell {
 		subjectNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
 		subjectNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
 	}
-
 }
 
 // MARK: - Public
@@ -50,5 +48,4 @@ extension SubjectCell {
 	func configure(with viewModel: SubjectCellViewModel) {
 		subjectNameLabel.text = viewModel.name
 	}
-
 }

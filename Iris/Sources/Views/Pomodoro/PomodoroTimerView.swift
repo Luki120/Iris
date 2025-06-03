@@ -9,7 +9,9 @@ import SwiftUI
 
 /// View that'll show a pomodoro timer
 struct PomodoroTimerView: View {
+	@State private var showAlert = false
 	@State private var viewModel = PomodoroTimerViewViewModel()
+
 	@Environment(\.colorScheme) private var colorScheme
 
 	var body: some View {
@@ -157,7 +159,7 @@ struct PomodoroTimerView: View {
 			HStack {
 				Group {
 					Button("\(viewModel.minutes) min") {
-						viewModel.showAlert.toggle()
+						showAlert.toggle()
 					}
 					.id(String(describing: viewModel.minutes) + "minutes")
 					.minimumScaleFactor(0.8)
@@ -183,7 +185,7 @@ struct PomodoroTimerView: View {
 			.padding(.vertical)
 			.background(Color.irisSlateBlue, in: .capsule)
 		}
-		.alert("Iris", isPresented: $viewModel.showAlert) {
+		.alert("Iris", isPresented: $showAlert) {
 			TextField("60m", value: $viewModel.minutes, format: .number)
 				.keyboardType(.numberPad)
 

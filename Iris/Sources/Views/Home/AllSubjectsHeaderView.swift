@@ -9,7 +9,6 @@ import UIKit
 
 /// Class to represent the header for the all subjects section
 final class AllSubjectsHeaderView: UICollectionReusableView {
-
 	private(set) lazy var titleLabel: UILabel = {
 		let label = UILabel()
 		label.font = .quicksand(withStyle: .semiBold, size: 18)
@@ -35,5 +34,4 @@ final class AllSubjectsHeaderView: UICollectionReusableView {
 		titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 		titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
 	}
-
 }

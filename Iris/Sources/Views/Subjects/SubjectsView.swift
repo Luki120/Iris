@@ -2,7 +2,6 @@ import UIKit
 
 /// Class to represent the subjects view
 final class SubjectsView: UIView {
-
 	private let viewModel = SubjectsViewViewModel()
 
 	private lazy var compositionalLayout: UICollectionViewCompositionalLayout = {
@@ -40,5 +39,4 @@ final class SubjectsView: UIView {
 
 		viewModel.setupCollectionViewDiffableDataSource(for: subjectsCollectionView)
 	}
-
 }

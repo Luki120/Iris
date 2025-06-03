@@ -2,7 +2,6 @@ import UIKit
 
 /// Root view controller, which will show our tabs
 final class TabBarVC: UITabBarController {
-
 	private let homeCoordinator = HomeCoordinator()
     private let gradesCoordinator = GradesCoordinator()
 	private let pomodoroCoordinator = PomodoroCoordinator()
@@ -22,5 +21,4 @@ final class TabBarVC: UITabBarController {
 			pomodoroCoordinator.navigationController
 		]
 	}
-
 }

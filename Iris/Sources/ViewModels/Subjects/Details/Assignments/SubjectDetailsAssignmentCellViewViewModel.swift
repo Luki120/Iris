@@ -7,13 +7,12 @@
 
 import UserNotifications
 
-/// View model class for SubjectDetailsAsssignmentCellView
+/// View model class for `SubjectDetailsAsssignmentCellView`
 final class SubjectDetailsAssignmentCellViewViewModel {
-
 	/// Function to schedule a notification for the given exam date
 	/// - Parameters:
 	/// 	- examDate: The exam date
-	/// 	- subject: The current subject
+	/// 	- subject: The current `Subject`
 	///		- daysLeftBeforeTheExam: An integer that represents when the notification should be fired before the exam date
 	func scheduleNotification(for examDate: Date, subject: Subject, daysLeftBeforeTheExam: Int) {
 		let calendar = Calendar.current
@@ -38,5 +37,4 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 	func removePendingNotificationRequests() {
 		UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 	}
-
 }
