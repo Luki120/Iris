@@ -47,11 +47,12 @@ struct SubjectDetailsAssignmentCellView: View {
 						DatePicker(selection: $task.examDate, displayedComponents: .date) {}
 							.blendMode(.destinationOver)
 							.labelsHidden()
-							.onChange(of: task.examDate) { _,  newDate in
+							.onChange(of: task.examDate) { _, newDate in
 								viewModel.removePendingNotificationRequests()
 
-								viewModel.scheduleNotification(for: newDate, subject: subject, daysLeftBeforeTheExam: 10)
-								viewModel.scheduleNotification(for: newDate, subject: subject, daysLeftBeforeTheExam: 5)
+								viewModel.scheduleNotification(for: newDate, subject: subject, daysBeforeTheExam: 10)
+								viewModel.scheduleNotification(for: newDate, subject: subject, daysBeforeTheExam: 5)
+								viewModel.scheduleNotification(for: newDate, subject: subject, daysBeforeTheExam: 0)
 							}
 					}
 				}

@@ -11,20 +11,32 @@ import UserNotifications
 final class SubjectDetailsAssignmentCellViewViewModel {
 	/// Function to schedule a notification for the given exam date
 	/// - Parameters:
-	/// 	- examDate: The exam date
+	/// 	- examDate: The exam `Date`
 	/// 	- subject: The current `Subject`
-	///		- daysLeftBeforeTheExam: An integer that represents when the notification should be fired before the exam date
-	func scheduleNotification(for examDate: Date, subject: Subject, daysLeftBeforeTheExam: Int) {
+	///		- daysBeforeTheExam: An integer that represents when the notification should fire before the exam date
+	func scheduleNotification(for examDate: Date, subject: Subject, daysBeforeTheExam: Int) {
 		let calendar = Calendar.current
 
-		let notificationDate = calendar.date(byAdding: .day, value: -daysLeftBeforeTheExam, to: examDate)!
-		guard notificationDate > .now else { return }
+		let notificationDate = calendar.date(byAdding: .day, value: -daysBeforeTheExam, to: examDate)!
+		let sameDayDate = calendar.date(byAdding: .hour, value: 1, to: examDate)!
 
-		let triggerDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: notificationDate)
+		let triggerDateComponents = calendar.dateComponents(
+			[.year, .month, .day, .hour, .minute, .second],
+			from: daysBeforeTheExam == 0 ? sameDayDate : notificationDate
+		)
+
+		let bodyMessage: String
+
+		if daysBeforeTheExam == 0 {
+			bodyMessage = "Your \(subject.name) exam is today, good luck 🤞🏻🍀"
+		}
+		else {
+			bodyMessage = "Your \(subject.name) exam is less than \(daysBeforeTheExam) days away"
+		}
 
 		let content = UNMutableNotificationContent()
 		content.title = "Upcoming Exam"
-		content.body = "Your \(subject.name) exam is less than \(daysLeftBeforeTheExam) days away"
+		content.body = bodyMessage
 		content.sound = .default
 
 		let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDateComponents, repeats: false)
