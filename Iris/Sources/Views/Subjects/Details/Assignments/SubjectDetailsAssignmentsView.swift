@@ -16,11 +16,13 @@ struct SubjectDetailsAssignmentsView: View {
 	}
 
 	private var pendingAssignments: [Subject.Task] {
-		return subject.tasks.filter { !$0.isCompleted && $0.priority != .exam }.sorted(using: SortDescriptor(\.timestamp))
+		return subject.tasks
+			.filter { !$0.isCompleted && $0.priority != .exam }
+			.sorted(using: SortDescriptor(\.sortOrder))
 	}
 
 	private var completedAssignments: [Subject.Task] {
-		return subject.tasks.filter { $0.isCompleted }.sorted(using: SortDescriptor(\.timestamp))
+		return subject.tasks.filter { $0.isCompleted }.sorted(using: SortDescriptor(\.sortOrder))
 	}
 
 	var body: some View {
@@ -48,7 +50,12 @@ struct SubjectDetailsAssignmentsView: View {
 			Group {
 				Button("Add") {
 					withAnimation(.snappy) {
-						subject.tasks.append(.init(title: "", priority: .normal))
+						let nextSortOrder = subject.tasks
+							.filter { !$0.isCompleted && $0.priority != .exam }
+							.map(\.sortOrder)
+							.max() ?? -1
+
+						subject.tasks.append(.init(title: "", priority: .normal, sortOrder: nextSortOrder + 1))
 					}
 				}
 				.font(.quicksand(withStyle: .medium))
@@ -80,6 +87,22 @@ struct SubjectDetailsAssignmentsView: View {
 			ForEach(pendingAssignments) { task in
 				SubjectDetailsAssignmentCellView(subject: subject, task: task)
 			}
+			.onMove { indices, offset in
+				Task {
+					try? await Task.sleep(for: .seconds(1.35))
+
+					var tasks = pendingAssignments
+						.filter { !$0.isCompleted && $0.priority != .exam }
+						.sorted(using: SortDescriptor(\.sortOrder))
+
+					tasks.move(fromOffsets: indices, toOffset: offset)
+
+					for (index, task) in tasks.enumerated() {
+						task.sortOrder = index
+					}
+					try? SubjectsManager.shared.context?.save()
+				}
+			}
 		}
 	}
 }
@@ -90,7 +113,7 @@ private struct CompletedAssignmentsView: View {
 	@State private var showAll = false
 
 	private var filteredTasks: [Subject.Task] {
-		return subject.tasks.filter { $0.isCompleted }.sorted(using: SortDescriptor(\.timestamp))
+		return subject.tasks.filter { $0.isCompleted }.sorted(using: SortDescriptor(\.sortOrder))
 	}
 
 	var body: some View {

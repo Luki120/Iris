@@ -17,11 +17,11 @@ final class Subject {
 
 	/// Designated initializer
 	///  - Parameters:
-	///		- name: A string that represents the name
-	///		- year: A string that represents the year
-	///		- grades: An array of integers to represent the grades, defaults to empty
-	///		- isFinished: A boolean that represents if I finished the subject, defaults to`false`
-	///		- hasThreeExams: A boolean that represents wether the subject requires taking three exams or more, defaults to`false`
+	///		- name: A `String` that represents the name
+	///		- year: A `String` that represents the year
+	///		- grades: An `[Int]` array to represent the grades, defaults to empty
+	///		- isFinished: A `Bool` that represents if I finished the subject, defaults to `false`
+	///		- hasThreeExams: A `Bool` that represents wether the subject requires taking three exams or more, defaults to `false`
 	///		- finalExamDate: A `Date` object that represents the subject's final exam date, defaults to `.now`
 	init(
 		name: String,
@@ -46,10 +46,10 @@ extension Subject {
 	final class Task {
 		var title: String
 		var priority: Priority = Priority.normal
+		var sortOrder: Int = 0
 
 		var examDate = Date()
 		var isCompleted = false
-		private(set) var timestamp = Date()
 
 		@Transient
 		enum Priority: String, CaseIterable, Codable {
@@ -66,11 +66,13 @@ extension Subject {
 
 		/// Designated initializer
 		///  - Parameters:
-		///		- title: A string that represents the assignment's title
-		///		- priority: An enum that represents the assignment's priority
-		init(title: String, priority: Priority) {
+		///		- title: A `String` that represents the assignment's title
+		///		- priority: A `Priority` object that represents the assignment's priority
+		///		- sortOrder: An `Int` that represents the sort order
+		init(title: String, priority: Priority, sortOrder: Int) {
 			self.title = title
 			self.priority = priority
+			self.sortOrder = sortOrder
 		}
 	}
 }
@@ -101,6 +103,8 @@ extension Subject: Hashable {
 		lhs.name == rhs.name
 	}
 }
+
+// MARK: - Private
 
 private extension Date {
 	static let dateFormatter: DateFormatter = {

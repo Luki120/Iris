@@ -24,7 +24,13 @@ struct NewAssignmentIntent: AppIntent {
 
 		guard let subjects = try? SubjectsManager.shared.context?.fetch(descriptor) else { return .result() }
 		let subject = subjects.first(where: { $0.name == subjectEntity.id })
-		subject?.tasks.append(.init(title: assignment, priority: .normal))
+
+		let nextSortOrder = subject?.tasks
+			.filter { !$0.isCompleted && $0.priority != .exam }
+			.map(\.sortOrder)
+			.max() ?? -1
+
+		subject?.tasks.append(.init(title: assignment, priority: .normal, sortOrder: nextSortOrder + 1))
 
 		try? SubjectsManager.shared.context?.save()
 		return .result()
