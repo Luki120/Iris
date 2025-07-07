@@ -8,6 +8,10 @@ struct GradesChartView: View {
 	@State private var showSheet = false
 	@State private var tappedGrade = 0
 
+	private var sortedSubjects: [Subject] {
+		subjectManager.passedSubjects.sorted(using: SortDescriptor(\.finalExamDate))
+	}
+
 	private struct NewGrade {
 		let subject: Subject
 		let value: Int
@@ -16,9 +20,7 @@ struct GradesChartView: View {
 	var body: some View {
 		if !subjectManager.passedSubjects.isEmpty {
 			ScrollView {
-				Chart(
-					subjectManager.passedSubjects.sorted(using: SortDescriptor(\.finalExamDate))
-				) { subject in
+				Chart(sortedSubjects) { subject in
 					AreaMark(
 						x: .value("Subjects", subject.name),
 						y: .value("Grade", subject.grades.first ?? 0)
@@ -123,7 +125,7 @@ struct GradesChartView: View {
 	@ViewBuilder
 	private func AddNewGradeView() -> some View {
 		VStack(spacing: 20) {
-			List(subjectManager.passedSubjects) { subject in
+			List(sortedSubjects) { subject in
 				HStack {
 					Text(subject.name)
 					Spacer()
