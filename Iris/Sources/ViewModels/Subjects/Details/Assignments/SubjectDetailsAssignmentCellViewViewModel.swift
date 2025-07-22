@@ -16,22 +16,26 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 	///		- daysBeforeTheExam: An integer that represents when the notification should fire before the exam date
 	func scheduleNotification(for examDate: Date, subject: Subject, daysBeforeTheExam: Int) {
 		let calendar = Calendar.current
-
-		let notificationDate = calendar.date(byAdding: .day, value: -daysBeforeTheExam, to: examDate)!
-		let sameDayDate = calendar.date(byAdding: .hour, value: 1, to: examDate)!
-
-		let triggerDateComponents = calendar.dateComponents(
-			[.year, .month, .day, .hour, .minute, .second],
-			from: daysBeforeTheExam == 0 ? sameDayDate : notificationDate
-		)
-
 		let bodyMessage: String
+		let notificationDate: Date
+
+		var components: DateComponents
 
 		if daysBeforeTheExam == 0 {
 			bodyMessage = "Your \(subject.name) exam is today, good luck 🤞🏻🍀"
+
+			components = calendar.dateComponents([.year, .month, .day], from: examDate)
+			components.hour = 7
+			components.minute = 30
+			components.second = 0
+
+			notificationDate = calendar.date(from: components)!
 		}
 		else {
 			bodyMessage = "Your \(subject.name) exam is less than \(daysBeforeTheExam) days away"
+
+			notificationDate = calendar.date(byAdding: .day, value: -daysBeforeTheExam, to: examDate)!
+			components = calendar.dateComponents([.year, .month, .day, .hour], from: notificationDate)
 		}
 
 		let content = UNMutableNotificationContent()
@@ -39,7 +43,7 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 		content.body = bodyMessage
 		content.sound = .default
 
-		let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDateComponents, repeats: false)
+		let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
 		let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
 		UNUserNotificationCenter.current().add(request)
