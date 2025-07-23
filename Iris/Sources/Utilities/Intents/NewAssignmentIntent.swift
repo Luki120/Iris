@@ -8,6 +8,7 @@
 import AppIntents
 import SwiftData
 
+/// App intent to create new assignments for a specific subject
 struct NewAssignmentIntent: AppIntent {
 	static let title: LocalizedStringResource = "Create new assignment"
 	static let openAppWhenRun = true
@@ -34,18 +35,6 @@ struct NewAssignmentIntent: AppIntent {
 
 		try? SubjectsManager.shared.context?.save()
 		return .result()
-	}
-}
-
-struct AppShortcuts: AppShortcutsProvider {
-	@AppShortcutsBuilder
-	static var appShortcuts: [AppShortcut] {
-		AppShortcut(
-			intent: NewAssignmentIntent(),
-			phrases: ["Use \(.applicationName) to create a new assignment"],
-			shortTitle: "Create assignment",
-			systemImageName: "book"
-		)
 	}
 }
 
