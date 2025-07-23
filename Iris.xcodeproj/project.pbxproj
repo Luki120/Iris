@@ -37,6 +37,8 @@
 		148D13A02C981CDF0069905C /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148D139F2C981CDF0069905C /* TokenResponse.swift */; };
 		1492E0522C94C74D00E8315E /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1492E0512C94C74D00E8315E /* AuthService.swift */; };
 		1492E0562C94CAC300E8315E /* AuthRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1492E0552C94CAC300E8315E /* AuthRequest.swift */; };
+		1496F0032E30C19300533E81 /* StartNewTimerIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496F0022E30C18B00533E81 /* StartNewTimerIntent.swift */; };
+		1496F0052E30C2FE00533E81 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496F0042E30C2F400533E81 /* AppShortcuts.swift */; };
 		14B3F5212DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B3F5202DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift */; };
 		14B3F5242DF16CA600D6DB76 /* NewAssignmentIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B3F5232DF16C9C00D6DB76 /* NewAssignmentIntent.swift */; };
 		14C7CFFF2C58F23E007F6A2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14C7CFFE2C58F23E007F6A2E /* Assets.xcassets */; };
@@ -114,6 +116,8 @@
 		148D139F2C981CDF0069905C /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
 		1492E0512C94C74D00E8315E /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		1492E0552C94CAC300E8315E /* AuthRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequest.swift; sourceTree = "<group>"; };
+		1496F0022E30C18B00533E81 /* StartNewTimerIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNewTimerIntent.swift; sourceTree = "<group>"; };
+		1496F0042E30C2F400533E81 /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
 		14AD1D462CA61EA500CE313F /* Iris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iris.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14B3F5202DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsView.swift; sourceTree = "<group>"; };
 		14B3F5232DF16C9C00D6DB76 /* NewAssignmentIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAssignmentIntent.swift; sourceTree = "<group>"; };
@@ -325,6 +329,8 @@
 		14B3F5222DF16C8400D6DB76 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
+				1496F0042E30C2F400533E81 /* AppShortcuts.swift */,
+				1496F0022E30C18B00533E81 /* StartNewTimerIntent.swift */,
 				14B3F5232DF16C9C00D6DB76 /* NewAssignmentIntent.swift */,
 			);
 			path = Intents;
@@ -648,6 +654,7 @@
 				148D13A02C981CDF0069905C /* TokenResponse.swift in Sources */,
 				14C7D0462C58F323007F6A2E /* SubjectsVC.swift in Sources */,
 				14C7D02E2C58F2DD007F6A2E /* SettingsCoordinator.swift in Sources */,
+				1496F0032E30C19300533E81 /* StartNewTimerIntent.swift in Sources */,
 				14B3F5242DF16CA600D6DB76 /* NewAssignmentIntent.swift in Sources */,
 				14C7D0252C58F2DD007F6A2E /* CurrentlyTakingSubjectCellViewModel.swift in Sources */,
 				1492E0562C94CAC300E8315E /* AuthRequest.swift in Sources */,
@@ -655,6 +662,7 @@
 				140F5A8E2C9CA4D70093A159 /* DeveloperCellView.swift in Sources */,
 				14C7D02C2C58F2DD007F6A2E /* Coordinator.swift in Sources */,
 				14C7D0262C58F2DD007F6A2E /* SubjectCellViewModel.swift in Sources */,
+				1496F0052E30C2FE00533E81 /* AppShortcuts.swift in Sources */,
 				14C7D04E2C58F441007F6A2E /* SceneDelegate.swift in Sources */,
 				14C7D0412C58F323007F6A2E /* HomeView.swift in Sources */,
 				145212AD2C8E9EB700CE286C /* SubjectDetailsAssignmentsVC.swift in Sources */,

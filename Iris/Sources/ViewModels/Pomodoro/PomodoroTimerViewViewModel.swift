@@ -43,6 +43,13 @@ final class PomodoroTimerViewViewModel {
 		Task {
 			try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
 		}
+
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(startTimerFromIntent),
+			name: .didStartNewTimerNotification,
+			object: nil
+		)
 	}
 
 	// MARK: - Timer
@@ -114,6 +121,11 @@ final class PomodoroTimerViewViewModel {
 
 		UIApplication.shared.isIdleTimerDisabled = false
 		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
+	}
+
+	@objc
+	private func startTimerFromIntent() {
+		startTimer()
 	}
 }
 

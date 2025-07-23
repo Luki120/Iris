@@ -8,6 +8,10 @@ extension String {
 	static let githubImageURL = "https://avatars.githubusercontent.com/u/74214115?v=4"
 }
 
+extension Notification.Name {
+	static let didStartNewTimerNotification = Notification.Name("didStartNewTimerNotification")
+}
+
 // MARK: - SwiftUI
 
 extension Color {
