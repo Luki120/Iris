@@ -6,7 +6,6 @@
 //
 
 import AppIntents
-import SwiftData
 
 /// App intent to create new assignments for a specific subject
 struct NewAssignmentIntent: AppIntent {
@@ -21,10 +20,7 @@ struct NewAssignmentIntent: AppIntent {
 
 	@MainActor
 	func perform() async throws -> some IntentResult {
-		let descriptor = FetchDescriptor<Subject>(sortBy: [SortDescriptor(\.name)])
-
-		guard let subjects = try? SubjectsManager.shared.context?.fetch(descriptor) else { return .result() }
-		let subject = subjects.first(where: { $0.name == subjectEntity.id })
+		let subject = SubjectsManager.shared.currentlyTakingSubjects.first(where: { $0.name == subjectEntity.id })
 
 		let nextSortOrder = subject?.tasks
 			.filter { !$0.isCompleted && $0.priority != .exam }
@@ -63,7 +59,7 @@ struct SubjectEntity: AppEntity {
 		}
 
 		func suggestedEntities() async throws -> [SubjectEntity] {
-			return SubjectsManager.shared.currentlyTakingSubjects.map { .init(from: $0) }
+			return SubjectsManager.shared.currentlyTakingSubjects.compactMap { .init(from: $0) }
 		}
 	}
 }
