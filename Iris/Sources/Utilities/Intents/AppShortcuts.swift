@@ -12,17 +12,29 @@ struct AppShortcuts: AppShortcutsProvider {
 	@AppShortcutsBuilder
 	static var appShortcuts: [AppShortcut] {
 		AppShortcut(
+			intent: CompletedAssignmentIntent(),
+			phrases: ["Complete assignment in \(.applicationName)"],
+			shortTitle: "Complete assignment",
+			systemImageName: "checkmark"
+		)
+		AppShortcut(
 			intent: NewAssignmentIntent(),
-			phrases: ["Use \(.applicationName) to create a new assignment"],
+			phrases: ["Create a new assignment in \(.applicationName)"],
 			shortTitle: "Create assignment",
-			systemImageName: "book"
+			systemImageName: "square.and.pencil"
 		)
 
 		AppShortcut(
 			intent: StartNewTimerIntent(),
-			phrases: ["Use \(.applicationName) to start a new timer"],
-			shortTitle: "Start a new timer",
+			phrases: ["Start a new timer in \(.applicationName)"],
+			shortTitle: "Start new timer",
 			systemImageName: "timer"
+		)
+		AppShortcut(
+			intent: TakeSubjectIntent(),
+			phrases: ["Take a new subject in \(.applicationName)"],
+			shortTitle: "Take subject",
+			systemImageName: "books.vertical"
 		)
 	}
 }
