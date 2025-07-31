@@ -15,6 +15,8 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 	/// 	- subject: The current `Subject`
 	///		- daysBeforeTheExam: An integer that represents when the notification should fire before the exam date
 	func scheduleNotification(for examDate: Date, subject: Subject, daysBeforeTheExam: Int) {
+		guard examDate > .now else { return }
+
 		let calendar = Calendar.current
 		let bodyMessage: String
 		let notificationDate: Date
