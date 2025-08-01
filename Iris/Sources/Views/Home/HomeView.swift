@@ -58,7 +58,7 @@ final class HomeView: UIView {
 		pinViewToAllEdges(subjectsCollectionView)
 
 		viewModel.delegate = self
-		viewModel.setupCollectionViewDiffableDataSource(for: subjectsCollectionView)
+		viewModel.setupDiffableDataSource(for: subjectsCollectionView)
 	}
 
 	// MARK: - Private
@@ -82,7 +82,7 @@ final class HomeView: UIView {
 	}
 
 	private func fetchImage() {
-		Task.detached(priority: .background) {
+		Task {
 			let image = await self.viewModel.fetchImage()
 
 			await MainActor.run {
@@ -170,10 +170,10 @@ private extension NSAttributedString {
 		let fullStringFont: UIFont = .quicksand(withStyle: .semiBold, size: 22)
 		let subStringFont: UIFont = .quicksand(withStyle: .bold, size: 22)
 
-		attributedString.addAttribute(NSAttributedString.Key.font, value: fullStringFont, range: rangeOfFullString)
-		attributedString.addAttribute(NSAttributedString.Key.font, value: subStringFont, range: rangeOfSubString)
-		attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.systemGray, range: rangeOfFullString)
-		attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.label, range: rangeOfSubString)
+		attributedString.addAttribute(.font, value: fullStringFont, range: rangeOfFullString)
+		attributedString.addAttribute(.font, value: subStringFont, range: rangeOfSubString)
+		attributedString.addAttribute(.foregroundColor, value: UIColor.systemGray, range: rangeOfFullString)
+		attributedString.addAttribute(.foregroundColor, value: UIColor.label, range: rangeOfSubString)
 
 		self.init(attributedString: attributedString)
 	}

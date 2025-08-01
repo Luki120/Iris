@@ -58,25 +58,24 @@ final class HomeViewViewModel: NSObject {
 			let _ = SubjectsManager.shared.currentlyTakingSubjects
 		} onChange: {
 			Task { @MainActor [weak self] in
-				self?.applyDiffableDataSourceSnapshot(
-					withModels: SubjectsManager.shared.currentlyTakingSubjects.sorted(using: KeyPathComparator(\.name))
-				)
+				guard let self else { return }
+				applySnapshot(withModels: SubjectsManager.shared.currentlyTakingSubjects)
 
-				guard let headerView = self?.collectionView.supplementaryView(
+				guard let headerView = collectionView.supplementaryView(
 					forElementKind: UICollectionView.elementKindSectionHeader,
 					at: IndexPath(row: 0, section: 1)
 				) as? AllSubjectsHeaderView else { return }
 
 				headerView.titleLabel.text = SubjectsManager.shared.currentlyTakingSubjects.isEmpty ? "" : "Currently taking"
-			}
-			MainActor.assumeIsolated {
-				self.observeSubjects()
+
+				observeSubjects()
 			}
 		}
 	}
 
 	/// Function to fetch the profile picture image
-	func fetchImage() async -> UIImage? {
+	/// - Returns: `UIImage?`
+	nonisolated func fetchImage() async -> UIImage? {
 		guard let url = URL(string: .githubImageURL) else { return nil }
 
 		do {
@@ -95,9 +94,8 @@ final class HomeViewViewModel: NSObject {
 
 extension HomeViewViewModel {
 	/// Function to setup the collection view's diffable data source
-	/// - Parameters:
-	///		- collectionView: The collection view
-	func setupCollectionViewDiffableDataSource(for collectionView: UICollectionView) {
+	/// - Parameter collectionView: The collection view
+	func setupDiffableDataSource(for collectionView: UICollectionView) {
 		dataSource = DataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
 			guard let self else { fatalError() }
 			self.collectionView = collectionView
@@ -125,7 +123,7 @@ extension HomeViewViewModel {
 			}
 		}
 		setupHeaderRegistration()
-		applyDiffableDataSourceSnapshot(withModels: SubjectsManager.shared.currentlyTakingSubjects)
+		applySnapshot(withModels: SubjectsManager.shared.currentlyTakingSubjects)
 	}
 
 	private func setupHeaderRegistration() {
@@ -147,7 +145,7 @@ extension HomeViewViewModel {
 		}
 	}
 
-	private func applyDiffableDataSourceSnapshot(withModels models: [Subject]) {
+	private func applySnapshot(withModels models: [Subject]) {
 		guard let dataSource else { return }
 
 		var snapshot = Snapshot()
@@ -160,7 +158,7 @@ extension HomeViewViewModel {
 				case 0: snapshot.appendItems(section.viewModels, toSection: section)
 				case 1: snapshot.appendItems(mappedModels, toSection: section)
 				default: break
- 			}
+			}
 		}
 		dataSource.apply(snapshot)
 	}
@@ -196,13 +194,11 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 						self.dataSource.apply(self.dataSource.snapshot())
 					}
 					let passedAction = UIAction(title: "Passed", image: UIImage(systemName: "checkmark")) { _ in
-						subject.isFinished = true
-
-						SubjectsManager.shared.markSubjectAsPassed(subject, at: indexPath.item)
+						SubjectsManager.shared.passed(subject: subject, at: indexPath.item)
 						self.dataSource.apply(self.dataSource.snapshot())
 					}
 
-					guard subject.grades.isEmpty else {
+					guard subject.finalGrades.isEmpty else {
 						return UIMenu(options: .displayInline, children: [passedAction, deleteAction])
 					}
 					return UIMenu(options: .displayInline, children: [deleteAction])
