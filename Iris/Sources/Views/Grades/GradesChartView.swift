@@ -6,7 +6,7 @@ struct GradesChartView: View {
 	@State private var subjectManager = SubjectsManager.shared
 	@State private var newGrades = [NewGrade]()
 	@State private var showSheet = false
-	@State private var tappedGrade = 0
+	@State private var tappedSubject = ""
 
 	private var sortedSubjects: [Subject] {
 		subjectManager.passedSubjects.sorted(using: SortDescriptor(\.finalExamDate))
@@ -22,8 +22,8 @@ struct GradesChartView: View {
 			ScrollView {
 				Chart(sortedSubjects) { subject in
 					AreaMark(
-						x: .value("Subjects", subject.name),
-						y: .value("Grade", subject.grades.first ?? 0)
+						x: .value("Subjects", subject.shortName),
+						y: .value("Grade", subject.finalGrades.first ?? 0)
 					)
 					.foregroundStyle(
 						Gradient(
@@ -36,8 +36,8 @@ struct GradesChartView: View {
 					.interpolationMethod(.catmullRom)
 
 					LineMark(
-						x: .value("Subjects", subject.name),
-						y: .value("Grade", subject.grades.first ?? 0)
+						x: .value("Subjects", subject.shortName),
+						y: .value("Grade", subject.finalGrades.first ?? 0)
 					)
 					.foregroundStyle(Color.irisSlateBlue)
 					.interpolationMethod(.catmullRom)
@@ -49,30 +49,32 @@ struct GradesChartView: View {
 					}
 
 					PointMark(
-						x: .value("Subjects", subject.name),
-						y: .value("Grade", subject.grades.first ?? 0)
+						x: .value("Subjects", subject.shortName),
+						y: .value("Grade", subject.finalGrades.first ?? 0)
 					)
 					.annotation {
-						if let grade = subject.grades.first, tappedGrade == grade {
+						if let grade = subject.finalGrades.first, tappedSubject == subject.shortName {
 							Text(String(describing: grade))
 						}
 					}
 					.opacity(0)
 				}
-				.chartOverlay { chartProxy in
-					GeometryReader { _ in
-						Color.clear
-							.contentShape(.rect)
-							.onTapGesture { location in
-								guard let (_, grade) = chartProxy.value(at: location, as: (String, Int).self) else {
-									return
-								}
+				.chartGesture { proxy in
+					SpatialTapGesture()
+						.onEnded { value in
+							if let (subjectName, _) = proxy.value(at: value.location, as: (String, Int).self),
+							   let subject = sortedSubjects.first(where: { $0.shortName == subjectName }) {
 								withAnimation(.easeInOut(duration: 0.25)) {
-									tappedGrade = grade
+									tappedSubject = subject.shortName
 								}
 							}
-					}
+							else {
+								tappedSubject = ""
+							}
+						}
 				}
+				.chartScrollableAxes(.horizontal)
+				.chartXVisibleDomain(length: 5)
 				.chartXAxis {
 					GradesAxisContent()
 				}
@@ -84,7 +86,7 @@ struct GradesChartView: View {
 				.padding()
 
 				let gradesAverage: Double = subjectManager.passedSubjects
-					.flatMap(\.grades)
+					.flatMap(\.finalGrades)
 					.average { $0 }
 
 				VStack(alignment: .leading, spacing: 15) {
@@ -163,7 +165,7 @@ struct GradesChartView: View {
 			Button("Confirm") {
 				withAnimation(.snappy) {
 					newGrades.forEach {
-						$0.subject.grades.append($0.value)
+						$0.subject.finalGrades.append($0.value)
 					}
 					newGrades.removeAll()
 				}
