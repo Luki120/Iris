@@ -9,7 +9,9 @@
 struct SubjectDTO: Codable {
 	let name: String
 	let year: String
-	let grades: [Int]
+	let shortName: String
+	let examGrades: [Int]
+	let finalGrades: [Int]
 	let isFinished: Bool
 	let hasThreeExams: Bool
 	let finalExamDate: String

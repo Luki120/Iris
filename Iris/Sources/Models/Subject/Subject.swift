@@ -4,13 +4,15 @@ import struct SwiftUI.Color
 
 /// API model class that represents a `Subject` object
 @Model
-final class Subject {
+final class Subject: @unchecked	Sendable {
 	private(set) var name: String
 	private(set) var year: String
+	private(set) var shortName: String
+	private(set) var hasThreeExams: Bool
 
-	var grades = [Int]()
+	var examGrades = [Int]()
+	var finalGrades = [Int]()
 	var isFinished = false
-	var hasThreeExams = false
 	var finalExamDate = Date()
 
 	var tasks = [Task]()
@@ -19,21 +21,27 @@ final class Subject {
 	///  - Parameters:
 	///		- name: A `String` that represents the name
 	///		- year: A `String` that represents the year
-	///		- grades: An `[Int]` array to represent the grades, defaults to empty
+	///		- shortName: A `String` that represents the short name, useful for displaying in charts
+	///		- examGrades: An `[Int]` array to represent the grades, defaults to empty
+	///		- finalGrades: An `[Int]` array to represent the final grades, defaults to empty
 	///		- isFinished: A `Bool` that represents if I finished the subject, defaults to `false`
-	///		- hasThreeExams: A `Bool` that represents wether the subject requires taking three exams or more, defaults to `false`
+	///		- hasThreeExams: A `Bool` that represents wether the subject requires taking three exams or more
 	///		- finalExamDate: A `Date` object that represents the subject's final exam date, defaults to `.now`
 	init(
 		name: String,
 		year: String,
-		grades: [Int] = [],
+		shortName: String,
+		examGrades: [Int] = [],
+		finalGrades: [Int] = [],
 		isFinished: Bool = false,
-		hasThreeExams: Bool = false,
+		hasThreeExams: Bool,
 		finalExamDate: Date = .now
 	) {
 		self.name = name
 		self.year = year
-		self.grades = grades
+		self.shortName = shortName
+		self.examGrades = examGrades
+		self.finalGrades = finalGrades
 		self.isFinished = isFinished
 		self.hasThreeExams = hasThreeExams
 		self.finalExamDate = finalExamDate
@@ -67,7 +75,7 @@ extension Subject {
 		/// Designated initializer
 		///  - Parameters:
 		///		- title: A `String` that represents the assignment's title
-		///		- priority: A `Priority` object that represents the assignment's priority
+		///		- priority: A `Priority` enum that represents the assignment's priority
 		///		- sortOrder: An `Int` that represents the sort order
 		init(title: String, priority: Priority, sortOrder: Int) {
 			self.title = title
@@ -84,11 +92,24 @@ extension Subject {
 		self.init(
 			name: subjectDTO.name,
 			year: subjectDTO.year,
-			grades: subjectDTO.grades,
+			shortName: subjectDTO.shortName.isEmpty ? subjectDTO.name : subjectDTO.shortName,
+			examGrades: subjectDTO.examGrades,
+			finalGrades: subjectDTO.finalGrades,
 			isFinished: subjectDTO.isFinished,
 			hasThreeExams: subjectDTO.hasThreeExams,
 			finalExamDate: parsedDate
 		)
+	}
+}
+
+extension Subject {
+	func setFinalGrade(_ grade: Int) {
+		if finalGrades.isEmpty {
+			finalGrades.append(grade)
+		}
+		else {
+			finalGrades[0] = grade
+		}
 	}
 }
 
