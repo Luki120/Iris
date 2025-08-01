@@ -41,8 +41,7 @@ final class AllSubjectsCell: UICollectionViewCell {
 
 extension AllSubjectsCell {
 	/// Function to configure the cell with its respective view model
-	/// -  Parameters:
-	/// 	- with: The view model object
+	/// - Parameter viewModel: The view model object
 	func configure(with viewModel: AllSubjectsCellViewModel) {
 		totalSubjectsLabel.attributedText = .init(
 			fullString: String(describing: viewModel.count) + "\n" + viewModel.title,
@@ -53,9 +52,12 @@ extension AllSubjectsCell {
 
 private extension NSAttributedString {
 	convenience init(fullString: String, subString: String) {
-		let rangeOfSubString = (fullString as NSString).range(of: subString)
-		let rangeOfFullString = NSRange(location: 0, length: fullString.count)
-		let attributedString = NSMutableAttributedString(string: fullString)
+		var attributedString = AttributedString(fullString)
+
+		guard let subRange = attributedString.range(of: subString) else {
+			self.init(attributedString)
+			return
+		}
 
 		let fullStringFont: UIFont = .quicksand(withStyle: .semiBold, size: 50)
 		let subStringFont: UIFont = .quicksand(withStyle: .medium, size: 18)
@@ -64,12 +66,20 @@ private extension NSAttributedString {
 		paragraphStyle.alignment = .center
 		paragraphStyle.paragraphSpacing = 0.05 * fullStringFont.lineHeight
 
-		attributedString.addAttribute(NSAttributedString.Key.font, value: fullStringFont, range: rangeOfFullString)
-		attributedString.addAttribute(NSAttributedString.Key.font, value: subStringFont, range: rangeOfSubString)
-		attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.label, range: rangeOfFullString)
-		attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.systemGray, range: rangeOfSubString)
-		attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: rangeOfFullString)
+		let fullStringAttributes = AttributeContainer()
+			.font(fullStringFont)
+			.foregroundColor(.label)
+			.paragraphStyle(paragraphStyle)
 
-		self.init(attributedString: attributedString)
+		let subAttributes = AttributeContainer()
+			.font(subStringFont)
+			.foregroundColor(.systemGray)
+
+		attributedString.setAttributes(fullStringAttributes)
+		attributedString[subRange].setAttributes(subAttributes)
+
+		self.init(attributedString)
 	}
 }
+
+extension NSParagraphStyle: @unchecked @retroactive Sendable {}
