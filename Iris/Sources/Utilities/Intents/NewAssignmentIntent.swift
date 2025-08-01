@@ -12,7 +12,7 @@ struct NewAssignmentIntent: AppIntent {
 	static let title: LocalizedStringResource = "Create new assignment"
 	static let openAppWhenRun = true
 
-	@Parameter(title: "Choose a subject")
+	@Parameter(title: "Choose subject")
 	private var subjectEntity: SubjectEntity
 
 	@Parameter(title: "Assignment")
@@ -28,8 +28,6 @@ struct NewAssignmentIntent: AppIntent {
 			.max() ?? -1
 
 		subject?.tasks.append(.init(title: assignment, priority: .normal, sortOrder: nextSortOrder + 1))
-
-		try? SubjectsManager.shared.context?.save()
 		return .result()
 	}
 }

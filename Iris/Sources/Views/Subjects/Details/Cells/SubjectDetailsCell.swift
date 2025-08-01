@@ -12,7 +12,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 	private var hashtagLabel, examLabel, finalExamLabel: UILabel!
 	private var examLabelTopConstraint, examLabelBottomConstraint: NSLayoutConstraint!
 
-	private(set) lazy var gradeTextField: UITextField = {
+	private lazy var gradeTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = .quicksand(withStyle: .semiBold, size: 25)
 		textField.delegate = self
@@ -24,7 +24,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		return textField
 	}()
 
-	private(set) lazy var finalExamDatePicker: UIDatePicker = {
+	private lazy var finalExamDatePicker: UIDatePicker = {
 		let datePicker = UIDatePicker()
 		datePicker.datePickerMode = .date
 		datePicker.preferredDatePickerStyle = .compact
@@ -40,8 +40,8 @@ final class SubjectDetailsCell: UICollectionViewCell {
 	}
 #endif
 
-	var onGradeChange: ((String) -> Void)!
-	var onSelectedExamDate: ((Date) -> Void)!
+	var onGradeChange: ((String) -> Void) = { _ in }
+	var onSelectedExamDate: ((Date) -> Void) = { _ in }
 
 	// MARK: - Lifecycle
 
@@ -148,12 +148,13 @@ final class SubjectDetailsCell: UICollectionViewCell {
 
 extension SubjectDetailsCell {
 	/// Function to configure the cell with its respective view model
-	/// -  Parameters:
-	/// 	- with: The view model object
+	/// -  Parameter with: The view model object
 	func configure(with viewModel: SubjectDetailsCellViewModel) {
 		examLabel.text = viewModel.exam
+		gradeTextField.text = viewModel.displayedGrade
 
 		guard viewModel.isFinalCell else { return }
+		finalExamDatePicker.date = viewModel.finalExamDate
 		setupFinalCell()
 	}
 }
@@ -162,7 +163,7 @@ extension SubjectDetailsCell {
 
 extension SubjectDetailsCell: UITextFieldDelegate {
 	func textFieldDidEndEditing(_ textField: UITextField) {
-		guard let onGradeChange, let text = textField.text else { return }
+		guard let text = textField.text else { return }
 		onGradeChange(text)
 	}
 }

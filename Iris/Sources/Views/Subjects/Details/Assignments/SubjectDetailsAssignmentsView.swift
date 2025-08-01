@@ -100,7 +100,6 @@ struct SubjectDetailsAssignmentsView: View {
 					for (index, task) in tasks.enumerated() {
 						task.sortOrder = index
 					}
-					try? SubjectsManager.shared.context?.save()
 				}
 			}
 		}

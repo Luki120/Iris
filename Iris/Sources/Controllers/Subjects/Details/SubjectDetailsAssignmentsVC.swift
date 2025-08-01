@@ -25,10 +25,8 @@ final class SubjectDetailsAssignmentsVC: UIViewController {
 		self.viewModel = viewModel
 		super.init(nibName: nil, bundle: nil)
 
-		guard let container = SubjectsManager.shared.sharedContainer else { return }
-
 		let subjectDetailsAssignmentsView = SubjectDetailsAssignmentsView(subject: viewModel.subject)
-			.modelContext(.init(container))
+			.modelContext(.init(SubjectsManager.shared.sharedContainer))
 
 		let hostingController = UIHostingController(rootView: subjectDetailsAssignmentsView)
 

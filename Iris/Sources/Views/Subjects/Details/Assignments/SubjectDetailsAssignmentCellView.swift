@@ -109,7 +109,6 @@ struct SubjectDetailsAssignmentCellView: View {
 			_ = subject.tasks.remove(at: index)
 		}
 
-		SubjectsManager.shared.context?.delete(task)
-		try? SubjectsManager.shared.context?.save()
+		SubjectsManager.shared.delete(task)
 	}
 }

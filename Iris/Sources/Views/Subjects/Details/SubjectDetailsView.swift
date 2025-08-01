@@ -41,15 +41,14 @@ final class SubjectDetailsView: UIView {
 	}
 
 	/// Designated initializer
-	/// - Parameters:
-	/// 	- viewModel: The view model object
+	/// - Parameter viewModel: The view model object
 	init(viewModel: SubjectDetailsViewViewModel) {
 		self.viewModel = viewModel
 		super.init(frame: .zero)
 		pinViewToAllEdges(subjectDetailsCollectionView)
 
 		viewModel.delegate = self
-		viewModel.setupCollectionViewDiffableDataSource(for: subjectDetailsCollectionView)
+		viewModel.setupDiffableDataSource(for: subjectDetailsCollectionView)
 	}
 }
 

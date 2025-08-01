@@ -2,27 +2,32 @@ import Foundation
 import SwiftData
 
 /// Singleton to handle finished & curently taking subjects
+@MainActor
 @Observable
 final class SubjectsManager {
-	private(set) var context: ModelContext?
 	private(set) var currentlyTakingSubjects = [Subject]()
 	private(set) var passedSubjects = [Subject]()
-	private(set) var sharedContainer: ModelContainer?
 
-	@MainActor
+	@ObservationIgnored
+	private var backgroundActor: BackgroundActor!
+
+	@ObservationIgnored var sharedContainer: ModelContainer {
+		guard let container = try? ModelContainer(for: Subject.self, Subject.Task.self) else {
+			fatalError("Failed to initialize a model container")
+		}
+		return container
+	}
+
 	static let shared = SubjectsManager()
 
 	private init() {
-		guard let sharedContainer = try? ModelContainer(for: Subject.self, Subject.Task.self) else { return }
-		context = ModelContext(sharedContainer)
+		Task {
+			self.backgroundActor = .init(modelContainer: sharedContainer)
+			let subjects: [Subject] = try await backgroundActor.fetch()
 
-		self.sharedContainer = sharedContainer
-
-		let descriptor = FetchDescriptor<Subject>(sortBy: [SortDescriptor(\.name)])
-		guard let subjects = try? context?.fetch(descriptor) else { return }
-
-		currentlyTakingSubjects = subjects.filter { !$0.isFinished }
-		passedSubjects = subjects.filter { $0.isFinished }
+			currentlyTakingSubjects = subjects.filter { !$0.isFinished }
+			passedSubjects = subjects.filter { $0.isFinished }
+		}
 	}
 }
 
@@ -30,68 +35,128 @@ final class SubjectsManager {
 
 extension SubjectsManager {
 	/// Function to track currently taking subjects
-	/// - Parameters:
-	///		- subject: The `Subject` object
+	/// - Parameter subject: The `Subject` object
 	func takeSubject(_ subject: Subject) {
-		let subject = Subject(
-			name: subject.name,
-			year: subject.year,
-			grades: subject.grades,
-			isFinished: subject.isFinished,
-			hasThreeExams: subject.hasThreeExams,
-			finalExamDate: subject.finalExamDate
-		)
+		Task {
+			let subject = Subject(
+				name: subject.name,
+				year: subject.year,
+				shortName: subject.shortName,
+				hasThreeExams: subject.hasThreeExams,
+			)
 
-		guard !currentlyTakingSubjects.contains(subject) else { return }
+			guard !currentlyTakingSubjects.contains(subject) else { return }
+			currentlyTakingSubjects.append(subject)
 
-		currentlyTakingSubjects.append(subject)
-		currentlyTakingSubjects.sort(using: SortDescriptor(\.name))
-		context?.insert(subject)
+			await backgroundActor.insert(subject)
+		}
 	}
 
 	/// Function to delete a subject at the given index
 	/// - Parameters:
 	///		- subject: The `Subject` object
 	///		- index: The index for the subject
-	func delete(subject: Subject, at index: Int, markAsPassed: Bool = false) {
-		if !markAsPassed {
-			let keys = ["First", "Second", "Third", "Final"]
-			keys.forEach {
-				let key = subject.name.lowercased().components(separatedBy: .whitespaces).joined() + "\($0)ExamGrade"
-				UserDefaults.standard.removeObject(forKey: key)
-			}
+	func delete(subject: Subject, at index: Int) {
+		Task {
+			currentlyTakingSubjects.remove(at: index)
+			await backgroundActor.delete(subject)
 		}
-
-		currentlyTakingSubjects.remove(at: index)
-		context?.delete(subject)
-		try? context?.save()
 	}
 
 	/// Function to mark a subject as passed at the given index
 	/// - Parameters:
 	///		- subject: The `Subject` object
 	///		- index: The index for the subject
-	func markSubjectAsPassed(_ subject: Subject, at index: Int) {
-		delete(subject: subject, at: index, markAsPassed: true)
+	func passed(subject: Subject, at index: Int) {
+		Task {
+			subject.isFinished = true
+			delete(subject: subject, at: index)
+			await backgroundActor.save()
 
-		guard !passedSubjects.contains(subject) else { return }
+			try await Task.sleep(for: .seconds(0.2))
 
-		passedSubjects.append(subject)
-		passedSubjects.sort(using: SortDescriptor(\.name))
-		context?.insert(subject)
+			guard !passedSubjects.contains(subject) else { return }
+			passedSubjects.append(subject)
+			await backgroundActor.insert(subject)
+		}
+	}
+
+	/// Function to update the currently taking subjects array
+	/// - Parameter subject: The `Subject` object
+	func update(subject: Subject) {
+		guard let index = currentlyTakingSubjects.firstIndex(where: { $0 === subject }) else { return }
+		currentlyTakingSubjects[index] = subject
+	}
+}
+
+// MARK: - SwiftData
+
+extension SubjectsManager {
+	/// Function to delete a SwiftData model from the database
+	/// - Parameter model: The `PersistentModel` object
+	func delete<M: PersistentModel>(_ model: M) {
+		Task { [model] in
+			await backgroundActor.delete(model)
+		}
 	}
 
 	/// Function to purge all data from the SwiftData container, for development purposes
 	func purgeAllData() {
-		if #available(iOS 18, *) {
-			try? sharedContainer?.erase()
+		Task {
+			try await backgroundActor.purgeAllData(for: Subject.self)
+			try await backgroundActor.purgeAllData(for: Subject.Task.self)
+			exit(0)
 		}
-		else {
-			try? context?.delete(model: Subject.self)
-			try? context?.delete(model: Subject.Task.self)
+	}
+}
+
+private extension SubjectsManager {
+	final actor BackgroundActor {
+		let modelContainer: ModelContainer
+		private let modelExecutor: ModelExecutor
+		private var modelContext: ModelContext { modelExecutor.modelContext }
+
+		init(modelContainer: ModelContainer) {
+			self.modelExecutor = DefaultSerialModelExecutor(modelContext: ModelContext(modelContainer))
+			self.modelExecutor.modelContext.autosaveEnabled = true
+			self.modelContainer = modelContainer
 		}
 
-		UserDefaults.standard.dictionaryRepresentation().keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
-		exit(0)
+		func insert<M: PersistentModel>(_ model: M) {
+			modelContext.insert(model)
+			save()
+		}
+
+		func delete<M: PersistentModel>(_ model: M) {
+			modelContext.delete(model)
+		}
+
+		func fetch<M: PersistentModel>() throws -> [M] {
+			let descriptor = FetchDescriptor<M>()
+			return try modelContext.fetch(descriptor)
+		}
+
+		func purgeAllData<M: PersistentModel>(for model: M.Type) throws {
+			if #available(iOS 18, *) {
+				try modelContainer.erase()
+			}
+			else {
+				try modelContext.delete(model: model.self)
+			}
+		}
+
+		func save() {
+			do {
+				guard modelContext.hasChanges else { return }
+				try modelContext.save()
+			}
+			catch {
+				print("❌ Error saving model: \(error.localizedDescription)")
+			}
+		}
 	}
+}
+
+extension Thread {
+	static var isMain: Bool { isMainThread }
 }

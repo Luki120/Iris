@@ -43,6 +43,7 @@
 		1496F0052E30C2FE00533E81 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496F0042E30C2F400533E81 /* AppShortcuts.swift */; };
 		14B3F5212DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B3F5202DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift */; };
 		14B3F5242DF16CA600D6DB76 /* NewAssignmentIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B3F5232DF16C9C00D6DB76 /* NewAssignmentIntent.swift */; };
+		14B568ED2E3A1C820001EAF6 /* SubjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B568EC2E3A1C7E0001EAF6 /* SubjectType.swift */; };
 		14C7CFFF2C58F23E007F6A2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14C7CFFE2C58F23E007F6A2E /* Assets.xcassets */; };
 		14C7D0022C58F23E007F6A2E /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 14C7D0012C58F23E007F6A2E /* Base */; };
 		14C7D0232C58F2DD007F6A2E /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C7D00D2C58F2DC007F6A2E /* Subject.swift */; };
@@ -125,6 +126,7 @@
 		14AD1D462CA61EA500CE313F /* Iris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iris.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14B3F5202DF1340600D6DB76 /* SubjectDetailsAssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsView.swift; sourceTree = "<group>"; };
 		14B3F5232DF16C9C00D6DB76 /* NewAssignmentIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAssignmentIntent.swift; sourceTree = "<group>"; };
+		14B568EC2E3A1C7E0001EAF6 /* SubjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectType.swift; sourceTree = "<group>"; };
 		14C2313B2DEAE499000C7A2B /* Iris.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Iris.entitlements; sourceTree = "<group>"; };
 		14C7CFFE2C58F23E007F6A2E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14C7D0012C58F23E007F6A2E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -324,8 +326,9 @@
 		1492E0542C94CAAF00E8315E /* Subject */ = {
 			isa = PBXGroup;
 			children = (
-				14660F3E2DEE7147006B3DA4 /* SubjectDTO.swift */,
 				14C7D00D2C58F2DC007F6A2E /* Subject.swift */,
+				14660F3E2DEE7147006B3DA4 /* SubjectDTO.swift */,
+				14B568EC2E3A1C7E0001EAF6 /* SubjectType.swift */,
 			);
 			path = Subject;
 			sourceTree = "<group>";
@@ -701,6 +704,7 @@
 				1492E0522C94C74D00E8315E /* AuthService.swift in Sources */,
 				1470360E2C74845600578925 /* SubjectDetailsView.swift in Sources */,
 				148BB3CA2C90331900B69B48 /* AllSubjectsHeaderView.swift in Sources */,
+				14B568ED2E3A1C820001EAF6 /* SubjectType.swift in Sources */,
 				14004A0E2C93910500BE7548 /* SubjectDetailsAssignmentCellView.swift in Sources */,
 				145E3FA62CACBF83005EED89 /* PomodoroTimerVC.swift in Sources */,
 				146589FA2E3215D9007D11B1 /* TakeSubjectIntent.swift in Sources */,
