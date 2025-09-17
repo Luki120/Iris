@@ -13,7 +13,7 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 	/// - Parameters:
 	/// 	- examDate: The exam `Date`
 	/// 	- subject: The current `Subject`
-	///		- daysBeforeTheExam: An integer that represents when the notification should fire before the exam date
+	///		- daysBeforeTheExam: An `Int` that represents when the notification should fire before the exam date
 	func scheduleNotification(for examDate: Date, subject: Subject, daysBeforeTheExam: Int) {
 		guard examDate > .now else { return }
 
@@ -24,7 +24,7 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 		var components: DateComponents
 
 		if daysBeforeTheExam == 0 {
-			bodyMessage = "Your \(subject.name) exam is today, good luck 🤞🏻🍀"
+			bodyMessage = "Hoy rendís \(subject.shortName), dale que se aprueba gil, confiá 🤞🏻🍀"
 
 			components = calendar.dateComponents([.year, .month, .day], from: examDate)
 			components.hour = 7
@@ -34,7 +34,7 @@ final class SubjectDetailsAssignmentCellViewViewModel {
 			notificationDate = calendar.date(from: components)!
 		}
 		else {
-			bodyMessage = "Your \(subject.name) exam is less than \(daysBeforeTheExam) days away"
+			bodyMessage = "Quedan \(daysBeforeTheExam) días para el examen de \(subject.shortName), estudiá cagón dale"
 
 			notificationDate = calendar.date(byAdding: .day, value: -daysBeforeTheExam, to: examDate)!
 			components = calendar.dateComponents([.year, .month, .day, .hour], from: notificationDate)
