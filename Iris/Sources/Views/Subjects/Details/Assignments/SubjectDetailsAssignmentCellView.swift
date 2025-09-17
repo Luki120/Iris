@@ -92,8 +92,20 @@ struct SubjectDetailsAssignmentCellView: View {
 			deleteTask()
 		}
 		.onSubmit(of: .text) {
-			guard task.title.isEmpty else { return }
-			deleteTask()
+			if task.title.isEmpty {
+				deleteTask()
+				return
+			}
+
+			if isExam {
+				Task {
+					try await Task.sleep(for: .seconds(0.35))
+
+					withAnimation(.snappy) {
+						$task.wrappedValue.priority = .exam
+					}
+				}
+			}
 		}
 		.swipeActions(edge: .trailing) {
 			Button("", systemImage: "trash", role: .destructive) {
@@ -110,5 +122,9 @@ struct SubjectDetailsAssignmentCellView: View {
 		}
 
 		SubjectsManager.shared.delete(task)
+	}
+
+	private var isExam: Bool {
+		task.title.contains("Parcial") || task.title.contains("Parcial".lowercased()) || task.title == "Final"
 	}
 }
