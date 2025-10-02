@@ -19,42 +19,42 @@ final class DeveloperCellViewViewModel {
 	private(set) var image = UIImage()
 
 	/// Designated initializer
-	/// - Parameters:
-	/// 	- name: A string that represents the developer name
+	/// - Parameter name: A `String` that represents the developer name
 	init(name: String) {
 		self.name = name
-		fetchImage()
-	}
 
-	private func fetchImage() {
-		Task.detached(priority: .background) {
-			guard let url = URL(string: .githubImageURL) else { return }
+		Task {
+			guard let image = await fetchImage() else { return }
 
-			do {
-				let (data, _) = try await URLSession.shared.data(from: url)
-				guard let image = UIImage(data: data) else { return }
-
-				await MainActor.run {
-					withAnimation(.smooth) {
-						self.image = image
-					}
-				}
-			}
-			catch {
-				print(error.localizedDescription)
+			withAnimation(.smooth) {
+				self.image = image
 			}
 		}
+	}
+
+	nonisolated
+	private func fetchImage() async -> UIImage? {
+		guard let url = URL(string: .githubImageURL) else { return nil }
+
+		do {
+			let (data, _) = try await URLSession.shared.data(from: url)
+			return UIImage(data: data)
+		}
+		catch {
+			print(error.localizedDescription)
+		}
+
+		return nil
 	}
 }
 
 // MARK: - Hashable
 
-extension DeveloperCellViewViewModel: Hashable {
-	nonisolated func hash(into hasher: inout Hasher) {
+nonisolated extension DeveloperCellViewViewModel: Hashable {
+	func hash(into hasher: inout Hasher) {
 		hasher.combine(name)
 	}
 
-	nonisolated
 	static func == (lhs: DeveloperCellViewViewModel, rhs: DeveloperCellViewViewModel) -> Bool {
 		return lhs.name == rhs.name
 	}
