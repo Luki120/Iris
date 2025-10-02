@@ -4,7 +4,7 @@ import struct SwiftUI.Color
 
 /// API model class that represents a `Subject` object
 @Model
-final class Subject: @unchecked	Sendable {
+final class Subject: @unchecked Sendable {
 	private(set) var name: String
 	private(set) var year: String
 	private(set) var shortName: String

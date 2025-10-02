@@ -13,12 +13,15 @@ final class HomeViewViewModel: NSObject {
 
 	// MARK: - UICollectionViewDiffableDataSource
 
-	struct Item: Hashable {
-		let viewModel: AnyHashable
+	@MainActor
+	fileprivate struct Item {
+		fileprivate let id = UUID()
+		fileprivate let viewModel: AnyHashable
 	}
 
+	@MainActor
 	struct Section: Hashable {
-		let viewModels: [Item]
+		fileprivate let viewModels: [Item]
 
 		static let allSubjects: Section = .init(
 			viewModels: [.init(viewModel: AllSubjectsCellViewModel(count: 35, title: "Subjects"))]
@@ -210,4 +213,12 @@ extension HomeViewViewModel: UICollectionViewDelegate {
 	}
 }
 
-extension AnyHashable: @unchecked @retroactive Sendable {}
+nonisolated extension HomeViewViewModel.Item: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+	}
+
+	static func == (lhs: HomeViewViewModel.Item, rhs: HomeViewViewModel.Item) -> Bool {
+		return lhs.hashValue == rhs.hashValue
+	}
+}

@@ -56,9 +56,16 @@ extension SubjectsManager {
 	/// - Parameters:
 	///		- subject: The `Subject` object
 	///		- index: The index for the subject
-	func delete(subject: Subject, at index: Int) {
+	///		- isPassed: A `Bool` to check wether it's a passed subject, defaults to `false`
+	func delete(subject: Subject, at index: Int, isPassed: Bool = false) {
 		Task {
-			currentlyTakingSubjects.remove(at: index)
+			if isPassed {
+				passedSubjects.remove(at: index)
+			}
+			else {
+				currentlyTakingSubjects.remove(at: index)
+			}
+
 			await backgroundActor.delete(subject)
 		}
 	}
@@ -86,6 +93,13 @@ extension SubjectsManager {
 	func update(subject: Subject) {
 		guard let index = currentlyTakingSubjects.firstIndex(where: { $0 === subject }) else { return }
 		currentlyTakingSubjects[index] = subject
+	}
+
+	/// Function to save data to the persistent storage
+	func save() {
+		Task {
+			await backgroundActor.save()
+		}
 	}
 }
 

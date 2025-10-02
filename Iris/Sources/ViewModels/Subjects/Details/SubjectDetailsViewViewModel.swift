@@ -21,10 +21,13 @@ final class SubjectDetailsViewViewModel: NSObject {
 
 	// MARK: - UICollectionViewDiffableDataSource
 
-	private struct Item: Hashable {
-		let viewModel: AnyHashable
+	@MainActor
+	fileprivate struct Item {
+		fileprivate let id = UUID()
+		fileprivate let viewModel: AnyHashable
 	}
 
+	@MainActor
 	private struct Section: Hashable {
 		fileprivate let viewModels: [Item]
 
@@ -183,5 +186,15 @@ private extension Array where Element == Int {
 
 	func element(at index: Int) -> Int {
 		return indices.contains(index) ? self[index] : 0
+	}
+}
+
+nonisolated extension SubjectDetailsViewViewModel.Item: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+	}
+
+	static func == (lhs: SubjectDetailsViewViewModel.Item, rhs: SubjectDetailsViewViewModel.Item) -> Bool {
+		return lhs.hashValue == rhs.hashValue
 	}
 }
