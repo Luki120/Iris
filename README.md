@@ -5,6 +5,7 @@
 * My personal app for college, to see which subjects I'm currently taking, add grades, assignments, etc. It calls my custom backend made with Kotlin & Ktor, [Ianthea](https://github.com/Luki120/Ianthea), which implements a REST API as well as JWT based authentication. Built using:
 
 	* MVVM-C (Model View ViewModel - Coordinator)
+	* AppIntents
 	* Observation framework
 	* SwiftData
 	* SwiftUI Charts
