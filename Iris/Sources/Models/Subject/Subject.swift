@@ -13,7 +13,7 @@ final class Subject: @unchecked Sendable {
 	var examGrades = [Int]()
 	var finalGrades = [Int]()
 	var isFinished = false
-	var finalExamDate = Date()
+	var finalExamDates = [Date]()
 
 	var tasks = [Task]()
 
@@ -26,7 +26,7 @@ final class Subject: @unchecked Sendable {
 	///		- finalGrades: An `[Int]` array to represent the final grades, defaults to empty
 	///		- isFinished: A `Bool` that represents if I finished the subject, defaults to `false`
 	///		- hasThreeExams: A `Bool` that represents wether the subject requires taking three exams or more
-	///		- finalExamDate: A `Date` object that represents the subject's final exam date, defaults to `.now`
+	///		- finalExamDate: An array of  `Date` objects that represent the subject's final exam dates, defaults to empty`
 	init(
 		name: String,
 		year: String,
@@ -35,7 +35,7 @@ final class Subject: @unchecked Sendable {
 		finalGrades: [Int] = [],
 		isFinished: Bool = false,
 		hasThreeExams: Bool,
-		finalExamDate: Date = .now
+		finalExamDates: [Date] = []
 	) {
 		self.name = name
 		self.year = year
@@ -44,7 +44,7 @@ final class Subject: @unchecked Sendable {
 		self.finalGrades = finalGrades
 		self.isFinished = isFinished
 		self.hasThreeExams = hasThreeExams
-		self.finalExamDate = finalExamDate
+		self.finalExamDates = finalExamDates
 	}
 }
 
@@ -87,8 +87,6 @@ extension Subject {
 
 extension Subject {
 	convenience init(from subjectDTO: SubjectDTO) {
-		let parsedDate = Date.dateFormatter.date(from: subjectDTO.finalExamDate) ?? .now
-
 		self.init(
 			name: subjectDTO.name,
 			year: subjectDTO.year,
@@ -97,7 +95,7 @@ extension Subject {
 			finalGrades: subjectDTO.finalGrades,
 			isFinished: subjectDTO.isFinished,
 			hasThreeExams: subjectDTO.hasThreeExams,
-			finalExamDate: parsedDate
+			finalExamDates: subjectDTO.finalExamDates.map { Date.dateFormatter.date(from: $0) ?? .now }
 		)
 	}
 }

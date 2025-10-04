@@ -18,6 +18,7 @@
 		143C1B552C97937400510596 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C1B542C97937400510596 /* LoginView.swift */; };
 		143C1B582C97939300510596 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C1B572C97939300510596 /* LoginVC.swift */; };
 		143C1B5B2C97B83100510596 /* LoginViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C1B5A2C97B83100510596 /* LoginViewViewModel.swift */; };
+		143EAF5E2E90F86000D806AF /* AllGradesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EAF5D2E90F85A00D806AF /* AllGradesView.swift */; };
 		145212A92C8E85F100CE286C /* SubjectDetailsAssignmentsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145212A82C8E85F100CE286C /* SubjectDetailsAssignmentsCellViewModel.swift */; };
 		145212AB2C8E865100CE286C /* SubjectDetailsAssignmentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145212AA2C8E865100CE286C /* SubjectDetailsAssignmentsCell.swift */; };
 		145212AD2C8E9EB700CE286C /* SubjectDetailsAssignmentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145212AC2C8E9EB700CE286C /* SubjectDetailsAssignmentsVC.swift */; };
@@ -100,6 +101,7 @@
 		143C1B542C97937400510596 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		143C1B572C97939300510596 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		143C1B5A2C97B83100510596 /* LoginViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewViewModel.swift; sourceTree = "<group>"; };
+		143EAF5D2E90F85A00D806AF /* AllGradesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllGradesView.swift; sourceTree = "<group>"; };
 		145212A82C8E85F100CE286C /* SubjectDetailsAssignmentsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsCellViewModel.swift; sourceTree = "<group>"; };
 		145212AA2C8E865100CE286C /* SubjectDetailsAssignmentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsCell.swift; sourceTree = "<group>"; };
 		145212AC2C8E9EB700CE286C /* SubjectDetailsAssignmentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectDetailsAssignmentsVC.swift; sourceTree = "<group>"; };
@@ -559,6 +561,7 @@
 		14F28D6A2C8CFF4E00FC1EC6 /* Grades */ = {
 			isa = PBXGroup;
 			children = (
+				143EAF5D2E90F85A00D806AF /* AllGradesView.swift */,
 				14C90B462C59B9B2002427D2 /* GradesChartView.swift */,
 			);
 			path = Grades;
@@ -714,6 +717,7 @@
 				14C7D0522C58FE33007F6A2E /* GradesCoordinator.swift in Sources */,
 				14C7D03F2C58F323007F6A2E /* CurrentlyTakingSubjectCell.swift in Sources */,
 				14C7D0292C58F2DD007F6A2E /* Extensions.swift in Sources */,
+				143EAF5E2E90F86000D806AF /* AllGradesView.swift in Sources */,
 				14C7D0432C58F323007F6A2E /* HomeVC.swift in Sources */,
 				14C7D02D2C58F2DD007F6A2E /* HomeCoordinator.swift in Sources */,
 				145212B12C8E9FF000CE286C /* SubjectDetailsAssignmentsViewViewModel.swift in Sources */,

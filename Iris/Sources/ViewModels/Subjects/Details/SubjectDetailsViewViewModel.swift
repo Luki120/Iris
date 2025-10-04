@@ -53,7 +53,7 @@ final class SubjectDetailsViewViewModel: NSObject {
 							exam: exam,
 							grade: grade,
 							isFinalCell: isFinal,
-							finalExamDate: subject.finalExamDate
+							finalExamDates: subject.finalExamDates
 						)
 					)
 				}
@@ -112,7 +112,9 @@ extension SubjectDetailsViewViewModel {
 					)
 
 					if viewModel.isFinalCell {
-						cell.onSelectedExamDate = { self.subject.finalExamDate = $0 }
+						cell.onSelectedExamDate = {
+							self.subject.finalExamDates.insert($0, at: 0)
+						}
 					}
 
 					cell.onGradeChange = { [self] text in

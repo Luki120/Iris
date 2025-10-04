@@ -13,7 +13,7 @@ struct SubjectDetailsCellViewModel: Hashable {
 	let exam: String
 	let grade: Int
 	let isFinalCell: Bool
-	let finalExamDate: Date
+	let finalExamDates: [Date]
 
 	var displayedGrade: String {
 		guard grade != 0 else { return "" }

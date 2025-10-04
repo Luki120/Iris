@@ -154,7 +154,7 @@ extension SubjectDetailsCell {
 		gradeTextField.text = viewModel.displayedGrade
 
 		guard viewModel.isFinalCell else { return }
-		finalExamDatePicker.date = viewModel.finalExamDate
+		finalExamDatePicker.date = viewModel.finalExamDates.first ?? .now
 		setupFinalCell()
 	}
 }

@@ -14,5 +14,5 @@ struct SubjectDTO: Codable {
 	let finalGrades: [Int]
 	let isFinished: Bool
 	let hasThreeExams: Bool
-	let finalExamDate: String
+	let finalExamDates: [String]
 }
