@@ -79,6 +79,7 @@ struct GradesChartView: View {
 				.padding()
 
 				let gradesAverage: Double = subjectManager.passedSubjects
+					.filter { $0.shortName != "Micro" }
 					.flatMap(\.finalGrades)
 					.average { $0 }
 
