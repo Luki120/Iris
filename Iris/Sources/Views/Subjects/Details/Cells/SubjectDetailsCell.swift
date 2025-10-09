@@ -26,6 +26,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 
 	private lazy var finalExamDatePicker: UIDatePicker = {
 		let datePicker = UIDatePicker()
+		datePicker.alpha = gradeTextField.text == "" ? 0 : 1
 		datePicker.datePickerMode = .date
 		datePicker.preferredDatePickerStyle = .compact
 		datePicker.translatesAutoresizingMaskIntoConstraints = false
@@ -40,8 +41,8 @@ final class SubjectDetailsCell: UICollectionViewCell {
 	}
 #endif
 
-	var onGradeChange: ((String) -> Void) = { _ in }
-	var onSelectedExamDate: ((Date) -> Void) = { _ in }
+	var onGradeChange: (String) -> Void = { _ in }
+	var onSelectedExamDate: (Date) -> Void = { _ in }
 
 	// MARK: - Lifecycle
 
@@ -122,6 +123,13 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		onSelectedExamDate(sender.date)
 	}
 
+	@objc
+	private func didChangeGrade(_ sender: UITextField) {
+		UIView.animate(withDuration: 0.35) {
+			self.finalExamDatePicker.alpha = sender.text == "" ? 0 : 1
+		}
+	}
+
 	// MARK: - Reusable
 
 	private func createLabel(
@@ -155,6 +163,7 @@ extension SubjectDetailsCell {
 
 		guard viewModel.isFinalCell else { return }
 		finalExamDatePicker.date = viewModel.finalExamDates.first ?? .now
+		gradeTextField.addTarget(self, action: #selector(didChangeGrade(_:)), for: .editingChanged)
 		setupFinalCell()
 	}
 }
