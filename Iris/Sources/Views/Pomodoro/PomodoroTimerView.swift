@@ -13,6 +13,7 @@ struct PomodoroTimerView: View {
 	@State private var viewModel = PomodoroTimerViewViewModel()
 
 	@Environment(\.colorScheme) private var colorScheme
+	@Environment(\.dynamicTypeSize) private var typeSize
 
 	var body: some View {
 		VStack(spacing: 15) {
@@ -92,7 +93,9 @@ struct PomodoroTimerView: View {
 			VStack(spacing: 10) {
 				Text(viewModel.totalTime, format: .time(pattern: .minuteSecond))
 					.contentTransition(.numericText())
-					.font(.system(size: 45, weight: .semibold).monospacedDigit())
+					.font(.system(size: UIFontMetrics.default.scaledValue(for: 44)))
+					.fontWeight(.semibold)
+					.monospacedDigit()
 
 				Text(viewModel.session.rawValue)
 					.font(.quicksand(withStyle: .medium, size: 18))

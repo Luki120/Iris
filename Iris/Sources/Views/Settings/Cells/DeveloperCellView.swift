@@ -11,13 +11,15 @@ import SwiftUI
 struct DeveloperCellView: View {
 	let viewModel: DeveloperCellViewViewModel
 
+	@ScaledMetric private var imageHeight = 40
+
 	var body: some View {
 		VStack(alignment: .leading) {
 			HStack {
 				Image(uiImage: viewModel.image)
 					.resizable()
-					.aspectRatio(contentMode: .fit)
-					.frame(width: 40, height: 40)
+					.scaledToFit()
+					.frame(height: imageHeight)
 					.clipShape(.circle)
 
 				Text(viewModel.name)

@@ -14,11 +14,12 @@ final class SubjectDetailsCell: UICollectionViewCell {
 
 	private lazy var gradeTextField: UITextField = {
 		let textField = UITextField()
-		textField.font = .quicksand(withStyle: .semiBold, size: 25)
+		textField.font = .quicksand(style: .semiBold, size: 25)
 		textField.delegate = self
 		textField.keyboardType = .numberPad
 		textField.textAlignment = .center
 		textField.addDoneButton()
+		textField.adjustsFontForContentSizeCategory = true
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(textField)
 		return textField
@@ -114,7 +115,8 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		])
 
 #if !targetEnvironment(macCatalyst)
-		datePickerLabel.font = .quicksand(withStyle: .semiBold, size: 12)
+		datePickerLabel.font = .quicksand(style: .semiBold, size: 12)
+		datePickerLabel.adjustsFontForContentSizeCategory = true
 #endif
 	}
 
@@ -140,10 +142,11 @@ final class SubjectDetailsCell: UICollectionViewCell {
 		addsSubview: Bool = true
 	) -> UILabel {
 		let label = UILabel()
-		label.font = .quicksand(withStyle: fontStyle, size: size)
+		label.font = .quicksand(style: fontStyle, size: size)
 		label.text = text
 		label.textColor = color
 		label.textAlignment = .center
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		if addsSubview {
 			contentView.addSubview(label)
@@ -156,7 +159,7 @@ final class SubjectDetailsCell: UICollectionViewCell {
 
 extension SubjectDetailsCell {
 	/// Function to configure the cell with its respective view model
-	/// -  Parameter with: The view model object
+	/// - Parameter viewModel: The view model object
 	func configure(with viewModel: SubjectDetailsCellViewModel) {
 		examLabel.text = viewModel.exam
 		gradeTextField.text = viewModel.displayedGrade

@@ -47,6 +47,7 @@ extension AllSubjectsCell {
 			fullString: String(describing: viewModel.count) + "\n" + viewModel.title,
 			subString: viewModel.title
 		)
+		totalSubjectsLabel.adjustsFontForContentSizeCategory = true
 	}
 }
 
@@ -59,8 +60,8 @@ private extension NSAttributedString {
 			return
 		}
 
-		let fullStringFont: UIFont = .quicksand(withStyle: .semiBold, size: 50)
-		let subStringFont: UIFont = .quicksand(withStyle: .medium, size: 18)
+		let fullStringFont: UIFont = .quicksand(style: .semiBold, size: 50)
+		let subStringFont: UIFont = .quicksand(style: .medium, size: 18)
 
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = .center

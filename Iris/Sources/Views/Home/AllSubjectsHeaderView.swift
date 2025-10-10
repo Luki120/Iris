@@ -11,7 +11,8 @@ import UIKit
 final class AllSubjectsHeaderView: UICollectionReusableView {
 	private(set) lazy var titleLabel: UILabel = {
 		let label = UILabel()
-		label.font = .quicksand(withStyle: .semiBold, size: 18)
+		label.font = .quicksand(style: .semiBold, size: 18)
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(label)
 		return label

@@ -11,20 +11,23 @@ import SwiftUI
 struct SettingsFooterView: View {
 	private let viewModel = SettingsFooterViewViewModel()
 
+	@ScaledMetric private var imageHeight = 25
+
 	var body: some View {
 		VStack(spacing: 15) {
 			HStack {
 				ForEach(viewModel.fundingPlatforms, id: \.rawValue) { platform in
 					platform.image
 						.resizable()
-						.aspectRatio(contentMode: .fit)
-						.frame(width: 25, height: 25)
+						.scaledToFit()
+						.frame(height: imageHeight)
 						.contentShape(.rect)
 						.onTapGesture {
 							UIApplication.shared.openURL(platform.url)
 						}
 				}
 			}
+
 			Text(viewModel.copyrightLabel)
 				.font(.quicksand(withStyle: .medium, size: 14))
 				.foregroundStyle(.gray)

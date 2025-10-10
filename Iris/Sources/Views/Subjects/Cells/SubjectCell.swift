@@ -4,8 +4,9 @@ import UIKit
 class SubjectCell: UICollectionViewCell {
 	private(set) lazy var subjectNameLabel: UILabel = {
 		let label = UILabel()
-		label.font = .quicksand(withStyle: .bold)
+		label.font = .quicksand(style: .bold)
 		label.adjustsFontSizeToFitWidth = true
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(label)
 		return label
@@ -43,8 +44,7 @@ class SubjectCell: UICollectionViewCell {
 
 extension SubjectCell {
 	/// Function to configure the cell with its respective view model
-	/// -  Parameters:
-	/// 	- with: The view model object
+	/// - Parameter viewModel: The view model object
 	func configure(with viewModel: SubjectCellViewModel) {
 		subjectNameLabel.text = viewModel.name
 	}

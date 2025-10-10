@@ -14,9 +14,9 @@ final class SceneDelegate: UIResponder, UIApplicationDelegate, UIWindowSceneDele
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let windowScene = scene as? UIWindowScene else { return }
 
-		let navBarAttributes = [NSAttributedString.Key.font: UIFont.quicksand(withStyle: .medium, size: 17)]
-		let navBarLargeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.quicksand(withStyle: .semiBold, size: 25)]
-		let tabBarItemAttributes = [NSAttributedString.Key.font: UIFont.quicksand(withStyle: .bold, size: 10)]
+		let navBarAttributes = [NSAttributedString.Key.font: UIFont.quicksand(style: .medium, size: 17)]
+		let navBarLargeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.quicksand(style: .semiBold, size: 25)]
+		let tabBarItemAttributes = [NSAttributedString.Key.font: UIFont.quicksand(style: .bold, size: 10)]
 
 		UINavigationBar.appearance().titleTextAttributes = navBarAttributes
 		UINavigationBar.appearance().largeTitleTextAttributes = navBarLargeTitleTextAttributes

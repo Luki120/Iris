@@ -61,8 +61,9 @@ final class SettingsViewViewModel: NSObject {
 	private let accountSettingsCellRegistration = AccountSettingsCellRegistration { cell, indexPath, viewModel in
 		var configuration = cell.defaultContentConfiguration()
 		configuration.text = viewModel.action
-		configuration.textProperties.font = .quicksand(withStyle: .medium)
+		configuration.textProperties.font = .quicksand()
 		configuration.textProperties.color = indexPath.item == 0 ? .label : .systemRed
+		configuration.textProperties.adjustsFontForContentSizeCategory = true
 
 		cell.contentConfiguration = configuration
 		cell.secondaryGroupedBackgroundConfiguration()
@@ -70,7 +71,8 @@ final class SettingsViewViewModel: NSObject {
 	private let sourceCodeCellRegistration = SourceCodeCellRegistration { cell, _, viewModel in
 		var configuration = cell.defaultContentConfiguration()
 		configuration.text = viewModel.title
-		configuration.textProperties.font = .quicksand(withStyle: .medium)
+		configuration.textProperties.font = .quicksand()
+		configuration.textProperties.adjustsFontForContentSizeCategory = true
 
 		cell.contentConfiguration = configuration
 		cell.secondaryGroupedBackgroundConfiguration()
@@ -81,8 +83,7 @@ final class SettingsViewViewModel: NSObject {
 
 extension SettingsViewViewModel {
 	/// Function to setup the collection view's diffable data source
-	/// - Parameters:
-	///		- collectionView: The collection view
+	/// - Parameter collectionView: The collection view
 	func setupCollectionViewDiffableDataSource(for collectionView: UICollectionView) {
 		dataSource = DataSource(collectionView: collectionView) { [weak self] collectionView, indexPath, item in
 			guard let self else { fatalError() }
@@ -122,7 +123,8 @@ extension SettingsViewViewModel {
 
 			var configuration = headerView.defaultContentConfiguration()
 			configuration.text = section.title
-			configuration.textProperties.font = .quicksand(withStyle: .medium, size: 14)
+			configuration.textProperties.font = .quicksand(style: .medium, size: 14)
+			configuration.textProperties.adjustsFontForContentSizeCategory = true
 
 			headerView.contentConfiguration = configuration
 		}
@@ -169,7 +171,7 @@ extension SettingsViewViewModel: UICollectionViewDelegate {
 
 extension UICollectionViewListCell {
 	func secondaryGroupedBackgroundConfiguration() {
-		self.configurationUpdateHandler = { cell, _ in
+		configurationUpdateHandler = { cell, _ in
 			var backgroundConfig = UIBackgroundConfiguration.listGroupedCell()
 			backgroundConfig.backgroundColor = .secondarySystemGroupedBackground
 			cell.backgroundConfiguration = backgroundConfig

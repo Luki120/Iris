@@ -30,6 +30,7 @@ final class HomeView: UIView {
 	private(set) lazy var titleLabel: UILabel = {
 		let label = UILabel()
 		label.attributedText = .init(fullString: createTitle(), subString: "Luki")
+		label.adjustsFontForContentSizeCategory = true
 		return label
 	}()
 
@@ -167,8 +168,8 @@ private extension NSAttributedString {
 		let rangeOfFullString = NSRange(location: 0, length: fullString.count)
 		let attributedString = NSMutableAttributedString(string: fullString)
 
-		let fullStringFont: UIFont = .quicksand(withStyle: .semiBold, size: 22)
-		let subStringFont: UIFont = .quicksand(withStyle: .bold, size: 22)
+		let fullStringFont: UIFont = .quicksand(style: .semiBold, size: 22)
+		let subStringFont: UIFont = .quicksand(style: .bold, size: 22)
 
 		attributedString.addAttribute(.font, value: fullStringFont, range: rangeOfFullString)
 		attributedString.addAttribute(.font, value: subStringFont, range: rangeOfSubString)

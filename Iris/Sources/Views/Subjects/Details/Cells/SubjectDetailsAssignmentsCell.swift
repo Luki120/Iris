@@ -16,6 +16,7 @@ final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
 		imageView.contentMode = .center
 		imageView.backgroundColor = .irisSlateBlue
 		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.adjustsImageSizeForAccessibilityContentSizeCategory = true
 		imageView.layer.cornerRadius = 15
 		contentView.addSubview(imageView)
 		return imageView
@@ -23,7 +24,8 @@ final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
 
 	private lazy var titleLabel: UILabel = {
 		let label = UILabel()
-		label.font = .quicksand(withStyle: .semiBold, size: 18)
+		label.font = .quicksand(style: .semiBold, size: 18)
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(label)
 		return label
@@ -31,9 +33,10 @@ final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
 
 	private lazy var arrowLabel: UILabel = {
 		let label = UILabel()
-		label.font = .quicksand(withStyle: .semiBold, size: 20)
+		label.font = .quicksand(style: .semiBold, size: 20)
 		label.text = "→"
 		label.textColor = .systemGray
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(label)
 		return label
@@ -77,8 +80,7 @@ final class SubjectDetailsAssignmentsCell: UICollectionViewCell {
 
 extension SubjectDetailsAssignmentsCell {
 	/// Function to configure the cell with its respective view model
-	/// -  Parameters:
-	/// 	- with: The view model object
+	///	- Parameter viewModel: The view model object
 	func configure(with viewModel: SubjectDetailsAssignmentsCellViewModel) {
 		titleLabel.text = viewModel.title
 	}
