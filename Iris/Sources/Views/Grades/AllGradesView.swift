@@ -34,7 +34,7 @@ struct AllGradesView: View {
 				}
 			}
 		}
-		.navigationTitle("Subjects")
+		.navigationTitle("Finals")
 	}
 
 	@ViewBuilder
@@ -70,9 +70,12 @@ struct AllGradesView: View {
 			}
 		}
 		.alert("Add new grade", isPresented: $showAlert) {
-			TextField("Final date: 14/7/25", text: $finalDate)
-			TextField("Grade:", text: $grade)
-				.keyboardType(.numberPad)
+			Group {
+				TextField("Final date: 17/7/25", text: $finalDate)
+				TextField("Grade:", text: $grade)
+					.keyboardType(.numberPad)
+			}
+			.font(.subheadline)
 
 			Button("Add") {
 				guard let date = AllGradesView.dateFormatter.date(from: finalDate) else { return }
