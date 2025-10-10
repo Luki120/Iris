@@ -11,11 +11,8 @@ import func SwiftUI.withAnimation
 
 /// View model class for `DeveloperCellView`
 @MainActor
-@Observable
 final class DeveloperCellViewViewModel {
-	@ObservationIgnored
 	let name: String
-
 	private(set) var image = UIImage()
 
 	/// Designated initializer
@@ -24,27 +21,27 @@ final class DeveloperCellViewViewModel {
 		self.name = name
 
 		Task {
-			guard let image = await fetchImage() else { return }
-
-			withAnimation(.smooth) {
-				self.image = image
-			}
+			await fetchImage()
 		}
 	}
 
 	nonisolated
-	private func fetchImage() async -> UIImage? {
-		guard let url = URL(string: .githubImageURL) else { return nil }
+	private func fetchImage() async {
+		guard let url = URL(string: .githubImageURL) else { return }
 
 		do {
 			let (data, _) = try await URLSession.shared.data(from: url)
-			return UIImage(data: data)
+			let image = UIImage(data: data) ?? .init()
+
+			await MainActor.run {
+				withAnimation(.smooth) {
+					self.image = image
+				}
+			}
 		}
 		catch {
 			print(error.localizedDescription)
 		}
-
-		return nil
 	}
 }
 
