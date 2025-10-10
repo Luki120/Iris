@@ -23,7 +23,7 @@ struct DeveloperCellView: View {
 					.clipShape(.circle)
 
 				Text(viewModel.name)
-					.font(.quicksand(withStyle: .medium))
+					.font(.quicksand())
 					.padding(.leading, 2.5)
 			}
 		}

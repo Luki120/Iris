@@ -29,7 +29,7 @@ struct SettingsFooterView: View {
 			}
 
 			Text(viewModel.copyrightLabel)
-				.font(.quicksand(withStyle: .medium, size: 14))
+				.font(.quicksand(size: 14))
 				.foregroundStyle(.gray)
 		}
 		.padding(35)

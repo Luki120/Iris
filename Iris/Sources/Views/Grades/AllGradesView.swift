@@ -57,7 +57,7 @@ struct AllGradesView: View {
 							.fill(entry.grade >= 4 ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
 					}
 			}
-			.font(.quicksand(withStyle: .medium))
+			.font(.quicksand())
 			.swipeActions(edge: .trailing) {
 				Button("", systemImage: "trash", role: .destructive) {
 					if let index = subject.finalGrades.firstIndex(of: entry.grade),

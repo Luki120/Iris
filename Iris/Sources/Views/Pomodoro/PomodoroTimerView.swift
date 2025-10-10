@@ -98,7 +98,7 @@ struct PomodoroTimerView: View {
 					.monospacedDigit()
 
 				Text(viewModel.session.rawValue)
-					.font(.quicksand(withStyle: .medium, size: 18))
+					.font(.quicksand(size: 18))
 			}
 		}
 		.animation(.smooth, value: viewModel.progress)
@@ -155,7 +155,7 @@ struct PomodoroTimerView: View {
 	private func NewTimerView() -> some View {
 		VStack(spacing: 15) {
 			Text("Start new Pomodoro session")
-				.font(.quicksand(withStyle: .medium, size: 20))
+				.font(.quicksand(size: 20))
 				.foregroundStyle(Color.primary)
 				.padding(.top, 5)
 
@@ -181,7 +181,7 @@ struct PomodoroTimerView: View {
 				viewModel.startTimer()
 			}
 			.disabled(viewModel.minutes == 0)
-			.font(.quicksand(withStyle: .semiBold, size: 18))
+			.font(.quicksand(style: .semiBold, size: 18))
 			.foregroundStyle(.primary)
 			.opacity(viewModel.minutes == 0 ? 0.5 : 1)
 			.padding(.horizontal, 35)

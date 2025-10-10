@@ -33,7 +33,7 @@ struct SubjectDetailsAssignmentCellView: View {
 			}
 			TextField("", text: $task.title)
 				.focused($isActive)
-				.font(.quicksand(withStyle: .medium))
+				.font(.quicksand())
 				.foregroundStyle(task.isCompleted ? .gray : .primary)
 				.strikethrough(task.isCompleted)
 
@@ -41,7 +41,7 @@ struct SubjectDetailsAssignmentCellView: View {
 				if task.priority == .exam {
 					VStack {
 						Text(task.examDate.formatted(.dateTime.day().month().year()))
-							.font(.quicksand(withStyle: .semiBold, size: 12))
+							.font(.quicksand(style: .semiBold, size: 12))
 					}
 					.overlay {
 						DatePicker(selection: $task.examDate, displayedComponents: .date) {}

@@ -19,7 +19,7 @@ extension Color {
 }
 
 extension Font {
-	static func quicksand(withStyle style: UIFont.QuicksandStyle, size: CGFloat = 16) -> Font {
+	static func quicksand(style: UIFont.QuicksandStyle = .medium, size: CGFloat = 16) -> Font {
 		return .custom(style.rawValue, size: size)
 	}
 }
@@ -44,11 +44,7 @@ extension UIFont {
 		case semiBold = "Quicksand SemiBold"
 		case bold = "Quicksand Bold"
 	}
-	
-	static func quicksand(withStyle style: QuicksandStyle, size: CGFloat = 16) -> UIFont {
-		self.init(name: style.rawValue, size: size)!
-	}
-	
+
 	static func quicksand(style: QuicksandStyle = .medium, size: CGFloat = 16) -> UIFont {
 		let font = self.init(name: style.rawValue, size: size) ?? .systemFont(ofSize: size)
 		return UIFontMetrics.default.scaledFont(for: font)
@@ -59,7 +55,7 @@ extension UIView {
 	func addSubviews(_ views: UIView...) {
 		views.forEach { addSubview($0) }
 	}
-	
+
 	func pinViewToAllEdges(
 		_ view: UIView,
 		topConstant: CGFloat = 0,
@@ -75,7 +71,7 @@ extension UIView {
 			view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailingConstant)
 		])
 	}
-	
+
 	func pinViewToSafeAreas(_ view: UIView) {
 		view.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([

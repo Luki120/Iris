@@ -98,7 +98,7 @@ struct GradesChartView: View {
 		else {
 			ContentUnavailableView {
 				Text("There's currently no grades data")
-					.font(.quicksand(withStyle: .medium))
+					.font(.quicksand())
 			}
 		}
 	}
@@ -108,7 +108,7 @@ struct GradesChartView: View {
 		AxisMarks {
 			AxisGridLine()
 			AxisValueLabel()
-				.font(.quicksand(withStyle: .medium, size: 10))
+				.font(.quicksand(size: 10))
 		}
 	}
 }

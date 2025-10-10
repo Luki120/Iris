@@ -30,7 +30,7 @@ struct SubjectDetailsAssignmentsView: View {
 			if subject.tasks.isEmpty {
 				ContentUnavailableView {
 					Text("There's currently no assignments for this subject")
-						.font(.quicksand(withStyle: .medium))
+						.font(.quicksand())
 				}
 			}
 			else {
@@ -58,7 +58,7 @@ struct SubjectDetailsAssignmentsView: View {
 						subject.tasks.append(.init(title: "", priority: .normal, sortOrder: nextSortOrder + 1))
 					}
 				}
-				.font(.quicksand(withStyle: .medium))
+				.font(.quicksand())
 				.foregroundStyle(.primary)
 				.frame(width: 120, height: 50)
 				.background(Color.irisSlateBlue, in: .capsule)

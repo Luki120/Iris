@@ -17,7 +17,7 @@ struct LoginView: View {
 	var body: some View {
 		VStack {
 			Text("Welcome back, Luki")
-				.font(.quicksand(withStyle: .bold, size: 55))
+				.font(.quicksand(style: .bold, size: 55))
 				.foregroundStyle(.white)
 				.frame(height: 160)
 				.frame(maxWidth: .infinity, alignment: .leading)
@@ -27,7 +27,7 @@ struct LoginView: View {
 				VStack {
 					Text(viewModel.isRegistering ? "Sign up" : "Login")
 						.animation(.smooth, value: viewModel.isRegistering)
-						.font(.quicksand(withStyle: .bold, size: 22))
+						.font(.quicksand(style: .bold, size: 22))
 						.foregroundStyle(.black)
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.padding(.top, 20)
@@ -74,7 +74,7 @@ struct LoginView: View {
 					Button("Create account") {
 						viewModel.isRegistering.toggle()
 					}
-					.font(.quicksand(withStyle: .bold))
+					.font(.quicksand(style: .bold))
 					.foregroundStyle(Color.irisSlateBlue)
 
 				}
@@ -83,7 +83,7 @@ struct LoginView: View {
 
 				if viewModel.showToast {
 					Text(viewModel.errorMessage)
-						.font(.quicksand(withStyle: .medium, size: 14))
+						.font(.quicksand(size: 14))
 						.frame(height: 40)
 						.padding(.horizontal, 20)
 						.background(Color.irisSlateBlue, in: .capsule)
@@ -119,7 +119,7 @@ struct LoginView: View {
 	) -> some View {
 		VStack(alignment: .leading) {
 			Label(title, systemImage: icon)
-				.font(.quicksand(withStyle: .medium, size: 14))
+				.font(.quicksand(size: 14))
 				.foregroundStyle(.black.opacity(0.8))
 
 			if title == "Password" && !showPassword.wrappedValue {
@@ -142,7 +142,7 @@ struct LoginView: View {
 						showPassword.wrappedValue.toggle()
 					}
 				}
-				.font(.quicksand(withStyle: .bold,  size: 14))
+				.font(.quicksand(style: .bold, size: 14))
 				.foregroundStyle(Color.irisSlateBlue)
 				.frame(maxWidth: .infinity, alignment: .trailing)
 			}

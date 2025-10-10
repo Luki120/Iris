@@ -7,7 +7,7 @@ final class GradesVC: UIViewController {
 	var coordinator: GradesCoordinator?
 
 	private let hostingController: UIHostingController<some View> = UIHostingController(
-		rootView: GradesChartView().font(.quicksand(withStyle: .medium))
+		rootView: GradesChartView().font(.quicksand())
 	)
 
 	// MARK: - Lifecycle
