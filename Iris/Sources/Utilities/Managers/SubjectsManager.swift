@@ -52,7 +52,9 @@ extension SubjectsManager {
 		guard let backgroundActor else { return }
 
 		do {
-			let allSubjects: [Subject] = try await backgroundActor.fetch()
+			let subjectIDs = try await backgroundActor.fetchModels(descriptor: FetchDescriptor<Subject>())
+			let allSubjects = subjectIDs.compactMap { backgroundActor.modelContext.model(for: $0) as? Subject }
+
 			currentlyTakingSubjects = allSubjects.filter { !$0.isFinished }
 			passedSubjects = allSubjects.filter { $0.isFinished }
 		}
@@ -61,7 +63,7 @@ extension SubjectsManager {
 		}
 	}
 
-	/// Function to delete user data for a given user
+	/// Function to delete all data for a given user
 	/// - Parameter userId: A `String` that represents the user id
 	func deleteData(userId: String) throws {
 		let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -79,13 +81,15 @@ extension SubjectsManager {
 				name: subject.name,
 				year: subject.year,
 				shortName: subject.shortName,
-				hasThreeExams: subject.hasThreeExams,
+				hasThreeExams: subject.hasThreeExams
 			)
 
 			guard !currentlyTakingSubjects.contains(subject) else { return }
 			currentlyTakingSubjects.append(subject)
 
-			await backgroundActor.insert(subject)
+			Task {
+				await backgroundActor.insert(subject)
+			}
 		}
 	}
 
@@ -121,7 +125,10 @@ extension SubjectsManager {
 
 			guard !passedSubjects.contains(subject) else { return }
 			passedSubjects.append(subject)
-			await backgroundActor.insert(subject)
+
+			Task {
+				await backgroundActor.insert(subject)
+			}
 		}
 	}
 
@@ -200,7 +207,7 @@ private extension SubjectsManager {
 	final actor BackgroundActor {
 		let modelContainer: ModelContainer
 		private let modelExecutor: ModelExecutor
-		private var modelContext: ModelContext { modelExecutor.modelContext }
+		nonisolated var modelContext: ModelContext { modelExecutor.modelContext }
 
 		init(modelContainer: ModelContainer) {
 			self.modelExecutor = DefaultSerialModelExecutor(modelContext: ModelContext(modelContainer))
@@ -217,9 +224,8 @@ private extension SubjectsManager {
 			modelContext.delete(model)
 		}
 
-		func fetch<M: PersistentModel>() throws -> [M] {
-			let descriptor = FetchDescriptor<M>()
-			return try modelContext.fetch(descriptor)
+		func fetchModels<M: PersistentModel>(descriptor: FetchDescriptor<M>) throws -> [PersistentIdentifier] {
+			return try modelContext.fetch(descriptor).map(\.persistentModelID)
 		}
 
 		func purgeAllData<M: PersistentModel>(for model: M.Type) throws {

@@ -4,7 +4,7 @@ import struct SwiftUI.Color
 
 /// API model class that represents a `Subject` object
 @Model
-final class Subject: @unchecked Sendable {
+final class Subject {
 	private(set) var name: String
 	private(set) var year: String
 	private(set) var shortName: String
@@ -26,7 +26,7 @@ final class Subject: @unchecked Sendable {
 	///		- finalGrades: An `[Int]` array to represent the final grades, defaults to empty
 	///		- isFinished: A `Bool` that represents if I finished the subject, defaults to `false`
 	///		- hasThreeExams: A `Bool` that represents wether the subject requires taking three exams or more
-	///		- finalExamDate: An array of  `Date` objects that represent the subject's final exam dates, defaults to empty`
+	///		- finalExamDate: An array of `Date` objects that represent the subject's final exam dates, defaults to empty
 	init(
 		name: String,
 		year: String,
@@ -119,7 +119,8 @@ extension Subject: Hashable {
 	}
 
 	static func == (lhs: Subject, rhs: Subject) -> Bool {
-		lhs.name == rhs.name
+		guard !lhs.isDeleted, !rhs.isDeleted else { return false }
+		return lhs.name == rhs.name
 	}
 }
 
