@@ -12,6 +12,9 @@ import SwiftUI
 @MainActor
 @Observable
 final class LoginViewViewModel {
+	@AppStorage("nickname")
+	@ObservationIgnored var nickname = ""
+
 	var username = ""
 	var password = ""
 	var errorMessage = ""
@@ -30,7 +33,7 @@ final class LoginViewViewModel {
 		case passwordIsTooShort = "Password must be at least 8 characters"
 	}
 
-	private func performAuth(isSignIn: Bool = false) {
+	private func performAuth(isSignIn: Bool = false, isManual: Bool = false) {
 		guard validateFields() else { return }
 
 		Task {
@@ -38,18 +41,24 @@ final class LoginViewViewModel {
 				let result = isSignIn ? try await AuthService.shared.signIn(username: username, password: password) : try await AuthService.shared.signUp(username: username, password: password)
 
 				switch result {
-					case .success: presentHomeVC.toggle()
+					case .success:
+						if isManual {
+							await SubjectsManager.shared.loadData()
+							try await Task.sleep(for: .seconds(0.02))
+						}
+						presentHomeVC.toggle()
+
 					case .unauthorized: break
 				}
 			}
 			catch let error as AuthService.AuthError {
-				presentToast(withErrorMessage: error.description)
+				presentToast(errorMessage: error.description)
 			}
 		}
 	}
 
-	private func presentToast(withErrorMessage message: String) {
-		self.errorMessage = message
+	private func presentToast(errorMessage: String) {
+		self.errorMessage = errorMessage
 
 		guard shouldShowToast else { return }
 
@@ -59,7 +68,7 @@ final class LoginViewViewModel {
 		}
 
 		Task {
-			try? await Task.sleep(for: .seconds(1.5))
+			try await Task.sleep(for: .seconds(1.5))
 
 			await MainActor.run {
 				withAnimation(.easeInOut, completionCriteria: .logicallyComplete) {
@@ -73,17 +82,17 @@ final class LoginViewViewModel {
 
 	private func validateFields() -> Bool {
 		guard !username.isEmpty && !password.isEmpty else {
-			presentToast(withErrorMessage: ValidationError.fieldsBlank.rawValue)
+			presentToast(errorMessage: ValidationError.fieldsBlank.rawValue)
 			return false
 		}
 
-		guard username == "Luki120" else {
-			presentToast(withErrorMessage: ValidationError.foreigner.rawValue)
+		guard username == "Luki120" || username == "lustflouis" else {
+			presentToast(errorMessage: ValidationError.foreigner.rawValue)
 			return false
 		}
 
 		guard password.count >= 8 else {
-			presentToast(withErrorMessage: ValidationError.passwordIsTooShort.rawValue)
+			presentToast(errorMessage: ValidationError.passwordIsTooShort.rawValue)
 			return false
 		}
 
@@ -101,6 +110,6 @@ extension LoginViewViewModel {
 	
 	/// Function to sign in a user
 	func signIn() {
-		performAuth(isSignIn: true)
+		performAuth(isSignIn: true, isManual: true)
 	}
 }

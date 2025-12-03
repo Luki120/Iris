@@ -17,8 +17,7 @@ final actor AuthService {
 	}
 
 	enum Result {
-		case success
-		case unauthorized
+		case success, unauthorized
 	}
 
 	enum AuthError: String, Error {
@@ -36,8 +35,8 @@ final actor AuthService {
 
 	/// Function to sign up a user
 	/// - Parameters:
-	///		- username: A string that represents the username
-	///		- password: A string that represents the password
+	///		- username: A `String` that represents the username
+	///		- password: A `String` that represents the password
 	///	- Returns: `Result`
 	/// - Throws: `AuthError`
 	func signUp(username: String, password: String) async throws -> Result {
@@ -67,8 +66,8 @@ final actor AuthService {
 
 	/// Function to sign in a user
 	/// - Parameters:
-	///		- username: A string that represents the username
-	///		- password: A strrng that represents the password
+	///		- username: A `String` that represents the username
+	///		- password: A `String` that represents the password
 	///	- Returns: `Result`
 	/// - Throws: `AuthError`
 	func signIn(username: String, password: String) async throws -> Result {
@@ -90,6 +89,10 @@ final actor AuthService {
 			case 200:
 				let tokenResponse = try JSONDecoder().decode(TokenResponse.self, from: data)
 				UserDefaults.standard.set(tokenResponse.token, forKey: "jwtToken")
+
+				let userId = try await getUserId()
+				await SubjectsManager.shared.setCurrentUser(id: userId)
+
 				return .success
 
 			case 401: return .unauthorized
@@ -114,7 +117,12 @@ final actor AuthService {
 		guard let httpResponse = response as? HTTPURLResponse else { throw AuthError.unknownError }
 
 		switch httpResponse.statusCode {
-			case 200: return .success
+			case 200:
+				let userId = try await getUserId()
+				await SubjectsManager.shared.setCurrentUser(id: userId)
+
+				return .success
+
 			case 401:
 				UserDefaults.standard.removeObject(forKey: "jwtToken")
 				return .unauthorized
@@ -141,6 +149,9 @@ final actor AuthService {
 		switch httpResponse.statusCode {
 			case 200:
 				UserDefaults.standard.removeObject(forKey: "jwtToken")
+				await SubjectsManager.shared.clearCurrentUser()
+				try await SubjectsManager.shared.deleteData(userId: userId)
+
 				return .success
 
 			case 401: return .unauthorized

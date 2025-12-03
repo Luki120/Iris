@@ -28,7 +28,9 @@ final class SettingsCoordinator: Coordinator {
 						switch indexPath.item {
 							case 0:
 								UserDefaults.standard.removeObject(forKey: "jwtToken")
+								SubjectsManager.shared.clearCurrentUser()
 								presentLoginVC()
+
 							case 1: deleteAccount()
 							case 2: SubjectsManager.shared.purgeAllData()
 							default: break

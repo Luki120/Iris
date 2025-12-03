@@ -8,32 +8,69 @@ final class SubjectsManager {
 	private(set) var currentlyTakingSubjects = [Subject]()
 	private(set) var passedSubjects = [Subject]()
 
-	@ObservationIgnored
-	private var backgroundActor: BackgroundActor!
+	private var currentUserId = ""
+	private var containerCache = [String:ModelContainer]()
 
-	@ObservationIgnored var sharedContainer: ModelContainer {
-		guard let container = try? ModelContainer(for: Subject.self, Subject.Task.self) else {
-			fatalError("Failed to initialize a model container")
-		}
-		return container
-	}
+	private var backgroundActor: BackgroundActor!
+	private(set) var sharedContainer: ModelContainer!
 
 	static let shared = SubjectsManager()
 
 	private init() {
 		Task {
-			self.backgroundActor = .init(modelContainer: sharedContainer)
-			let subjects: [Subject] = try await backgroundActor.fetch()
-
-			currentlyTakingSubjects = subjects.filter { !$0.isFinished }
-			passedSubjects = subjects.filter { $0.isFinished }
+			await loadData()
 		}
+	}
+
+	private func createContainer(for userId: String) throws -> ModelContainer {
+		if let cached = containerCache[userId] {
+			return cached
+		}
+
+		let schema = Schema([Subject.self, Subject.Task.self])
+
+		let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+		let userDirectory = appSupportURL.appendingPathComponent("Users/\(userId)", isDirectory: true)
+
+		try FileManager.default.createDirectory(at: userDirectory, withIntermediateDirectories: true)
+
+		let storeURL = userDirectory.appendingPathComponent("default.store")
+
+		let modelConfiguration = ModelConfiguration(userId, schema: schema, url: storeURL)
+		let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+
+		containerCache[userId] = container
+		return container
 	}
 }
 
 // MARK: - Public
 
 extension SubjectsManager {
+	/// Function to load data
+	func loadData() async {
+		guard let backgroundActor else { return }
+
+		do {
+			let allSubjects: [Subject] = try await backgroundActor.fetch()
+			currentlyTakingSubjects = allSubjects.filter { !$0.isFinished }
+			passedSubjects = allSubjects.filter { $0.isFinished }
+		}
+		catch {
+			print("❌ Error loading user data: \(error.localizedDescription)")
+		}
+	}
+
+	/// Function to delete user data for a given user
+	/// - Parameter userId: A `String` that represents the user id
+	func deleteData(userId: String) throws {
+		let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+		let userDirectory = appSupportURL.appendingPathComponent("Users/\(userId)", isDirectory: true)
+
+		containerCache.removeValue(forKey: userId)
+		try FileManager.default.removeItem(at: userDirectory)
+	}
+
 	/// Function to track currently taking subjects
 	/// - Parameter subject: The `Subject` object
 	func takeSubject(_ subject: Subject) {
@@ -55,7 +92,7 @@ extension SubjectsManager {
 	/// Function to delete a subject at the given index
 	/// - Parameters:
 	///		- subject: The `Subject` object
-	///		- index: The index for the subject
+	///		- index: An `Int` that represents the index
 	///		- isPassed: A `Bool` to check wether it's a passed subject, defaults to `false`
 	func delete(subject: Subject, at index: Int, isPassed: Bool = false) {
 		Task {
@@ -73,7 +110,7 @@ extension SubjectsManager {
 	/// Function to mark a subject as passed at the given index
 	/// - Parameters:
 	///		- subject: The `Subject` object
-	///		- index: The index for the subject
+	///		- index: An `Int` that represents the index
 	func passed(subject: Subject, at index: Int) {
 		Task {
 			subject.isFinished = true
@@ -94,18 +131,53 @@ extension SubjectsManager {
 		guard let index = currentlyTakingSubjects.firstIndex(where: { $0 === subject }) else { return }
 		currentlyTakingSubjects[index] = subject
 	}
+}
 
-	/// Function to save data to the persistent storage
-	func save() {
-		Task {
-			await backgroundActor.save()
+// MARK: - User
+
+extension SubjectsManager {
+	/// Function to set the current user
+	/// - Parameter id: A `String` that represents the user id
+	func setCurrentUser(id: String) async {
+		guard currentUserId != id else { return }
+
+		do {
+			currentUserId = id
+
+			let container = try createContainer(for: id)
+			sharedContainer = container
+			backgroundActor = BackgroundActor(modelContainer: container)
+
+			await loadData()
 		}
+		catch {
+			print("❌ Error setting up container for user \(id): \(error.localizedDescription)")
+		}
+	}
+
+	/// Function to clear data for the current user
+	func clearCurrentUser() {
+		currentUserId = ""
+
+		if !currentlyTakingSubjects.isEmpty {
+			currentlyTakingSubjects.removeAll()
+		}
+
+		backgroundActor = nil
+		sharedContainer = nil
 	}
 }
 
 // MARK: - SwiftData
 
 extension SubjectsManager {
+	/// Function to save data to the persistent storage
+	func save() {
+		Task {
+			await backgroundActor.save()
+		}
+	}
+
 	/// Function to delete a SwiftData model from the database
 	/// - Parameter model: The `PersistentModel` object
 	func delete<M: PersistentModel>(_ model: M) {
