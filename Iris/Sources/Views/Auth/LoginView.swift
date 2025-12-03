@@ -11,12 +11,14 @@ import SwiftUI
 struct LoginView: View {
 	@State private var viewModel = LoginViewViewModel()
 
+	@FocusState private var isNicknameFocused
 	@FocusState private var isUsernameFocused
 	@FocusState private var isPasswordFocused
 
 	var body: some View {
 		VStack {
-			Text("Welcome back, Luki")
+			Text(viewModel.isRegistering ? "Create account" : "Welcome back")
+				.animation(.smooth, value: viewModel.isRegistering)
 				.font(.quicksand(style: .bold, size: 55))
 				.foregroundStyle(.white)
 				.frame(height: 160)
@@ -32,6 +34,21 @@ struct LoginView: View {
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.padding(.top, 20)
 
+					if viewModel.isRegistering {
+						CleanTextField(
+							title: "Nickname",
+							hint: "Luki",
+							icon: "person",
+							value: $viewModel.nickname
+						)
+						.focused($isNicknameFocused)
+						.onSubmit(of: .text) {
+							isUsernameFocused = true
+						}
+						.padding(.top, 30)
+						.submitLabel(.next)
+					}
+
 					CleanTextField(
 						title: "Username",
 						hint: "Luki120",
@@ -42,7 +59,7 @@ struct LoginView: View {
 					.onSubmit(of: .text) {
 						isPasswordFocused = true
 					}
-					.padding(.top, 30)
+					.padding(.top, 15)
 					.submitLabel(.next)
 
 					CleanTextField(
@@ -72,7 +89,9 @@ struct LoginView: View {
 					.shadow(color: .black.opacity(0.4), radius: 5)
 
 					Button("Create account") {
-						viewModel.isRegistering.toggle()
+						withAnimation(.smooth) {
+							viewModel.isRegistering.toggle()
+						}
 					}
 					.font(.quicksand(style: .bold))
 					.foregroundStyle(Color.irisSlateBlue)

@@ -9,7 +9,7 @@ protocol HomeViewViewModelDelegate: AnyObject {
 /// View model class for `HomeView`
 @MainActor
 final class HomeViewViewModel: NSObject {
-	weak var delegate: HomeViewViewModelDelegate?
+	let nickname = UserDefaults.standard.string(forKey: "nickname") ?? ""
 
 	// MARK: - UICollectionViewDiffableDataSource
 
@@ -48,6 +48,8 @@ final class HomeViewViewModel: NSObject {
 	private let currentlyTakingSubjectCellRegistration = CurrentlyTakingSubjectCellRegistration { cell, _, viewModel in
 		cell.configure(with: viewModel)
 	}
+
+	weak var delegate: HomeViewViewModelDelegate?
 
 	private var collectionView: UICollectionView!
 

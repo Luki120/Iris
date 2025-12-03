@@ -29,7 +29,6 @@ final class HomeView: UIView {
 
 	private(set) lazy var titleLabel: UILabel = {
 		let label = UILabel()
-		label.attributedText = .init(fullString: createTitle(), subString: "Luki")
 		label.adjustsFontForContentSizeCategory = true
 		return label
 	}()
@@ -46,6 +45,8 @@ final class HomeView: UIView {
 	}()
 
 	weak var delegate: HomeViewDelegate?
+
+	var nickname: String { viewModel.nickname }
 
 	// MARK: - Lifecycle
 
@@ -68,14 +69,16 @@ final class HomeView: UIView {
 		let hour = Calendar.current.component(.hour, from: .now)
 
 		switch hour {
-			case 6..<12: return "Good morning, Luki"
-			case 12..<18: return "Good afternoon, Luki"
-			case 18..<22: return "Good evening, Luki"
-			default: return "Good night, Luki"
+			case 6..<12: return "Good morning, \(nickname)"
+			case 12..<18: return "Good afternoon, \(nickname)"
+			case 18..<22: return "Good evening, \(nickname)"
+			default: return "Good night, \(nickname)"
 		}
 	}
 
 	private func setupUI() {
+		titleLabel.attributedText = .init(fullString: createTitle(), subString: nickname)
+
 		profilePictureButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
 		profilePictureButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
 
