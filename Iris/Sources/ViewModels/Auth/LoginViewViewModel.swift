@@ -86,10 +86,12 @@ final class LoginViewViewModel {
 			return false
 		}
 
+#if !DEBUG
 		guard username == "Luki120" || username == "lustflouis" else {
 			presentToast(errorMessage: ValidationError.foreigner.rawValue)
 			return false
 		}
+#endif
 
 		guard password.count >= 8 else {
 			presentToast(errorMessage: ValidationError.passwordIsTooShort.rawValue)
