@@ -15,7 +15,7 @@ protocol SubjectDetailsViewViewModelDelegate: AnyObject {
 /// View model class for `SubjectDetailsView`
 @MainActor
 final class SubjectDetailsViewViewModel: NSObject {
-	var title: String { return subject.name }
+	var title: String { return subject.shortName }
 
 	weak var delegate: SubjectDetailsViewViewModelDelegate?
 

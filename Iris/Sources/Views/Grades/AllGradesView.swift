@@ -24,7 +24,7 @@ struct AllGradesView: View {
 
 	var body: some View {
 		List(subjects) { subject in
-			NavigationLink(subject.name) {
+			NavigationLink(subject.shortName) {
 				GradesView(subject: subject)
 			}
 			.swipeActions(edge: .trailing) {
@@ -88,7 +88,7 @@ struct AllGradesView: View {
 			Button("Cancel", role: .cancel) {}
 		}
 		.animation(.snappy, value: subject.finalGrades)
-		.navigationTitle(subject.name)
+		.navigationTitle(subject.shortName)
 		.toolbar {
 			ToolbarItem(placement: .topBarTrailing) {
 				Button("", systemImage: "plus") {
