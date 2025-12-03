@@ -18,11 +18,27 @@ final class HomeVC: UIViewController {
 
 	private func setupUI() {
 		navigationItem.titleView = homeView.titleLabel
-		navigationItem.rightBarButtonItem = .init(customView: homeView.profilePictureButton)
+
+		if homeView.nickname == "Luki" {
+			navigationItem.rightBarButtonItem = .init(customView: homeView.profilePictureButton)
+		}
+		else {
+			navigationItem.rightBarButtonItem = .init(
+				image: .init(.gear),
+				style: .plain,
+				target: self,
+				action: #selector(didTapSettingsButton)
+			)
+		}
 
 		view.backgroundColor = .systemBackground
 		view.addSubview(homeView)
 		view.pinViewToSafeAreas(homeView)
+	}
+
+	@objc
+	private func didTapSettingsButton() {
+		coordinator?.eventOccurred(with: .profilePictureButtonTapped)
 	}
 }
 
